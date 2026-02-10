@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Simon Keyser Petty — Simonoto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,WONK@0,9..144,300..900,0..1;1,9..144,300..900,0..1&family=Azeret+Mono:wght@300;400;500;600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Cursor glow for dark sections -->
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<nav id="nb">
+  <a href="#" class="nav-logo">S.K.P.</a>
+  <ul class="nav-links" id="nl">
+    <li><a href="#music" onclick="cm()">Music</a></li>
+    <li><a href="#studio" onclick="cm()">Studio</a></li>
+    <li><a href="#gear" onclick="cm()">Gear</a></li>
+    <li><a href="#videos" onclick="cm()">Watch</a></li>
+    <li><a href="#teaching" onclick="cm()">Teaching</a></li>
+    <li><a href="#events" onclick="cm()">Events</a></li>
+    <li><a href="#contact" onclick="cm()">Contact</a></li>
+  </ul>
+  <button class="menu-btn" id="mb" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<section class="hero">
+  <div class="hero-video-wrap"><iframe src="https://www.youtube.com/embed/t7-fKnCdKOw?autoplay=1&mute=1&loop=1&playlist=t7-fKnCdKOw&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1" allow="autoplay" loading="lazy"></iframe><div class="hero-video-overlay"></div></div>
+  <div class="deco deco-ring" style="top:15%;left:8%;opacity:.06"></div>
+  <div class="deco deco-cross" style="bottom:20%;right:12%;opacity:.08;transform:rotate(15deg)"></div>
+  <div class="hero-grid">
+    <div class="hero-text">
+      <p class="hero-tag">musician · producer · educator · oakland, ca</p>
+      <h1><span class="word">Simon</span> <span class="word">Keyser</span> <span class="word">Petty</span></h1>
+      <p class="hero-sub">Multi-instrumentalist, composer & producer. Running Studio S, directing Professor of Funk, performing across the Bay.</p>
+      <div class="hero-btns">
+        <a href="#music" class="btn btn-red">listen now</a>
+        <a href="#contact" class="btn btn-out">book a session</a>
+      </div>
+    </div>
+    <div class="hero-images">
+      <div class="hero-stamp-2">#BAM forever</div>
+      <div class="hero-img-main"><img src="images/Face Closeup.jpg" alt="Simon Keyser Petty"></div>
+      <div class="hero-img-accent"><img src="images/CJCConcert2.jpeg" alt="Playing guitar"></div>
+      <div class="hero-stamp">Oakland, CA</div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>scroll</span><div class="scroll-arrow"></div></div>
+</section>
+
+<div class="marquee"><div class="marquee-inner"><span class="t1">Simonoto</span><span class="t2">&bull;</span> <span class="t1">Professor of Funk</span><span class="t2">&bull;</span> <span class="t1">Studio S</span><span class="t2">&bull;</span> <span class="t1">Celestial Hotties</span><span class="t2">&bull;</span> <span class="t1">D.A.T.A.M.O.S.H</span><span class="t2">&bull;</span> <span class="t1">Slappers Only</span><span class="t2">&bull;</span> <span class="t1">MOONGLOW TRIO</span><span class="t2">&bull;</span> <span class="t1">Here/There</span><span class="t2">&bull;</span> <span class="t1">Shredbeard</span><span class="t2">&bull;</span><span class="t1">Simonoto</span><span class="t2">&bull;</span> <span class="t1">Professor of Funk</span><span class="t2">&bull;</span> <span class="t1">Studio S</span><span class="t2">&bull;</span> <span class="t1">Celestial Hotties</span><span class="t2">&bull;</span> <span class="t1">D.A.T.A.M.O.S.H</span><span class="t2">&bull;</span> <span class="t1">Slappers Only</span><span class="t2">&bull;</span> <span class="t1">MOONGLOW TRIO</span><span class="t2">&bull;</span> <span class="t1">Here/There</span><span class="t2">&bull;</span> <span class="t1">Shredbeard</span><span class="t2">&bull;</span></div></div>
+
+<section id="music">
+  <!-- Skull Background -->
+  <div class="music-bg"></div>
+  <!-- Skull Banner Top -->
+  <div class="skull-banner skull-banner--top">
+    <div class="skull-banner-inner">
+      <img src="images/skull_bones.png" alt=""><img src="images/Skull_1.png" alt=""><img src="images/Skull_Blank.png" alt=""><img src="images/Skull_4.png" alt=""><img src="images/skull_bones.png" alt=""><img src="images/Skull_1.png" alt=""><img src="images/Skull_Blank.png" alt=""><img src="images/Skull_4.png" alt=""><img src="images/skull_bones.png" alt=""><img src="images/Skull_1.png" alt=""><img src="images/Skull_Blank.png" alt=""><img src="images/Skull_4.png" alt="">
+    </div>
+  </div>
+  <!-- Skull Banner Bottom -->
+  <div class="skull-banner skull-banner--bottom">
+    <div class="skull-banner-inner">
+      <img src="images/Skull_4.png" alt=""><img src="images/Skull_Blank.png" alt=""><img src="images/skull_bones.png" alt=""><img src="images/Skull_1.png" alt=""><img src="images/Skull_4.png" alt=""><img src="images/Skull_Blank.png" alt=""><img src="images/skull_bones.png" alt=""><img src="images/Skull_1.png" alt=""><img src="images/Skull_4.png" alt=""><img src="images/Skull_Blank.png" alt=""><img src="images/skull_bones.png" alt=""><img src="images/Skull_1.png" alt="">
+    </div>
+  </div>
+  <div class="deco deco-dot" style="top:60px;right:80px;opacity:.2"></div>
+  <div class="deco deco-line" style="bottom:100px;left:40px;opacity:.1;transform:rotate(-20deg)"></div>
+  <div class="wrap">
+    <p class="s-label rv">Music</p>
+    <h2 class="s-title" data-split>Simonoto Releases</h2>
+    <p class="s-sub rv" style="color:var(--lav)">Original cuts — funk, jazz, electronic, and whatever the groove requests.</p>
+    <div class="music-layout">
+      <div class="music-visual rv-s">
+        <div class="music-badge">Made live!</div>
+        <div class="music-img-1"><img src="images/Kodak1.jpg" alt="Live performance"></div>
+        <div class="music-img-2"><img src="images/Redcig5.jpg" alt="Performing"></div>
+      </div>
+      <div>
+        <div class="albums">
+<div class="alb alb-bc rv" style="grid-column:span 2"><iframe style="border:0;width:100%;height:274px" src="https://bandcamp.com/EmbeddedPlayer/album=2330220054/size=large/bgcol=2A1A22/linkcol=FF9090/artwork=small/transparent=true/" seamless></iframe><div class="alb-buy"><a href="https://simonoto.bandcamp.com/album/simonoto-ch-1" target="_blank" class="btn btn-red" style="font-size:.58rem;padding:10px 22px">buy on bandcamp</a></div></div>
+<div class="alb alb-flip rv" data-d="1" onclick="this.classList.toggle('flipped')">
+  <div class="alb-flip-inner">
+    <div class="alb-front"><div class="alb-art" style="background:linear-gradient(135deg,#1a2822,#2a5244 40%,#5a9a7a)"><span>Ch.2</span></div><div class="alb-info"><h3>Simonoto Ch.2</h3><p>5/2026</p></div></div>
+    <div class="alb-back" style="background:linear-gradient(135deg,#1a2822,#2a5244 40%,#5a9a7a)"><div class="alb-back-title">Simonoto Ch.2</div><ol class="alb-tracklist"><li>Freeze ft. Freeze</li><li>Lofi-Crazy</li><li>White Lotus</li><li>Dreaming</li></ol><div class="alb-back-hint">tap to flip back</div></div>
+  </div>
+</div>
+<div class="alb alb-flip rv" data-d="2" onclick="this.classList.toggle('flipped')">
+  <div class="alb-flip-inner">
+    <div class="alb-front"><div class="alb-art" style="background:linear-gradient(135deg,#2A1A22,#7A6279 40%,#CDB1CC)"><span>Ch.3</span></div><div class="alb-info"><h3>Simonoto Ch.3</h3><p>6/2026</p></div></div>
+    <div class="alb-back" style="background:linear-gradient(135deg,#2A1A22,#7A6279 40%,#CDB1CC)"><div class="alb-back-title">Simonoto Ch.3</div><ol class="alb-tracklist"><li>Starline Jingle</li><li>Tupper and Reed Theme</li><li>DOPESAMPLE ft. Madison Bohrer</li><li>Feladan ft. Madison Bohrer</li></ol><div class="alb-back-hint">tap to flip back</div></div>
+  </div>
+</div>
+<div class="alb alb-flip rv" data-d="3" onclick="this.classList.toggle('flipped')">
+  <div class="alb-flip-inner">
+    <div class="alb-front"><div class="alb-art" style="background:linear-gradient(135deg,#1a1a20,#5a2a3a 40%,#ED2024)"><span>Ch.4</span></div><div class="alb-info"><h3>Simonoto Ch.4</h3><p>7/2026</p></div></div>
+    <div class="alb-back" style="background:linear-gradient(135deg,#1a1a20,#5a2a3a 40%,#ED2024)"><div class="alb-back-title">Simonoto Ch.4</div><ol class="alb-tracklist"><li>What is life? ft. Ian Santilliano</li><li>Ownway ft. Sheldon Alexander, Clay Xavier</li><li>Salsachipps ft. Caleb Sanders</li><li>Spooky Season ft. Madison Bohrer</li></ol><div class="alb-back-hint">tap to flip back</div></div>
+  </div>
+</div>
+<div class="alb alb-flip rv" data-d="4" onclick="this.classList.toggle('flipped')">
+  <div class="alb-flip-inner">
+    <div class="alb-front"><div class="alb-art" style="background:linear-gradient(135deg,#0a0a12,#1a3a5a 40%,#00ccff)"><span>D.M.</span></div><div class="alb-info"><h3>D.A.T.A.M.O.S.H</h3><p>8/2026 · 3 tracks</p></div></div>
+    <div class="alb-back" style="background:linear-gradient(135deg,#0a0a12,#1a3a5a 40%,#00ccff)"><div class="alb-back-title">D.A.T.A.M.O.S.H</div><ol class="alb-tracklist"><li>Race My Thoughts</li><li>Trying to Forget</li><li>Lack of Ambition</li></ol><div class="alb-back-hint">tap to flip back</div></div>
+  </div>
+</div>
+<div class="alb alb-flip rv" data-d="5" onclick="this.classList.toggle('flipped')">
+  <div class="alb-flip-inner">
+    <div class="alb-front"><div class="alb-art" style="background:linear-gradient(135deg,#1a0a2a,#5a2a7a 40%,#ff66cc)"><span>C.H.</span></div><div class="alb-info"><h3>Celestial Hotties</h3><p>coming soon · 8 tracks</p></div></div>
+    <div class="alb-back" style="background:linear-gradient(135deg,#1a0a2a,#5a2a7a 40%,#ff66cc)"><div class="alb-back-title">Celestial Hotties</div><ol class="alb-tracklist"><li>Tynomite!</li><li>Nuthin' Betta' Than</li><li>Funkybrushin</li><li>Strange Brew</li><li>Dreaming</li><li>Meanmuggin</li><li>Sugar Coated</li><li>Swollen Eyeball</li></ol><div class="alb-back-hint">tap to flip back</div></div>
+  </div>
+</div>
+</div>
+
+        <div class="stream-links rv">
+  <a href="https://soundcloud.com/simonoto" target="_blank">soundcloud</a>
+  <a href="https://simonoto.bandcamp.com" target="_blank">bandcamp</a>
+  <a href="#" target="_blank">spotify</a>
+  <a href="https://youtube.com/@shr3dbeard" target="_blank">youtube</a>
+</div>
+
+        <div class="section-cta rv" data-d="3"><a href="https://simonoto.bandcamp.com" target="_blank" class="btn-cta btn-cta-coral">get the album</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="studio">
+  <div class="deco deco-ring" style="bottom:120px;right:-40px;opacity:.05"></div>
+  <div class="wrap">
+    <p class="s-label rv-l">Studio S</p>
+    <h2 class="s-title" data-split>Production & Engineering</h2>
+    <div class="studio-hero">
+      <div class="studio-text">
+        <p class="s-sub rv-l" style="color:var(--faded)">Professional recording, mixing, and production from Oakland — top-tier custom gear, shaped by years of experience in CJC's exclusive studio program and at Tiny Telephone and Hyde Street Studios.</p>
+        <p class="studio-copy rv">Every session starts with <em>the music</em>. Whether you need a polished mix, a raw live take, or full production from scratch — I bring <em>musicianship first</em>, engineering second.</p>
+        <div class="section-cta rv"><a href="#contact" class="btn-cta btn-cta-red">book a session</a></div>
+      </div>
+      <div class="studio-images rv-r">
+        <div class="studio-img-1"><img src="images/Magilosquat.jpg" alt="Studio"></div>
+        <div class="studio-img-2"><img src="images/console-selfie.jpg" alt="Console"></div>
+        <div class="studio-stamp">since 2019</div>
+      </div>
+    </div>
+    <div class="svc-grid">
+<div class="svc rv-rot">
+  <div class="svc-num">01</div>
+  <h3>Recording & Tracking</h3>
+  <p>Full multi-track sessions. Solo to full band. Hybrid setup - Analog warmth meets modern workflow.</p>
+  <div class="svc-hover-line"></div>
+</div>
+<div class="svc rv-rot" data-d="1">
+  <div class="svc-num">02</div>
+  <h3>Mixing & Mastering</h3>
+  <p>Release-ready sound. Plugins + custom analog outboard from Pacifico Audio.</p>
+  <div class="svc-hover-line"></div>
+</div>
+<div class="svc rv-rot" data-d="2">
+  <div class="svc-num">03</div>
+  <h3>Full Production</h3>
+  <p>Arrangement to final master. Expert guidance and humble collaboration on every track.</p>
+  <div class="svc-hover-line"></div>
+</div>
+<div class="svc rv-rot" data-d="3">
+  <div class="svc-num">04</div>
+  <h3>Session Musician</h3>
+  <p>Guitar, bass, keys, drums, vocals. In-studio or remote. Whatever the project needs.</p>
+  <div class="svc-hover-line"></div>
+</div>
+</div>
+
+    <div class="quote-bar rv-s">
+      <blockquote>&ldquo;Your humanity is your instrument.&rdquo;</blockquote>
+      <cite>&mdash; Wayne Shorter</cite>
+    </div>
+  </div>
+</section>
+
+<div class="photo-break">
+  <img src="images/polaroids.jpg" alt="Studio moments">
+  <div class="photo-break-stamp">studio moments</div>
+</div>
+
+<section id="gear">
+  <div class="deco deco-cross" style="top:80px;left:60px;opacity:.08;transform:rotate(22deg)"></div>
+  <div class="wrap">
+    <p class="s-label rv">The Rig</p>
+    <h2 class="s-title" data-split>Studio Gear</h2>
+    <div class="gear-story">
+      <div class="gear-story-img rv-l"><img src="images/Peacesign.png" alt="Console"></div>
+      <div class="gear-story-text rv-r">Built around custom analog gear from <strong>Pacifico Audio</strong> — designed by Cesar Delly, the legendary Oakland builder behind consoles for studios worldwide, including Otis McDonald's. Every preamp, every EQ — hand-built with rare vintage transformers.</div>
+    </div>
+    <div class="gear-grid">
+<div class="gear-cat rv"><h3>Console & Summing<span class="gear-count">3</span></h3><ul>
+  <li>Custom 16-ch Summing Mixer<span class="note">Pacifico Audio (Cesar Delly)</span></li>
+  <li>6 Custom Preamps w/ vintage transformers<span class="note">Pacifico Audio</span></li>
+  <li>2 Chameleon Labs 1073 Preamps w/ EQ</li>
+</ul></div>
+<div class="gear-cat rv" data-d="1"><h3>Outboard Processing<span class="gear-count">2</span></h3><ul>
+  <li>"LogicChild" Mastering Comp/Saturator<span class="note">Stam Audio</span></li>
+  <li>4 Custom Mastering EQ<span class="note">Pacifico Audio</span></li>
+</ul></div>
+<div class="gear-cat rv" data-d="2"><h3>Conversion & Recording<span class="gear-count">3</span></h3><ul>
+  <li>Universal Audio Apollo x8p, x16, x4</li>
+  <li>Tandberg ¼" 7.5 IPS Tape Machine</li>
+  <li>Tascam Portastudio 4-Track</li>
+</ul></div>
+</div>
+<div id="gear-full" class="gear-full-wrap" style="max-height:0;overflow:hidden;transition:max-height .6s cubic-bezier(.16,1,.3,1)">
+<div class="gear-grid" style="margin-top:18px">
+<div class="gear-cat rv"><h3>Microphones<span class="gear-count">9</span></h3><ul>
+  <li>Advanced Audio U47 clone<span class="note">large diaphragm tube condenser</span></li>
+  <li>Beesneez Arabella<span class="note">Large diaphragm tube condenser</span></li>
+  <li>Pacifico U87 Clone</li>
+  <li>Pacifico U47 FET Clone (×2)</li>
+  <li>Pacifico Mini Ribbon (×2)</li>
+  <li>AKG D12 · Telefunken TD26</li>
+  <li>Uher M534 (pair) · Warm WA-13, WA-44</li>
+  <li>SM58, SM57 · SM7 (American)</li>
+  <li>Unidyne III 54553 (pair) · v7 (pair)</li>
+</ul></div>
+<div class="gear-cat rv" data-d="2"><h3>Drums & Percussion<span class="gear-count">4</span></h3><ul>
+  <li>Sonor S Class 22" — 5-piece</li>
+  <li>Vintage Zildjian A Cymbals<span class="note">1968</span></li>
+  <li>Yamaha SD493 Snare<span class="note">Steve Gadd model</span></li>
+  <li>14" Kenyan Claves + misc percussion</li>
+</ul></div>
+<div class="gear-cat rv" data-d="3"><h3>Keys & Synths<span class="gear-count">3</span></h3><ul>
+  <li>Rhodes Stage MK2<span class="note">incoming</span></li>
+  <li>Vintage MicroKorg</li>
+  <li>DCP-300 Weighted Keyboard</li>
+</ul></div>
+<div class="gear-cat rv" data-d="4"><h3>Guitar, Amps & Effects<span class="gear-count">6</span></h3><ul>
+  <li>Reverend Kingsnake Tube Amp</li>
+  <li>MarkBass Little Ninja 1000W + Ampeg 10"</li>
+  <li>Helix LT</li>
+  <li>Red Panda Labs Context & Particle</li>
+  <li>MXR Phase 90 phaser · Red Witch Chorus/Trem</li>
+  <li>Modded Boss DS-1 Distortion · Sonic Research Strobe Tuner</li>
+</ul></div>
+<div class="gear-cat rv" data-d="1"><h3>DI, Monitoring & Strings<span class="gear-count">3</span></h3><ul>
+  <li>JDI Duplex · Motor City Bass DI · RC20</li>
+  <li>Neumann KH120 Monitors</li>
+  <li>JBL LSR 8 + Subwoofer</li>
+</ul></div>
+<div class="gear-cat rv" data-d="2"><h3>Software<span class="gear-count">1</span></h3><ul>
+  <li>UAD Complete · Goodhertz · iZotope · Soundtoys · Native Instruments · Sound Labs · Arturia</li>
+</ul></div>
+</div>
+</div>
+<button id="gear-toggle" class="btn btn-out" style="margin-top:24px;color:var(--brown);border-color:var(--brown)" onclick="toggleGear()">see the full rig →</button>
+
+  </div>
+</section>
+
+<section id="videos">
+  <div class="deco deco-dot" style="top:80px;right:60px;opacity:.15"></div>
+  <div class="wrap">
+    <p class="s-label rv">Watch</p>
+    <h2 class="s-title" data-split>Sessions & Lessons</h2>
+    <p class="s-sub rv" style="color:var(--lav)">Live from the studio and the classroom.</p>
+    <div class="vid-grid">
+<div class="vid-card rv">
+  <div class="vid-placeholder"><div class="vid-play-icon">▶</div><span>video coming soon</span></div>
+  <div class="vid-info"><h4>Studio Session — Coming Soon</h4><p>Full band live recording at Studio S</p></div>
+</div>
+<div class="vid-card rv" data-d="1">
+  <div class="vid-placeholder"><div class="vid-play-icon">▶</div><span>video coming soon</span></div>
+  <div class="vid-info"><h4>Professor of Funk — Coming Soon</h4><p>Teaching clip from Groove Ensemble</p></div>
+</div>
+<div class="vid-card rv" data-d="2">
+  <div class="vid-placeholder"><div class="vid-play-icon">▶</div><span>video coming soon</span></div>
+  <div class="vid-info"><h4>Live Performance — Coming Soon</h4><p>Celestial Hotties live at a Bay Area venue</p></div>
+</div>
+</div>
+
+  </div>
+</section>
+
+<section id="testimonials">
+  <div class="deco deco-ring" style="top:60px;right:80px;opacity:.06"></div>
+  <div class="wrap">
+    <p class="s-label rv">Kind Words</p>
+    <h2 class="s-title" data-split>What People Say</h2>
+    <div class="test-grid">
+<div class="test-card rv">
+  <div class="test-quote">&ldquo;Simon is easy to work with, quick, professional, and insightful as a producer.  Every project we work together has a spark!&rdquo;</div>
+  <div class="test-author">
+    <div class="test-avatar"><img src="images/client-testimony.jpg" alt="Tess Posner"></div>
+    <div><strong>Tess Posner</strong><span>Professional recording artist and composer</span></div>
+  </div>
+</div>
+<div class="test-card rv" data-d="1">
+  <div class="test-quote">&ldquo;“Simon met my son on his level  and helped develop his confidence to play live.”&rdquo;</div>
+  <div class="test-author">
+    <div class="test-avatar"><img src="images/parent-testimony.jpg" alt="Caroline Munck"></div>
+    <div><strong>Caroline Munck</strong><span>Parent of Student</span></div>
+  </div>
+</div>
+<div class="test-card rv" data-d="2">
+  <div class="test-quote">&ldquo;Placeholder testimonial — edit in content.json&rdquo;</div>
+  <div class="test-author">
+    <div class="test-avatar"><img src="images/club-testimony.jpg" alt="Jason Mulvaney"></div>
+    <div><strong>Jason Mulvaney</strong><span>Studio S client (live show)</span></div>
+  </div>
+</div>
+</div>
+
+  </div>
+</section>
+
+<section id="teaching">
+  <div class="deco deco-dot" style="top:100px;right:100px;opacity:.15"></div>
+  <div class="deco deco-line" style="bottom:80px;left:80px;opacity:.08;transform:rotate(35deg)"></div>
+  <div class="wrap">
+    <p class="s-label rv-l">Professor of Funk</p>
+    <h2 class="s-title" data-split>Classes & Education</h2>
+    <div class="teach-layout">
+      <div class="teach-img-stack rv-l">
+        <div class="teach-stamp">deep grooves</div>
+        <div class="teach-img-1"><img src="images/funkensemble2024.jpg" alt="Simon"></div>
+        <div class="teach-img-2"><img src="images/CJCConcert1.jpeg" alt="Live performance"></div>
+      </div>
+      <div>
+        <p class="teach-intro rv">Jazz-trained and accredited at California Jazz Conservatory, apprenticed under Otis McDonald. Real stage and studio chops, straight into the classroom. It's all about <em>authentic groove</em>.</p>
+        <div class="classes">
+<div class="cls rv"><span class="cls-tag">beginner</span><h3>Groove Ensemble #1</h3><p>Classic recordings to current cuts — broken down, analyzed, performed. Recording & live shows at Tiny Telephone and Verdi Club.</p><div class="cls-foot"><span>90 min</span><span>directed by simon</span></div></div>
+<div class="cls rv" data-d="1"><span class="cls-tag">intermediate</span><h3>Groove Ensemble #2</h3><p>What it truly means to move people. Recording and gigging at Hyde Street, Tiny Telephone, Old Skool Cafe.</p><div class="cls-foot"><span>90 min</span><span>recording + gigs</span></div></div>
+<div class="cls rv" data-d="2"><span class="cls-tag">studio</span><h3>Studio Ensemble #1</h3><p>World-class studio workflow. Mix in the box, outboard gear, tape. Learn by doing.</p><div class="cls-foot"><span>90 min</span><span>hands-on studio</span></div></div>
+</div>
+
+        <div class="section-cta rv" data-d="3"><a href="#contact" class="btn-cta btn-cta-out">enroll now</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" style="background:var(--wine)"><div class="marquee-inner" style="animation-direction:reverse"><span class="t1">Funk</span><span class="t2">&diams;</span> <span class="t1">Jazz</span><span class="t2">&diams;</span> <span class="t1">Soul</span><span class="t2">&diams;</span> <span class="t1">Gospel</span><span class="t2">&diams;</span> <span class="t1">Hip-Hop</span><span class="t2">&diams;</span> <span class="t1">R&B</span><span class="t2">&diams;</span> <span class="t1">Groove</span><span class="t2">&diams;</span> <span class="t1">americana</span><span class="t2">&diams;</span> <span class="t1">folk</span><span class="t2">&diams;</span> <span class="t1">punk</span><span class="t2">&diams;</span> <span class="t1">Fusion</span><span class="t2">&diams;</span> <span class="t1">Neo Soul</span><span class="t2">&diams;</span> <span class="t1">Math Rock</span><span class="t2">&diams;</span> <span class="t1">Death core</span><span class="t2">&diams;</span> <span class="t1">Indie Rock</span><span class="t2">&diams;</span> <span class="t1">Hyper-pop</span><span class="t2">&diams;</span> <span class="t1">synthwave</span><span class="t2">&diams;</span> <span class="t1">FONK</span><span class="t2">&diams;</span> <span class="t1">lo-fi</span><span class="t2">&diams;</span><span class="t1">Funk</span><span class="t2">&diams;</span> <span class="t1">Jazz</span><span class="t2">&diams;</span> <span class="t1">Soul</span><span class="t2">&diams;</span> <span class="t1">Gospel</span><span class="t2">&diams;</span> <span class="t1">Hip-Hop</span><span class="t2">&diams;</span> <span class="t1">R&B</span><span class="t2">&diams;</span> <span class="t1">Groove</span><span class="t2">&diams;</span> <span class="t1">americana</span><span class="t2">&diams;</span> <span class="t1">folk</span><span class="t2">&diams;</span> <span class="t1">punk</span><span class="t2">&diams;</span> <span class="t1">Fusion</span><span class="t2">&diams;</span> <span class="t1">Neo Soul</span><span class="t2">&diams;</span> <span class="t1">Math Rock</span><span class="t2">&diams;</span> <span class="t1">Death core</span><span class="t2">&diams;</span> <span class="t1">Indie Rock</span><span class="t2">&diams;</span> <span class="t1">Hyper-pop</span><span class="t2">&diams;</span> <span class="t1">synthwave</span><span class="t2">&diams;</span> <span class="t1">FONK</span><span class="t2">&diams;</span> <span class="t1">lo-fi</span><span class="t2">&diams;</span></div></div>
+
+<section id="events">
+  <div class="wrap">
+    <p class="s-label rv">Live</p>
+    <h2 class="s-title" data-split>Upcoming Shows & Events</h2>
+    <div class="ev-layout">
+      <div>
+        <div id="live-events">
+          <div class="ev-item rv"><span class="ev-date">TBA</span><div class="ev-info"><h4>Simonoto Ch.1 &mdash; Release Show</h4><p>bay area &middot; details incoming</p></div></div>
+          <div class="ev-item rv" data-d="1"><span class="ev-date">Monthly</span><div class="ev-info"><h4>Celestial Hotties Night</h4><p>rotating bay area venues</p></div></div>
+          <div class="ev-item rv" data-d="2"><span class="ev-date">Ongoing</span><div class="ev-info"><h4>Available for Hire</h4><p>live &middot; session &middot; private events</p></div></div>
+        </div>
+        <p class="rv" data-d="3" style="margin-top:24px;font-size:.8rem;color:var(--faded)">Booking? Hit the <a href="#contact" style="color:var(--red);text-decoration:none;font-weight:600">contact form</a>.</p>
+        <div class="section-cta rv" data-d="4"><a href="#contact" class="btn-cta btn-cta-dark">book a show</a></div>
+        <div class="ev-img rv"><img src="images/Band Tuff.jpg" alt="Band" style="object-position:center 25%"></div>
+      </div>
+      <div class="hotties rv-r">
+        <h3>Celestial Hotties Art Collective</h3>
+        <p>Unforgettable nights of live music, visual art, and community across the Bay. Every show is different. Every show is a moment.</p>
+        <a href="https://instagram.com/simonoto" target="_blank">follow for events →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="deco deco-ring" style="top:80px;right:60px;opacity:.04"></div>
+  <div class="wrap">
+    <p class="s-label rv-l">Get In Touch</p>
+    <h2 class="s-title" data-split>Let's Make Something</h2>
+    <div class="ct-layout">
+      <div class="ct-info rv-l">
+        <h3>What's the vibe?</h3>
+        <p>Studio time, lessons, session work, live bookings, or just connecting. I get back within 24 hours.</p>
+        <p style="margin-bottom:10px"><strong style="color:var(--cream)">Based in:</strong> Oakland, CA</p>
+        <div class="socials" style="margin-top:20px">
+  <a href="https://instagram.com/simonoto" target="_blank">IG</a>
+  <a href="https://www.tiktok.com/@simonoto_" target="_blank">TT</a>
+  <a href="https://youtube.com/@shr3dbeard" target="_blank">YT</a>
+  <a href="https://www.facebook.com/simon.keyserpetty/" target="_blank">FB</a>
+  <a href="https://soundcloud.com/simonoto" target="_blank">SC</a>
+</div>
+
+      </div>
+      <form class="ct-form rv-r" action="https://formspree.io/f/xnjbqdld" method="POST">
+        <div class="f-row">
+          <div class="f-grp"><label for="name">name</label><input type="text" id="name" name="name" required></div>
+          <div class="f-grp"><label for="email">email</label><input type="email" id="email" name="email" required></div>
+        </div>
+        <div class="f-grp"><label for="subject">interested in...</label>
+          <select id="subject" name="subject">
+            <option value="studio">studio s</option>
+            <option value="teaching">professor of funk</option>
+            <option value="session">session musician</option>
+            <option value="booking">live booking</option>
+            <option value="other">something else</option>
+          </select>
+        </div>
+        <div class="f-grp"><label for="message">message</label><textarea id="message" name="message" rows="4" required></textarea></div>
+        <button type="submit" class="btn-send">send it &bull;</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="ft-name">Simon Keyser Petty</span>
+  <span>&copy; 2026</span>
+  <span>oakland, ca &middot; <a href="#contact">contact</a></span>
+</footer>
+
+<script>
+const nb=document.getElementById("nb");window.addEventListener("scroll",()=>nb.classList.toggle("scrolled",window.scrollY>50));
+const mb=document.getElementById("mb"),nl=document.getElementById("nl");mb.addEventListener("click",()=>{mb.classList.toggle("active");nl.classList.toggle("open")});function cm(){mb.classList.remove("active");nl.classList.remove("open")}
+
+/* Reveal on scroll */
+const revEls=document.querySelectorAll(".rv,.rv-l,.rv-r,.rv-s,.rv-rot");const revObs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add("vis");revObs.unobserve(x.target)}})},{threshold:.06,rootMargin:"0px 0px -20px 0px"});revEls.forEach(e=>revObs.observe(e));
+
+/* Title char split animation */
+document.querySelectorAll("[data-split]").forEach(el=>{const t=el.textContent;el.innerHTML="";let ci=0;for(let i=0;i<t.length;i++){const s=document.createElement("span");s.className="char";s.textContent=t[i]===" "?"\u00A0":t[i];if(t[i]!=" "){s.style.transitionDelay=(ci*.028)+"s";ci++}el.appendChild(s)}});
+const tObs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add("anim");tObs.unobserve(x.target)}})},{threshold:.2});document.querySelectorAll(".s-title").forEach(t=>tObs.observe(t));
+
+/* Smooth scroll */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener("click",function(e){e.preventDefault();const t=document.querySelector(this.getAttribute("href"));if(t)t.scrollIntoView({behavior:"smooth",block:"start"})});});
+
+/* Deco parallax */
+window.addEventListener("scroll",()=>{const s=window.scrollY;document.querySelectorAll(".deco").forEach((d,i)=>{const speed=[.02,.015,.025,.018,.022][i%5];const dir=i%2===0?1:-1;d.style.transform=`translateY(${s*speed*dir}px)`})});
+
+/* Gear toggle */
+function toggleGear(){const el=document.getElementById("gear-full");const btn=document.getElementById("gear-toggle");if(el.style.maxHeight==="0px"||el.style.maxHeight==="0"){el.style.maxHeight=el.scrollHeight+"px";btn.textContent="collapse ↑";setTimeout(()=>{el.querySelectorAll(".rv").forEach(r=>r.classList.add("vis"))},100)}else{el.style.maxHeight="0px";btn.textContent="see the full rig →"}}
+
+/* Service card click toggle */
+document.querySelectorAll('.svc').forEach(card=>{card.addEventListener('click',()=>{card.classList.toggle('clicked')});});
+
+/* Class card click toggle */
+document.querySelectorAll('.cls').forEach(card=>{card.addEventListener('click',()=>{card.classList.toggle('clicked')});});
+
+/* Event item click */
+document.querySelectorAll('.ev-item').forEach(item=>{item.addEventListener('click',()=>{item.classList.toggle('clicked')});});
+
+/* Cursor glow on dark sections */
+const glow=document.getElementById('cursorGlow');
+const darkSections=['music','teaching','videos','contact'];
+let glowActive=false;
+document.addEventListener('mousemove',(e)=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px';const el=document.elementFromPoint(e.clientX,e.clientY);if(el){const sec=el.closest('section,.hero');if(sec&&(sec.classList.contains('hero')||darkSections.includes(sec.id))){if(!glowActive){glow.classList.add('active');glowActive=true}}else{if(glowActive){glow.classList.remove('active');glowActive=false}}}});
+
+/* Google Calendar */
+const GCAL_ID='0jd67j77f31mnfk5i0bfomaep0@group.calendar.google.com';const GCAL_KEY='AIzaSyBbEtkn6hgiJ6DJJg8st2QLwMEDUt8jL8o';
+async function loadShows(){const container=document.getElementById('live-events');if(!container)return;const now=new Date().toISOString();const url=`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(GCAL_ID)}/events?key=${GCAL_KEY}&timeMin=${now}&maxResults=8&singleEvents=true&orderBy=startTime`;try{const res=await fetch(url);if(!res.ok)throw new Error('Calendar fetch failed');const data=await res.json();const events=data.items||[];if(events.length===0){container.innerHTML=`<div class="ev-item rv vis"><span class="ev-date">TBA</span><div class="ev-info"><h4>New shows coming soon</h4><p>follow @simonoto for announcements</p></div></div>`;return}container.innerHTML=events.map(ev=>{const start=ev.start.dateTime||ev.start.date;const d=new Date(start);const month=d.toLocaleString('en-US',{month:'short'}).toUpperCase();const day=d.getDate();const time=ev.start.dateTime?d.toLocaleString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}).toLowerCase():'all day';const location=ev.location||'';return`<div class="ev-item rv vis"><span class="ev-date">${month} ${day}</span><div class="ev-info"><h4>${ev.summary||'Untitled Event'}</h4><p>${location?location+' · ':''}${time}</p></div></div>`}).join('')}catch(err){console.warn('Calendar load failed:',err)}}
+document.addEventListener('DOMContentLoaded',loadShows);
+</script>
+</body>
+</html>

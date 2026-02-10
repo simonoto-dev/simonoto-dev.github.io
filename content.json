@@ -1,0 +1,236 @@
+{
+  "_instructions": "Edit any value below, then run: python build.py. Images reference filenames in the images/ folder.",
+
+  "site": {
+    "title": "Simon Keyser Petty — Simonoto",
+    "nav_logo": "S.K.P.",
+    "copyright_year": "2026"
+  },
+
+  "hero": {
+    "tagline": "musician · producer · educator · oakland, ca",
+    "name_line1": "Simon",
+    "name_line2": "Keyser",
+    "name_line3": "Petty",
+    "subtitle": "Multi-instrumentalist, composer & producer. Running Studio S, directing Professor of Funk, performing across the Bay.",
+    "btn_primary": "listen now",
+    "btn_secondary": "book a session",
+    "stamp_1": "Oakland, CA",
+    "stamp_2": "#BAM forever",
+    "image_main": "Face Closeup.jpg",
+    "image_accent": "CJCConcert2.jpeg",
+    "video_youtube_id": "t7-fKnCdKOw"
+  },
+
+  "marquee": {
+    "items": ["Simonoto", "Professor of Funk", "Studio S", "Celestial Hotties", "D.A.T.A.M.O.S.H", "Slappers Only", "MOONGLOW TRIO", "Here/There", "Shredbeard" ]
+  },
+
+  "music": {
+    "label": "Music",
+    "title": "Simonoto Releases",
+    "subtitle": "Original cuts — funk, jazz, electronic, and whatever the groove requests.",
+    "badge": "Made live!",
+    "image_1": "Kodak1.jpg",
+    "image_2": "Redcig5.jpg",
+    "albums": [
+      {"num": "Ch.1", "title": "Simonoto Ch.1", "year": "2026 · 4 tracks", "badge": "new", "colors": ["#2D2218","#7A4A28","#D4943A"], "bandcamp_album_id": "2330220054", "bandcamp_url": "https://simonoto.bandcamp.com/album/simonoto-ch-1", "tracks": ["Track 1", "Track 2", "Track 3", "Track 4"]},
+      {"num": "Ch.2", "title": "Simonoto Ch.2", "year": "5/2026", "badge": null, "colors": ["#1a2822","#2a5244","#5a9a7a"], "tracks": ["Freeze ft. Freeze", "Lofi-Crazy", "White Lotus", "Dreaming"]},
+      {"num": "Ch.3", "title": "Simonoto Ch.3", "year": "6/2026", "badge": null, "colors": ["#2A1A22","#7A6279","#CDB1CC"], "tracks": ["Starline Jingle", "Tupper and Reed Theme", "DOPESAMPLE ft. Madison Bohrer", "Feladan ft. Madison Bohrer"]},
+      {"num": "Ch.4", "title": "Simonoto Ch.4", "year": "7/2026", "badge": null, "colors": ["#1a1a20","#5a2a3a","#ED2024"], "tracks": ["What is life? ft. Ian Santilliano", "Ownway ft. Sheldon Alexander, Clay Xavier", "Salsachipps ft. Caleb Sanders", "Spooky Season ft. Madison Bohrer"]},
+      {"num": "D.M.", "title": "D.A.T.A.M.O.S.H", "year": "8/2026 · 3 tracks", "badge": null, "colors": ["#0a0a12","#1a3a5a","#00ccff"], "tracks": ["Race My Thoughts", "Trying to Forget", "Lack of Ambition"]},
+      {"num": "C.H.", "title": "Celestial Hotties", "year": "coming soon · 8 tracks", "badge": null, "colors": ["#1a0a2a","#5a2a7a","#ff66cc"], "tracks": ["Tynomite!", "Nuthin' Betta' Than", "Funkybrushin", "Strange Brew", "Dreaming", "Meanmuggin", "Sugar Coated", "Swollen Eyeball"]}
+    ],
+    "bandcamp_album_id": "2330220054",
+    "bandcamp_url": "https://simonoto.bandcamp.com/album/simonoto-ch-1",
+    "streaming_links": {
+      "soundcloud": "https://soundcloud.com/simonoto",
+      "bandcamp": "https://simonoto.bandcamp.com",
+      "spotify": "#",
+      "youtube": "https://youtube.com/@shr3dbeard"
+    }
+  },
+
+  "studio": {
+    "label": "Studio S",
+    "title": "Production & Engineering",
+    "subtitle": "Professional recording, mixing, and production from Oakland — top-tier custom gear, shaped by years of experience in CJC's exclusive studio program and at Tiny Telephone and Hyde Street Studios.",
+    "copy": "Every session starts with <em>the music</em>. Whether you need a polished mix, a raw live take, or full production from scratch — I bring <em>musicianship first</em>, engineering second.",
+    "stamp": "since 2019",
+    "image_1": "Magilosquat.jpg",
+    "image_2": "console-selfie.jpg",
+    "services": [
+      {"num": "01", "title": "Recording & Tracking", "desc": "Full multi-track sessions. Solo to full band. Hybrid setup - Analog warmth meets modern workflow."},
+      {"num": "02", "title": "Mixing & Mastering", "desc": "Release-ready sound. Plugins + custom analog outboard from Pacifico Audio."},
+      {"num": "03", "title": "Full Production", "desc": "Arrangement to final master. Expert guidance and humble collaboration on every track."},
+      {"num": "04", "title": "Session Musician", "desc": "Guitar, bass, keys, drums, vocals. In-studio or remote. Whatever the project needs."}
+    ],
+    "quote": "Your humanity is your instrument.",
+    "quote_author": "Wayne Shorter"
+  },
+
+  "photo_break": {
+    "image": "polaroids.jpg",
+    "stamp": "studio moments"
+  },
+
+  "gear": {
+    "label": "The Rig",
+    "title": "Studio Gear",
+    "story_image": "Peacesign.png",
+    "story_text": "Built around custom analog gear from <strong>Pacifico Audio</strong> — designed by Cesar Delly, the legendary Oakland builder behind consoles for studios worldwide, including Otis McDonald's. Every preamp, every EQ — hand-built with rare vintage transformers.",
+    "categories": [
+      {
+        "name": "Console & Summing",
+        "items": [
+          {"name": "Custom 16-ch Summing Mixer", "note": "Pacifico Audio (Cesar Delly)"},
+          {"name": "6 Custom Preamps w/ vintage transformers", "note": "Pacifico Audio"},
+          {"name": "2 Chameleon Labs 1073 Preamps w/ EQ", "note": null}
+        ]
+      },
+      {
+        "name": "Outboard Processing",
+        "items": [
+          {"name": "\"LogicChild\" Mastering Comp/Saturator", "note": "Stam Audio"},
+          {"name": "4 Custom Mastering EQ", "note": "Pacifico Audio"}
+        ]
+      },
+      {
+        "name": "Conversion & Recording",
+        "items": [
+          {"name": "Universal Audio Apollo x8p, x16, x4", "note": null},
+          {"name": "Tandberg ¼\" 7.5 IPS Tape Machine", "note": null},
+          {"name": "Tascam Portastudio 4-Track", "note": null}
+        ]
+      },
+      {
+        "name": "Microphones",
+        "items": [
+          {"name": "Advanced Audio U47 clone", "note": "large diaphragm tube condenser"},
+          {"name": "Beesneez Arabella", "note": "Large diaphragm tube condenser"},
+          {"name": "Pacifico U87 Clone", "note": null},
+          {"name": "Pacifico U47 FET Clone (×2)", "note": null},
+          {"name": "Pacifico Mini Ribbon (×2)", "note": null},
+          {"name": "AKG D12 · Telefunken TD26", "note": null},
+          {"name": "Uher M534 (pair) · Warm WA-13, WA-44", "note": null},
+          {"name": "SM58, SM57 · SM7 (American)", "note": null},
+          {"name": "Unidyne III 54553 (pair) · v7 (pair)", "note": null}
+        ]
+      },
+      {
+        "name": "Drums & Percussion",
+        "items": [
+          {"name": "Sonor S Class 22\" — 5-piece", "note": null},
+          {"name": "Vintage Zildjian A Cymbals", "note": "1968"},
+          {"name": "Yamaha SD493 Snare", "note": "Steve Gadd model"},
+          {"name": "14\" Kenyan Claves + misc percussion", "note": null}
+        ]
+      },
+      {
+        "name": "Keys & Synths",
+        "items": [
+          {"name": "Rhodes Stage MK2", "note": "incoming"},
+          {"name": "Vintage MicroKorg", "note": null},
+          {"name": "DCP-300 Weighted Keyboard", "note": null}
+        ]
+      },
+      {
+        "name": "Guitar, Amps & Effects",
+        "items": [
+          {"name": "Reverend Kingsnake Tube Amp", "note": null},
+          {"name": "MarkBass Little Ninja 1000W + Ampeg 10\"", "note": null},
+          {"name": "Helix LT", "note": null},
+          {"name": "Red Panda Labs Context & Particle", "note": null},
+          {"name": "MXR Phase 90 phaser · Red Witch Chorus/Trem", "note": null},
+          {"name": "Modded Boss DS-1 Distortion · Sonic Research Strobe Tuner", "note": null}
+        ]
+      },
+      {
+        "name": "DI, Monitoring & Strings",
+        "items": [
+          {"name": "JDI Duplex · Motor City Bass DI · RC20", "note": null},
+          {"name": "Neumann KH120 Monitors", "note": null},
+          {"name": "JBL LSR 8 + Subwoofer", "note": null}
+        ]
+      },
+      {
+        "name": "Software",
+        "items": [
+          {"name": "UAD Complete · Goodhertz · iZotope · Soundtoys · Native Instruments · Sound Labs · Arturia", "note": null}
+        ]
+      }
+    ]
+  },
+
+  "teaching": {
+    "label": "Professor of Funk",
+    "title": "Classes & Education",
+    "intro": "Jazz-trained and accredited at California Jazz Conservatory, apprenticed under Otis McDonald. Real stage and studio chops, straight into the classroom. It's all about <em>authentic groove</em>.",
+    "stamp": "deep grooves",
+    "image_1": "funkensemble2024.jpg",
+    "image_2": "CJCConcert1.jpeg",
+    "classes": [
+      {"tag": "beginner", "title": "Groove Ensemble #1", "desc": "Classic recordings to current cuts — broken down, analyzed, performed. Recording & live shows at Tiny Telephone and Verdi Club.", "foot_1": "90 min", "foot_2": "directed by simon"},
+      {"tag": "intermediate", "title": "Groove Ensemble #2", "desc": "What it truly means to move people. Recording and gigging at Hyde Street, Tiny Telephone, Old Skool Cafe.", "foot_1": "90 min", "foot_2": "recording + gigs"},
+      {"tag": "studio", "title": "Studio Ensemble #1", "desc": "World-class studio workflow. Mix in the box, outboard gear, tape. Learn by doing.", "foot_1": "90 min", "foot_2": "hands-on studio"}
+    ]
+  },
+
+  "genre_marquee": {
+    "items": ["Funk", "Jazz", "Soul", "Gospel", "Hip-Hop", "R&B", "Groove", "americana", "folk", "punk", "Fusion", "Neo Soul", "Math Rock", "Death core", "Indie Rock", "Hyper-pop", "synthwave", "FONK", "lo-fi" ]
+  },
+
+  "events": {
+    "label": "Live",
+    "title": "Upcoming Shows & Events",
+    "booking_text": "Booking? Hit the",
+    "booking_link_text": "contact form",
+    "image": "Band Tuff.jpg",
+    "hotties_title": "Celestial Hotties Art Collective",
+    "hotties_desc": "Unforgettable nights of live music, visual art, and community across the Bay. Every show is different. Every show is a moment.",
+    "hotties_link": "https://instagram.com/simonoto",
+    "hotties_link_text": "follow for events →"
+  },
+
+  "contact": {
+    "label": "Get In Touch",
+    "title": "Let's Make Something",
+    "heading": "What's the vibe?",
+    "copy": "Studio time, lessons, session work, live bookings, or just connecting. I get back within 24 hours.",
+    "location": "Oakland, CA",
+    "formspree_id": "xnjbqdld",
+    "socials": {
+      "IG": "https://instagram.com/simonoto",
+      "TT": "https://www.tiktok.com/@simonoto_",
+      "YT": "https://youtube.com/@shr3dbeard",
+      "FB": "https://www.facebook.com/simon.keyserpetty/",
+      "SC": "https://soundcloud.com/simonoto"
+    }
+  },
+
+  "testimonials": {
+    "label": "Kind Words",
+    "title": "What People Say",
+    "items": [
+      {"quote": "Simon is easy to work with, quick, professional, and insightful as a producer.  Every project we work together has a spark!", "name": "Tess Posner", "role": "Professional recording artist and composer", "image": "client-testimony.jpg"},
+      {"quote": "“Simon met my son on his level  and helped develop his confidence to play live.”", "name": "Caroline Munck", "role": "Parent of Student", "image": "parent-testimony.jpg"},
+      {"quote": "Placeholder testimonial — edit in content.json", "name": "Jason Mulvaney", "role": "Studio S client (live show)", "image": "club-testimony.jpg"}
+    ]
+  },
+
+  "videos": {
+    "label": "Watch",
+    "title": "Sessions & Lessons",
+    "subtitle": "Live from the studio and the classroom.",
+    "items": [
+      {"youtube_id": "PLACEHOLDER", "title": "Studio Session — Coming Soon", "desc": "Full band live recording at Studio S"},
+      {"youtube_id": "PLACEHOLDER", "title": "Professor of Funk — Coming Soon", "desc": "Teaching clip from Groove Ensemble"},
+      {"youtube_id": "PLACEHOLDER", "title": "Live Performance — Coming Soon", "desc": "Celestial Hotties live at a Bay Area venue"}
+    ]
+  },
+
+  "calendar": {
+    "calendar_id": "0jd67j77f31mnfk5i0bfomaep0@group.calendar.google.com",
+    "api_key": "AIzaSyBbEtkn6hgiJ6DJJg8st2QLwMEDUt8jL8o"
+  }
+}
