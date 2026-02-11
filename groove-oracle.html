@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Groove Oracle">
+<meta name="theme-color" content="#08070d">
+<title>Groove Oracle</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#08070d;--s:#110f18;--s2:#1d1c24;--bd:#2a2838;--acc:#d4943a;--gold:#fbbf24;--prp:#a78bfa;--pnk:#f472b6;--cyn:#22d3ee;--grn:#4ade80;--red:#f87171;--txt:#e8e8ef;--mut:#7a7890;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,sans-serif;min-height:100vh;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0);}
+.wrap{max-width:500px;margin:0 auto;padding:24px 20px;}
+h1{font-family:'Fraunces',Georgia,serif;font-size:2.2rem;font-weight:900;text-align:center;margin:0;
+  background:linear-gradient(135deg,var(--acc),var(--gold),var(--pnk));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.sub{text-align:center;color:var(--mut);font-size:12px;margin:4px 0 16px;}
+canvas{width:100%;height:160px;border-radius:12px;display:block;margin-bottom:16px;touch-action:none;}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.card{background:var(--s);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;cursor:pointer;
+  transition:transform 0.2s,box-shadow 0.2s;min-height:140px;display:flex;flex-direction:column;-webkit-user-select:none;user-select:none;}
+.card:active{transform:scale(0.97);}
+.card-head{display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.card-icon{font-size:18px;}
+.card-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+.card-body{flex:1;font-size:13px;font-weight:600;line-height:1.4;}
+.card-foot{font-size:10px;color:var(--mut);text-align:center;margin-top:6px;}
+.card-meta{display:flex;gap:10px;font-size:11px;margin-top:4px;}
+.affirm{margin:0 0 14px;padding:16px;text-align:center;cursor:pointer;
+  background:linear-gradient(135deg,rgba(212,148,58,0.08),rgba(167,139,250,0.04));
+  border:1px solid var(--bd);border-radius:12px;-webkit-user-select:none;user-select:none;}
+.affirm-label{font-size:9px;color:var(--acc);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:4px;}
+.affirm-text{font-family:'Fraunces',Georgia,serif;font-size:15px;font-weight:700;line-height:1.5;}
+.oracle-btn{display:block;width:100%;padding:14px;border:none;border-radius:14px;font-size:16px;font-weight:800;
+  cursor:pointer;letter-spacing:0.5px;transition:transform 0.2s;
+  background:linear-gradient(135deg,var(--acc),var(--gold));color:#000;}
+.oracle-btn:active{transform:scale(0.96);}
+.rolls{text-align:center;color:var(--mut);font-size:11px;margin-top:6px;}
+.groove-btn{position:absolute;bottom:10px;right:10px;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:600;
+  cursor:pointer;border:1px solid var(--bd);background:var(--s);color:var(--mut);transition:all 0.3s;}
+.groove-btn.on{background:var(--acc);color:#000;border-color:var(--acc);}
+.viz-wrap{position:relative;margin-bottom:16px;}
+.foot{text-align:center;color:var(--mut);font-size:10px;margin-top:16px;padding-bottom:20px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p style="text-align:center;font-size:10px;color:var(--acc);text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:2px;">The Simonoto</p>
+  <h1>Groove Oracle</h1>
+  <div class="sub" id="greeting"></div>
+  <div class="viz-wrap">
+    <canvas id="viz" width="500" height="160"></canvas>
+    <button class="groove-btn" id="groove-toggle" onclick="toggleGroove()">▶ Activate</button>
+  </div>
+  <div class="cards">
+    <div class="card" style="border-top:3px solid var(--acc)" onclick="roll('practice')">
+      <div class="card-head"><span class="card-icon">🎸</span><span class="card-title" style="color:var(--acc)">Practice</span></div>
+      <div class="card-body" id="practice-text"></div>
+      <div class="card-meta" id="practice-meta"></div>
+      <div class="card-foot">tap to reroll</div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--prp)" onclick="roll('content')">
+      <div class="card-head"><span class="card-icon">📱</span><span class="card-title" style="color:var(--prp)">Content</span></div>
+      <div class="card-body" id="content-text"></div>
+      <div class="card-foot">tap to reroll</div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--cyn)" onclick="roll('collab')">
+      <div class="card-head"><span class="card-icon">🤝</span><span class="card-title" style="color:var(--cyn)">Collab</span></div>
+      <div class="card-body" id="collab-text"></div>
+      <div class="card-foot">tap to reroll</div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--pnk)" onclick="roll('wild')">
+      <div class="card-head"><span class="card-icon">🎲</span><span class="card-title" style="color:var(--pnk)">Wild Card</span></div>
+      <div class="card-body" id="wild-text"></div>
+      <div class="card-foot">tap to reroll</div>
+    </div>
+  </div>
+  <div class="affirm" onclick="roll('affirm')">
+    <div class="affirm-label">✨ Daily Affirmation (tap to refresh)</div>
+    <div class="affirm-text" id="affirm-text"></div>
+  </div>
+  <button class="oracle-btn" onclick="rollAll()">🔮 Consult the Oracle Again</button>
+  <div class="rolls" id="roll-count"></div>
+  <div class="foot">The groove is the message. Now go make something. 🎵</div>
+</div>
+<script>
+const P=[
+  {c:"Play your fav Ch.1 track on a different instrument.",d:"🌶️🌶️",t:"20m"},
+  {c:"Learn a Herbie Hancock voicing → 3 progressions.",d:"🌶️🌶️🌶️",t:"45m"},
+  {c:"Record a 60-second loop with only body percussion.",d:"🌶️",t:"15m"},
+  {c:"Transcribe a bass line by ear. Play it on guitar.",d:"🌶️🌶️",t:"30m"},
+  {c:"10 min: improvise over a drone in an unfamiliar key.",d:"🌶️",t:"10m"},
+  {c:"Write a melody using only 4 notes. Make it stick.",d:"🌶️🌶️🌶️",t:"25m"},
+  {c:"Play along to a genre you NEVER listen to.",d:"🌶️🌶️",t:"20m"},
+  {c:"Record yourself. Listen back. What surprised you?",d:"🌶️",t:"15m"},
+  {c:"Practice one song at HALF tempo. Feel every note.",d:"🌶️🌶️",t:"15m"},
+  {c:"Create a beat in Reaper using only kitchen sounds.",d:"🌶️🌶️🌶️",t:"40m"},
+  {c:"Play a chord progression eyes closed. Pure feel.",d:"🌶️",t:"10m"},
+  {c:"Learn the bridge of a standard you've been avoiding.",d:"🌶️🌶️🌶️",t:"30m"},
+  {c:"Take a BellDingThing riff → modulate through 3 keys.",d:"🌶️🌶️",t:"20m"},
+  {c:"Play along to Sly Stone. Absorb the pocket.",d:"🌶️🌶️",t:"25m"},
+  {c:"Compose a 16-bar piece about how you feel RIGHT NOW.",d:"🌶️🌶️",t:"20m"},
+  {c:"Listen to Tynomite! — write 3 things you'd change. Then DON'T.",d:"🌶️",t:"15m"},
+  {c:"Play only whole notes for 5 minutes. Every one counts.",d:"🌶️🌶️🌶️",t:"5m"},
+  {c:"Learn a D'Angelo guitar part by ear. No tabs.",d:"🌶️🌶️🌶️",t:"45m"},
+  {c:"Record a 1-min improv. Send it to someone you respect.",d:"🌶️🌶️",t:"10m"},
+];
+const CN=[
+  "Film a 15-sec clip of the weirdest sound your gear makes.",
+  "Post a 'what I'm listening to' story with a snippet.",
+  "Record yourself teaching a groove concept. Professor of Funk energy.",
+  "Show your pedalboard/gear with a quick caption.",
+  "Film before/after: rough demo vs. polished mix. 30 seconds.",
+  "Post a 'studio view' photo. Real > perfect.",
+  "Record a reaction to a song you love. Pure enthusiasm.",
+  "Share a chord voicing your students struggle with.",
+  "Film yourself playing along to whatever's on shuffle.",
+  "Post what inspired you today. A building, color, conversation.",
+  "One-take performance. No edits. Imperfection = charm.",
+  "Share a music hot take. Start a conversation.",
+  "Film Oakland from your studio. Set to your music.",
+  "30-second story about why you started playing.",
+  "Post your practice space. Where the magic happens.",
+];
+const AF=[
+  "You have 4 completed tracks ready. More than most achieve in a year.",
+  "Jazz degree + production chops + teaching = nobody sounds like you.",
+  "6 months of weekly releases from what you already have.",
+  "Professor of Funk at $200/hr proves your value.",
+  "The groove is the message. When you play, people feel it.",
+  "Tiny Telephone. Hyde Street. You belong in any room.",
+  "Chapter 1 exists because you had vision AND discipline.",
+  "One session closer to the player you want to become.",
+  "Your community supports you. The Bay knows your name.",
+  "The Otis method works. The site is live. You're ready.",
+  "Progress over perfection. Ship it. Let the music breathe.",
+  "Musician, producer, engineer, educator, entrepreneur. That's powerful.",
+];
+const CL=[
+  {i:"Commission a local visual artist for a music video.",e:"💜"},
+  {i:"Find an Oakland poet. Spoken word over your instrumental.",e:"💛"},
+  {i:"Hit up a coffee shop about monthly acoustic sets.",e:"💚"},
+  {i:"Text Julian RIGHT NOW about the Freeze session.",e:"🔥"},
+  {i:"Ask your wife to photograph your next practice session.",e:"💛"},
+  {i:"Find a CJC drummer. Record a raw duo jam.",e:"💚"},
+  {i:"Pitch a Bay Area music blogger your story.",e:"💜"},
+  {i:"Invite Victor Ko for a Data.Mosh session.",e:"🔥"},
+  {i:"Organize a Celestial Hotties jam. Film everything.",e:"💛"},
+  {i:"Reach out to KQED about a music education segment.",e:"💜"},
+];
+const WC=[
+  "🎲 Go to a record store. Buy the first album that catches your eye.",
+  "🎲 Write a song in a genre you've never tried. 30 minutes.",
+  "🎲 Call someone who inspired your music journey. Tell them.",
+  "🎲 Walk without headphones. What rhythms does the city have?",
+  "🎲 Cook a meal while listening to your own music.",
+  "🎲 Rearrange your studio. Even one thing changes perspective.",
+  "🎲 Write a letter to Simonoto one year from now.",
+  "🎲 Learn a Pokémon battle theme on guitar. Then funk it up.",
+  "🎲 Find an old recording of yourself. Marvel at how far you've come.",
+  "🎲 Go busking. Just you and a guitar. See what happens.",
+];
+function rand(a){return a[Math.floor(Math.random()*a.length)];}
+let rolls=0,grooveOn=false;
+function roll(type){
+  if(type==="practice"){const p=rand(P);document.getElementById("practice-text").textContent=p.c;document.getElementById("practice-meta").innerHTML='<span style="color:var(--red)">'+p.d+'</span><span style="color:var(--mut)">⏱ '+p.t+'</span>';}
+  if(type==="content")document.getElementById("content-text").textContent=rand(CN);
+  if(type==="collab"){const c=rand(CL);document.getElementById("collab-text").textContent=c.i+" "+c.e;}
+  if(type==="wild")document.getElementById("wild-text").textContent=rand(WC);
+  if(type==="affirm")document.getElementById("affirm-text").textContent='"'+rand(AF)+'"';
+}
+function rollAll(){rolls++;roll("practice");roll("content");roll("collab");roll("wild");roll("affirm");
+  document.getElementById("roll-count").textContent=rolls+" consultation"+(rolls>1?"s":"")+" today";}
+function toggleGroove(){
+  grooveOn=!grooveOn;
+  const btn=document.getElementById("groove-toggle");
+  btn.textContent=grooveOn?"🎵 Grooving...":"▶ Activate";
+  btn.className="groove-btn"+(grooveOn?" on":"");
+}
+const hr=new Date().getHours();
+document.getElementById("greeting").textContent=
+  (hr<12?"Rise and groove":hr<17?"Keep the groove alive":"Evening groove session")+
+  ", Kaze — "+new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
+const canvas=document.getElementById("viz"),ctx=canvas.getContext("2d");
+canvas.width=500;canvas.height=160;let t=0;
+const colors=["#d4943a","#a78bfa","#22d3ee","#f472b6","#4ade80"];
+function draw(){
+  t+=grooveOn?0.03:0.005;
+  ctx.fillStyle="rgba(8,7,13,0.15)";ctx.fillRect(0,0,500,160);
+  for(let i=0;i<5;i++){
+    ctx.beginPath();ctx.strokeStyle=colors[i];ctx.lineWidth=2;ctx.globalAlpha=0.6+Math.sin(t+i)*0.3;
+    for(let x=0;x<500;x++){
+      const f=0.015+i*0.005,a=(grooveOn?35:12)+Math.sin(t*0.5+i)*(grooveOn?18:4),
+            p=t*(1+i*0.3)+i*1.2,y=80+Math.sin(x*f+p)*a+Math.sin(x*f*2.1+p*0.7)*a*0.3;
+      x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.stroke();ctx.globalAlpha=1;
+  }
+  if(grooveOn){const p=Math.sin(t*4)*0.5+0.5;ctx.beginPath();ctx.arc(250,80,6+p*10,0,Math.PI*2);
+    ctx.fillStyle="rgba(212,148,58,"+(0.3+p*0.4)+")";ctx.fill();}
+  requestAnimationFrame(draw);
+}
+draw();rollAll();rolls=0;document.getElementById("roll-count").textContent="Fresh oracle readings every tap";
+if("serviceWorker"in navigator){const sw='self.addEventListener("install",e=>self.skipWaiting());self.addEventListener("activate",e=>self.clients.claim());';navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:"application/javascript"}))).catch(()=>{});}
+</script>
+</body>
+</html>
