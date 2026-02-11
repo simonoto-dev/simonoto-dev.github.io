@@ -1,20 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>🚄 Japan Adventure — Bonito Express</title>
-  <meta name="description" content="Kawaii Japan vacation planner with Conductor Bonito" />
-  <meta name="theme-color" content="#FF6B9D" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet" />
+  <meta name="theme-color" content="#FF6B9D"/>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body, #root { min-height: 100vh; min-height: 100dvh; }
-    body { font-family: 'M PLUS Rounded 1c', sans-serif; -webkit-font-smoothing: antialiased; background: #FFF5F9; overflow-x: hidden; }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #FFB3D9; border-radius: 3px; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body,#root{min-height:100vh;min-height:100dvh}
+    body{font-family:'M PLUS Rounded 1c',sans-serif;-webkit-font-smoothing:antialiased;background:#FFF5F9;overflow-x:hidden}
+    ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#FFB3D9;border-radius:3px}
     @keyframes yukiFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
     @keyframes fadeSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
     @keyframes trainMove{0%{transform:translateX(-120%)}100%{transform:translateX(250%)}}
@@ -23,7 +19,6 @@
     @keyframes stickerDrift1{0%,100%{transform:translate(0,0) rotate(0deg)}25%{transform:translate(5px,-8px) rotate(5deg)}50%{transform:translate(-3px,-14px) rotate(-3deg)}75%{transform:translate(4px,-6px) rotate(4deg)}}
     @keyframes stickerDrift2{0%,100%{transform:translate(0,0) rotate(0deg)}33%{transform:translate(-6px,-10px) rotate(-6deg)}66%{transform:translate(4px,-5px) rotate(4deg)}}
     @keyframes stickerBounce{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-12px) scale(1.15)}}
-    @keyframes stickerSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
     @keyframes stickerSparkle{0%,100%{opacity:0.1;transform:scale(0.8)}50%{opacity:0.3;transform:scale(1.3)}}
     @keyframes stickerWave{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}}
     @keyframes stickerSwing{0%,100%{transform:rotate(-8deg) translateY(0)}50%{transform:rotate(8deg) translateY(-5px)}}
@@ -36,164 +31,187 @@
     @keyframes splashSticker{0%,100%{transform:translateY(0) rotate(0deg) scale(1)}25%{transform:translateY(-12px) rotate(5deg) scale(1.1)}50%{transform:translateY(-20px) rotate(-3deg) scale(1.05)}75%{transform:translateY(-8px) rotate(2deg) scale(1.08)}}
     @keyframes trainRoll{0%{transform:translateX(-150%)}100%{transform:translateX(150%)}}
     @keyframes sparkleFloat{0%,100%{opacity:0;transform:scale(0) translateY(0)}50%{opacity:1;transform:scale(1) translateY(-20px)}}
-    @keyframes tailWag{0%,100%{transform:rotate(-15deg)}50%{transform:rotate(15deg)}}
-    @keyframes earTwitch{0%,90%,100%{transform:rotate(0deg)}93%{transform:rotate(-8deg)}96%{transform:rotate(5deg)}}
+    @keyframes tailWag{0%,100%{transform-origin:bottom left;transform:rotate(-12deg)}50%{transform-origin:bottom left;transform:rotate(12deg)}}
+    @keyframes earTwitch{0%,85%,100%{transform:scaleY(1)}90%{transform:scaleY(0.85)}95%{transform:scaleY(1.05)}}
+    textarea,input{font-family:'M PLUS Rounded 1c',sans-serif}
+    .edit-btn{background:none;border:1.5px dashed #FFB3D9;border-radius:10px;padding:4px 10px;font-size:11px;color:#FF6B9D;cursor:pointer;font-weight:700;font-family:'M PLUS Rounded 1c',sans-serif;transition:all .2s}
+    .edit-btn:hover{background:#FF6B9D10;border-style:solid}
+    .save-btn{background:linear-gradient(135deg,#FF6B9D,#C77DFF);border:none;border-radius:10px;padding:6px 14px;font-size:11px;color:white;cursor:pointer;font-weight:900;font-family:'M PLUS Rounded 1c',sans-serif;box-shadow:0 2px 8px rgba(255,107,157,0.3)}
+    .note-area{width:100%;border:2px solid #FFE0F0;border-radius:14px;padding:10px 14px;font-size:13px;resize:vertical;min-height:60px;outline:none;font-family:'M PLUS Rounded 1c',sans-serif;transition:border-color .2s;background:#FFFAFC}
+    .note-area:focus{border-color:#FF6B9D}
   </style>
 </head>
 <body>
-  <div id="root"></div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
-  <script type="text/babel">
-const{useState,useEffect}=React;
-const DAYS=[{id:1,date:"Day 1",title:"Tokyo Arrival ✈️",subtitle:"Shibuya & Harajuku",color:"#FF6B9D",emoji:"🗼",events:[{time:"14:00",title:"Arrive at Narita Airport",icon:"✈️",type:"travel",note:"Take Narita Express to Shibuya (~90 min)",mapQuery:"Narita+Airport+Tokyo"},{time:"16:00",title:"Check in to Airbnb",icon:"🏠",type:"stay",note:"Drop bags, freshen up",mapQuery:"Shibuya+Station+Tokyo"},{time:"17:30",title:"Explore Takeshita Street",icon:"🛍️",type:"explore",note:"Harajuku's famous kawaii shopping street!",mapQuery:"Takeshita+Street+Harajuku+Tokyo"},{time:"19:00",title:"Dinner at Genki Sushi",icon:"🍣",type:"food",note:"Conveyor belt sushi experience",mapQuery:"Genki+Sushi+Shibuya+Tokyo"},{time:"21:00",title:"Shibuya Crossing at Night",icon:"🌃",type:"explore",note:"See the famous scramble crossing lit up!",mapQuery:"Shibuya+Crossing+Tokyo"}]},{id:2,date:"Day 2",title:"Classic Tokyo 🏯",subtitle:"Asakusa & Akihabara",color:"#9B59FF",emoji:"⛩️",events:[{time:"08:00",title:"Breakfast at Tsukiji Outer Market",icon:"🐟",type:"food",note:"Fresh sushi & tamagoyaki for breakfast",mapQuery:"Tsukiji+Outer+Market+Tokyo"},{time:"10:00",title:"Senso-ji Temple",icon:"⛩️",type:"explore",note:"Tokyo's oldest temple — get fortunes!",mapQuery:"Senso-ji+Temple+Tokyo"},{time:"12:30",title:"Lunch in Asakusa",icon:"🍜",type:"food",note:"Try tempura or monjayaki",mapQuery:"Asakusa+Tokyo"},{time:"14:00",title:"Akihabara Electric Town",icon:"🎮",type:"explore",note:"Anime, games, & electronics paradise",mapQuery:"Akihabara+Tokyo"},{time:"17:00",title:"TeamLab Planets",icon:"🎨",type:"explore",note:"Immersive digital art — book tickets!",mapQuery:"TeamLab+Planets+Tokyo"},{time:"20:00",title:"Ramen in Shinjuku",icon:"🍜",type:"food",note:"Fuunji tsukemen or Ichiran ramen",mapQuery:"Shinjuku+Ramen+Street+Tokyo"}]},{id:3,date:"Day 3",title:"Day Trip 🗻",subtitle:"Kamakura",color:"#00C9A7",emoji:"🌸",events:[{time:"07:30",title:"Early Train Departure",icon:"🚄",type:"travel",note:"Take JR line to Kamakura (~1 hr)",mapQuery:"Kamakura+Station"},{time:"09:00",title:"Great Buddha (Daibutsu)",icon:"🗿",type:"explore",note:"Iconic 13m bronze Buddha statue",mapQuery:"Kotoku-in+Kamakura"},{time:"11:00",title:"Hokokuji Bamboo Temple",icon:"🎋",type:"explore",note:"Stunning bamboo grove + matcha tea",mapQuery:"Hokokuji+Temple+Kamakura"},{time:"12:30",title:"Komachi-dori Street Lunch",icon:"🍡",type:"food",note:"Street food & cute shops",mapQuery:"Komachi-dori+Kamakura"},{time:"14:30",title:"Enoshima Island",icon:"🏝️",type:"explore",note:"Sea caves, shrines & ocean views",mapQuery:"Enoshima+Island"},{time:"18:00",title:"Return to Tokyo",icon:"🚃",type:"travel",note:"Rest up for tomorrow!",mapQuery:"Shibuya+Station+Tokyo"}]},{id:4,date:"Day 4",title:"Culture Day 🎌",subtitle:"Meiji Shrine & Omotesando",color:"#FF9F43",emoji:"🎎",events:[{time:"08:00",title:"Meiji Shrine Morning Walk",icon:"⛩️",type:"explore",note:"Peaceful morning at this forest shrine",mapQuery:"Meiji+Shrine+Tokyo"},{time:"10:30",title:"Omotesando Shopping",icon:"🛍️",type:"explore",note:"High-end fashion boulevard",mapQuery:"Omotesando+Tokyo"},{time:"12:00",title:"Cat Cafe Visit",icon:"🐱",type:"explore",note:"Cuddle with cats! Book ahead.",mapQuery:"Cat+Cafe+Harajuku+Tokyo"},{time:"14:00",title:"Yoyogi Park Picnic",icon:"🌳",type:"explore",note:"Grab konbini snacks and relax",mapQuery:"Yoyogi+Park+Tokyo"},{time:"16:00",title:"Shinjuku Gyoen Garden",icon:"🌺",type:"explore",note:"Beautiful traditional garden",mapQuery:"Shinjuku+Gyoen+Tokyo"},{time:"19:00",title:"Golden Gai Bar Hopping",icon:"🍶",type:"food",note:"Tiny themed bars — unforgettable!",mapQuery:"Golden+Gai+Shinjuku+Tokyo"}]},{id:5,date:"Day 5",title:"Kyoto Bound 🚅",subtitle:"Shinkansen & Temples",color:"#E84393",emoji:"🚄",events:[{time:"07:00",title:"Shinkansen to Kyoto",icon:"🚅",type:"travel",note:"Bullet train from Tokyo Station (~2.5 hrs)",mapQuery:"Tokyo+Station"},{time:"10:00",title:"Check in Kyoto Airbnb",icon:"🏠",type:"stay",note:"Traditional machiya house stay!",mapQuery:"Kyoto+Station"},{time:"11:30",title:"Fushimi Inari Shrine",icon:"⛩️",type:"explore",note:"Thousands of orange torii gates!",mapQuery:"Fushimi+Inari+Shrine+Kyoto"},{time:"14:00",title:"Nishiki Market Lunch",icon:"🍡",type:"food",note:"Kyoto's kitchen — street food heaven",mapQuery:"Nishiki+Market+Kyoto"},{time:"16:00",title:"Kinkaku-ji Golden Pavilion",icon:"🏯",type:"explore",note:"The iconic golden temple",mapQuery:"Kinkaku-ji+Kyoto"},{time:"19:00",title:"Pontocho Alley Dinner",icon:"🏮",type:"food",note:"Atmospheric riverside dining",mapQuery:"Pontocho+Alley+Kyoto"}]}];
-const ACCOMMODATIONS=[{name:"Shibuya Cozy Apartment",location:"Shibuya, Tokyo",dates:"Days 1-4",price:"¥12,000/night",amenities:["WiFi","Kitchen","Washer","Near Station"],emoji:"🏠",color:"#FF6B9D",airbnbSearch:"Shibuya+Tokyo+Japan"},{name:"Kyoto Machiya House",location:"Higashiyama, Kyoto",dates:"Days 5-7",price:"¥15,000/night",amenities:["Traditional","Garden","Futon","Tea Room"],emoji:"🏡",color:"#9B59FF",airbnbSearch:"Higashiyama+Kyoto+Japan"}];
-const PACKING_INIT=[{item:"Passport & Copies",checked:false,emoji:"📕"},{item:"JR Pass / IC Card",checked:false,emoji:"🎫"},{item:"Portable WiFi / SIM",checked:false,emoji:"📶"},{item:"Comfortable Walking Shoes",checked:false,emoji:"👟"},{item:"Universal Adapter",checked:false,emoji:"🔌"},{item:"Cash (Yen)",checked:false,emoji:"💴"},{item:"Rain Jacket / Umbrella",checked:false,emoji:"☂️"},{item:"Sunscreen",checked:false,emoji:"🧴"},{item:"Medications",checked:false,emoji:"💊"},{item:"Snacks for Flight",checked:false,emoji:"🍙"}];
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script type="text/babel">
+const{useState,useEffect,useCallback}=React;
+
+/* ===== STORAGE HELPERS ===== */
+const STORE_KEY="bonito-japan-";
+async function loadData(key,fallback){try{const r=await window.storage.get(STORE_KEY+key);return r?JSON.parse(r.value):fallback}catch(e){return fallback}}
+async function saveData(key,val){try{await window.storage.set(STORE_KEY+key,JSON.stringify(val))}catch(e){console.error("save error",e)}}
+
+/* ===== DEFAULT DATA ===== */
+const DEFAULT_DAYS=[
+  {id:1,date:"Day 1",title:"Tokyo Arrival ✈️",subtitle:"Shibuya & Harajuku",color:"#FF6B9D",emoji:"🗼",note:"",events:[{time:"14:00",title:"Arrive at Narita Airport",icon:"✈️",type:"travel",note:"Take Narita Express to Shibuya (~90 min)",mapQuery:"Narita+Airport+Tokyo"},{time:"16:00",title:"Check in to Airbnb",icon:"🏠",type:"stay",note:"Drop bags, freshen up",mapQuery:"Shibuya+Station+Tokyo"},{time:"17:30",title:"Explore Takeshita Street",icon:"🛍️",type:"explore",note:"Harajuku's famous kawaii shopping street!",mapQuery:"Takeshita+Street+Harajuku+Tokyo"},{time:"19:00",title:"Dinner at Genki Sushi",icon:"🍣",type:"food",note:"Conveyor belt sushi experience",mapQuery:"Genki+Sushi+Shibuya+Tokyo"},{time:"21:00",title:"Shibuya Crossing at Night",icon:"🌃",type:"explore",note:"See the famous scramble crossing lit up!",mapQuery:"Shibuya+Crossing+Tokyo"}]},
+  {id:2,date:"Day 2",title:"Classic Tokyo 🏯",subtitle:"Asakusa & Akihabara",color:"#9B59FF",emoji:"⛩️",note:"",events:[{time:"08:00",title:"Breakfast at Tsukiji Outer Market",icon:"🐟",type:"food",note:"Fresh sushi & tamagoyaki for breakfast",mapQuery:"Tsukiji+Outer+Market+Tokyo"},{time:"10:00",title:"Senso-ji Temple",icon:"⛩️",type:"explore",note:"Tokyo's oldest temple — get fortunes!",mapQuery:"Senso-ji+Temple+Tokyo"},{time:"12:30",title:"Lunch in Asakusa",icon:"🍜",type:"food",note:"Try tempura or monjayaki",mapQuery:"Asakusa+Tokyo"},{time:"14:00",title:"Akihabara Electric Town",icon:"🎮",type:"explore",note:"Anime, games, & electronics paradise",mapQuery:"Akihabara+Tokyo"},{time:"17:00",title:"TeamLab Planets",icon:"🎨",type:"explore",note:"Immersive digital art — book tickets!",mapQuery:"TeamLab+Planets+Tokyo"},{time:"20:00",title:"Ramen in Shinjuku",icon:"🍜",type:"food",note:"Fuunji tsukemen or Ichiran ramen",mapQuery:"Shinjuku+Ramen+Street+Tokyo"}]},
+  {id:3,date:"Day 3",title:"Day Trip 🗻",subtitle:"Kamakura",color:"#00C9A7",emoji:"🌸",note:"",events:[{time:"07:30",title:"Early Train Departure",icon:"🚄",type:"travel",note:"Take JR line to Kamakura (~1 hr)",mapQuery:"Kamakura+Station"},{time:"09:00",title:"Great Buddha (Daibutsu)",icon:"🗿",type:"explore",note:"Iconic 13m bronze Buddha statue",mapQuery:"Kotoku-in+Kamakura"},{time:"11:00",title:"Hokokuji Bamboo Temple",icon:"🎋",type:"explore",note:"Stunning bamboo grove + matcha tea",mapQuery:"Hokokuji+Temple+Kamakura"},{time:"12:30",title:"Komachi-dori Street Lunch",icon:"🍡",type:"food",note:"Street food & cute shops",mapQuery:"Komachi-dori+Kamakura"},{time:"14:30",title:"Enoshima Island",icon:"🏝️",type:"explore",note:"Sea caves, shrines & ocean views",mapQuery:"Enoshima+Island"},{time:"18:00",title:"Return to Tokyo",icon:"🚃",type:"travel",note:"Rest up for tomorrow!",mapQuery:"Shibuya+Station+Tokyo"}]},
+  {id:4,date:"Day 4",title:"Culture Day 🎌",subtitle:"Meiji Shrine & Omotesando",color:"#FF9F43",emoji:"🎎",note:"",events:[{time:"08:00",title:"Meiji Shrine Morning Walk",icon:"⛩️",type:"explore",note:"Peaceful morning at this forest shrine",mapQuery:"Meiji+Shrine+Tokyo"},{time:"10:30",title:"Omotesando Shopping",icon:"🛍️",type:"explore",note:"High-end fashion boulevard",mapQuery:"Omotesando+Tokyo"},{time:"12:00",title:"Cat Cafe Visit",icon:"🐱",type:"explore",note:"Cuddle with cats! Book ahead.",mapQuery:"Cat+Cafe+Harajuku+Tokyo"},{time:"14:00",title:"Yoyogi Park Picnic",icon:"🌳",type:"explore",note:"Grab konbini snacks and relax",mapQuery:"Yoyogi+Park+Tokyo"},{time:"16:00",title:"Shinjuku Gyoen Garden",icon:"🌺",type:"explore",note:"Beautiful traditional garden",mapQuery:"Shinjuku+Gyoen+Tokyo"},{time:"19:00",title:"Golden Gai Bar Hopping",icon:"🍶",type:"food",note:"Tiny themed bars — unforgettable!",mapQuery:"Golden+Gai+Shinjuku+Tokyo"}]},
+  {id:5,date:"Day 5",title:"Kyoto Bound 🚅",subtitle:"Shinkansen & Temples",color:"#E84393",emoji:"🚄",note:"",events:[{time:"07:00",title:"Shinkansen to Kyoto",icon:"🚅",type:"travel",note:"Bullet train from Tokyo Station (~2.5 hrs)",mapQuery:"Tokyo+Station"},{time:"10:00",title:"Check in Kyoto Airbnb",icon:"🏠",type:"stay",note:"Traditional machiya house stay!",mapQuery:"Kyoto+Station"},{time:"11:30",title:"Fushimi Inari Shrine",icon:"⛩️",type:"explore",note:"Thousands of orange torii gates!",mapQuery:"Fushimi+Inari+Shrine+Kyoto"},{time:"14:00",title:"Nishiki Market Lunch",icon:"🍡",type:"food",note:"Kyoto's kitchen — street food heaven",mapQuery:"Nishiki+Market+Kyoto"},{time:"16:00",title:"Kinkaku-ji Golden Pavilion",icon:"🏯",type:"explore",note:"The iconic golden temple",mapQuery:"Kinkaku-ji+Kyoto"},{time:"19:00",title:"Pontocho Alley Dinner",icon:"🏮",type:"food",note:"Atmospheric riverside dining",mapQuery:"Pontocho+Alley+Kyoto"}]}
+];
+const DEFAULT_STAYS=[{name:"Shibuya Cozy Apartment",location:"Shibuya, Tokyo",dates:"Days 1-4",price:"¥12,000/night",amenities:["WiFi","Kitchen","Washer","Near Station"],emoji:"🏠",color:"#FF6B9D",airbnbSearch:"Shibuya+Tokyo+Japan",note:""},{name:"Kyoto Machiya House",location:"Higashiyama, Kyoto",dates:"Days 5-7",price:"¥15,000/night",amenities:["Traditional","Garden","Futon","Tea Room"],emoji:"🏡",color:"#9B59FF",airbnbSearch:"Higashiyama+Kyoto+Japan",note:""}];
+const DEFAULT_PACKING=[{item:"Passport & Copies",checked:false,emoji:"📕"},{item:"JR Pass / IC Card",checked:false,emoji:"🎫"},{item:"Portable WiFi / SIM",checked:false,emoji:"📶"},{item:"Comfortable Walking Shoes",checked:false,emoji:"👟"},{item:"Universal Adapter",checked:false,emoji:"🔌"},{item:"Cash (Yen)",checked:false,emoji:"💴"},{item:"Rain Jacket / Umbrella",checked:false,emoji:"☂️"},{item:"Sunscreen",checked:false,emoji:"🧴"},{item:"Medications",checked:false,emoji:"💊"},{item:"Snacks for Flight",checked:false,emoji:"🍙"}];
 const PHRASES=[{jp:"こんにちは",en:"Hello",romaji:"Konnichiwa"},{jp:"ありがとう",en:"Thank you",romaji:"Arigatou"},{jp:"すみません",en:"Excuse me",romaji:"Sumimasen"},{jp:"いくらですか",en:"How much?",romaji:"Ikura desu ka"},{jp:"お願いします",en:"Please",romaji:"Onegaishimasu"},{jp:"美味しい！",en:"Delicious!",romaji:"Oishii!"},{jp:"トイレはどこ",en:"Where's the toilet?",romaji:"Toire wa doko"},{jp:"駅はどこ",en:"Where's the station?",romaji:"Eki wa doko"}];
 const typeColors={travel:{bg:"#E8F8FF",border:"#7EC8E3"},food:{bg:"#FFF5E6",border:"#FFB347"},explore:{bg:"#F0FFF0",border:"#77DD77"},stay:{bg:"#FFF0F5",border:"#FF6B9D"}};
-const GUIDE_MESSAGES={home:"にゃ～ん！Welcome aboard the Bonito Express! 🐱🚄 I'm Conductor Bonito — your purrfect guide to Japan! Next stop: amazing adventures! 🌸✨",itinerary:"Doors closing～! にゃ！🚄💨 Here's your daily route map! Tap any station to see it on Google Maps! Don't forget your IC card! ピッ！",stays:"Arriving at your cozy napping spots! 🏠✨ I found the most purr-fect places near all the best train lines! にゃ～",packing:"Pre-departure checklist! 🎒 A good conductor always double-checks! Even cats know to pack their essentials! にゃ！✓",phrases:"Attention passengers! 🗣️📢 Learn these phrases and you'll charm everyone in Japan! がんばってにゃ～！"};
+const GUIDE_MSGS={home:"にゃ～ん！Welcome aboard the Bonito Express! 🐱🚄 I'm Conductor Bonito — your purrfect guide to Japan! Tap ✏️ to edit anything! 🌸✨",itinerary:"Doors closing～! にゃ！🚄💨 Tap any station for Google Maps! Tap ✏️ to edit stops or add notes! ピッ！",stays:"Your cozy napping spots! 🏠✨ Tap ✏️ to edit details or add notes about your stays! にゃ～",packing:"Pre-departure checklist! 🎒 Tap to check items, ✏️ to edit, ➕ to add more! にゃ！✓",phrases:"Useful phrases for your trip! 🗣️📢 がんばってにゃ～！",notes:"Your personal trip journal! 📝 Write anything — ideas, wishlists, reminders! にゃ～✨",partner:"See what your travel partner has planned! 🐾 You can peek but not edit — that's their adventure! にゃ～"};
+const PROFILE_COLORS={A:{primary:"#FF6B9D",accent:"#E84393",name:"Profile A"},B:{primary:"#4ECDC4",accent:"#2C9F97",name:"Profile B"}};
 
-/* === SHINKANSEN SVG === */
+/* ===== SHINKANSEN SVG ===== */
 function ShinkansenTrain({width=280}){
-  return(
-    <svg width={width} height={Math.round(width*0.14)} viewBox="0 0 280 40" style={{display:"block"}}>
-      <line x1="-10" y1="18" x2="-2" y2="18" stroke="white" strokeWidth="1.5" opacity="0.4"/>
-      <line x1="-15" y1="24" x2="-4" y2="24" stroke="white" strokeWidth="1" opacity="0.3"/>
-      <line x1="-8" y1="30" x2="-1" y2="30" stroke="white" strokeWidth="1" opacity="0.25"/>
-      <path d="M0 28 Q8 28 18 24 Q28 18 40 16 L40 28 Q40 32 36 32 L4 32 Q0 32 0 28 Z" fill="white"/>
-      <path d="M18 24 Q28 18 40 16 L40 20 Q30 21 20 26 Z" fill="#0066CC"/>
-      <path d="M2 29 Q10 27 20 25 Q30 22 40 20 L40 22 Q30 24 20 27 Q10 29 2 31 Z" fill="#0066CC"/>
-      <circle cx="10" cy="27" r="2.5" fill="#FFE066"/><circle cx="10" cy="27" r="1.5" fill="#FFF8CC"/>
-      <rect x="40" y="14" width="190" height="18" rx="2" fill="white"/>
-      <rect x="40" y="20" width="190" height="4" fill="#0066CC"/>
-      {[0,1,2,3,4,5,6,7,8,9,10,11].map(i=><React.Fragment key={i}><rect x={46+i*16} y={15.5} width="10" height="4" rx="1.5" fill="#B8D8F0"/><rect x={46+i*16} y={15.5} width="10" height="1.5" rx="1" fill="#D0E8FF" opacity="0.5"/></React.Fragment>)}
-      <rect x="78" y="14.5" width="6" height="11" rx="1" fill="#E8E8E8" stroke="#CCC" strokeWidth="0.5"/>
-      <rect x="142" y="14.5" width="6" height="11" rx="1" fill="#E8E8E8" stroke="#CCC" strokeWidth="0.5"/>
-      <rect x="206" y="14.5" width="6" height="11" rx="1" fill="#E8E8E8" stroke="#CCC" strokeWidth="0.5"/>
-      <rect x="230" y="14" width="20" height="18" rx="2" fill="white"/>
-      <rect x="230" y="20" width="20" height="4" fill="#0066CC"/>
-      <path d="M250 14 Q258 14 260 18 L260 28 Q258 32 250 32 L250 14 Z" fill="white"/>
-      <path d="M250 20 Q256 20 258 22 L258 24 Q256 26 250 24 Z" fill="#0066CC"/>
-      <circle cx="257" cy="17" r="1.5" fill="#FF4444"/>
-      <rect x="60" y="12" width="170" height="3" rx="1.5" fill="#F0F0F0"/>
-      <line x1="120" y1="12" x2="118" y2="6" stroke="#999" strokeWidth="1.5"/>
-      <line x1="118" y1="6" x2="126" y2="3" stroke="#999" strokeWidth="1.2"/>
-      <line x1="126" y1="3" x2="124" y2="6" stroke="#999" strokeWidth="1.2"/>
-      <line x1="124" y1="6" x2="122" y2="12" stroke="#999" strokeWidth="1"/>
-      <rect x="5" y="32" width="250" height="3" rx="1.5" fill="#444"/>
-      <rect x="50" y="33" width="24" height="4" rx="2" fill="#333"/>
-      <circle cx="56" cy="37" r="2.5" fill="#555"/><circle cx="56" cy="37" r="1.5" fill="#777"/>
-      <circle cx="68" cy="37" r="2.5" fill="#555"/><circle cx="68" cy="37" r="1.5" fill="#777"/>
-      <rect x="180" y="33" width="24" height="4" rx="2" fill="#333"/>
-      <circle cx="186" cy="37" r="2.5" fill="#555"/><circle cx="186" cy="37" r="1.5" fill="#777"/>
-      <circle cx="198" cy="37" r="2.5" fill="#555"/><circle cx="198" cy="37" r="1.5" fill="#777"/>
-      <rect x="100" y="25" width="14" height="6" rx="1" fill="#0066CC" opacity="0.15"/>
-      <text x="107" y="30" textAnchor="middle" fontSize="5" fill="#0066CC" fontWeight="bold" fontFamily="sans-serif">JR</text>
-      <text x="268" y="22" fontSize="10" fill="#FFD700" opacity="0.7">✦</text>
-    </svg>
-  );
+  return(<svg width={width} height={Math.round(width*0.14)} viewBox="0 0 280 40" style={{display:"block"}}>
+    <line x1="-10" y1="18" x2="-2" y2="18" stroke="white" strokeWidth="1.5" opacity="0.4"/>
+    <line x1="-15" y1="24" x2="-4" y2="24" stroke="white" strokeWidth="1" opacity="0.3"/>
+    <path d="M0 28Q8 28 18 24Q28 18 40 16L40 28Q40 32 36 32L4 32Q0 32 0 28Z" fill="white"/>
+    <path d="M18 24Q28 18 40 16L40 20Q30 21 20 26Z" fill="#0066CC"/>
+    <path d="M2 29Q10 27 20 25Q30 22 40 20L40 22Q30 24 20 27Q10 29 2 31Z" fill="#0066CC"/>
+    <circle cx="10" cy="27" r="2.5" fill="#FFE066"/><circle cx="10" cy="27" r="1.5" fill="#FFF8CC"/>
+    <rect x="40" y="14" width="190" height="18" rx="2" fill="white"/>
+    <rect x="40" y="20" width="190" height="4" fill="#0066CC"/>
+    {[0,1,2,3,4,5,6,7,8,9,10,11].map(i=><React.Fragment key={i}><rect x={46+i*16} y={15.5} width="10" height="4" rx="1.5" fill="#B8D8F0"/></React.Fragment>)}
+    <rect x="230" y="14" width="20" height="18" rx="2" fill="white"/><rect x="230" y="20" width="20" height="4" fill="#0066CC"/>
+    <path d="M250 14Q258 14 260 18L260 28Q258 32 250 32L250 14Z" fill="white"/>
+    <path d="M250 20Q256 20 258 22L258 24Q256 26 250 24Z" fill="#0066CC"/>
+    <circle cx="257" cy="17" r="1.5" fill="#FF4444"/>
+    <rect x="60" y="12" width="170" height="3" rx="1.5" fill="#F0F0F0"/>
+    <line x1="120" y1="12" x2="118" y2="6" stroke="#999" strokeWidth="1.5"/><line x1="118" y1="6" x2="126" y2="3" stroke="#999" strokeWidth="1.2"/>
+    <rect x="5" y="32" width="250" height="3" rx="1.5" fill="#444"/>
+    <rect x="50" y="33" width="24" height="4" rx="2" fill="#333"/><circle cx="56" cy="37" r="2.5" fill="#555"/><circle cx="68" cy="37" r="2.5" fill="#555"/>
+    <rect x="180" y="33" width="24" height="4" rx="2" fill="#333"/><circle cx="186" cy="37" r="2.5" fill="#555"/><circle cx="198" cy="37" r="2.5" fill="#555"/>
+    <text x="107" y="30" textAnchor="middle" fontSize="5" fill="#0066CC" fontWeight="bold" fontFamily="sans-serif">JR</text>
+    <text x="268" y="22" fontSize="10" fill="#FFD700" opacity="0.7">✦</text>
+  </svg>);
 }
 
-/* === CONDUCTOR BONITO — Orange Cat === */
+/* ===== CONDUCTOR BONITO — Sanrio-Style Orange Cat ===== */
 function ConductorBonito({expression="hearts",size=120,animate=true}){
   const eyeV={
-    hearts:<React.Fragment><g transform="translate(37,44)"><path d="M0 3Q0-1 3-1Q6-1 6 3Q6 7 3 10Q0 7 0 3Z" fill="#FF6B9D"/><path d="M6 3Q6-1 9-1Q12-1 12 3Q12 7 9 10Q6 7 6 3Z" fill="#FF6B9D"/><circle cx="3" cy="2" r="1.5" fill="white" opacity="0.8"/><circle cx="9" cy="1" r="0.8" fill="white" opacity="0.5"/></g><g transform="translate(55,44)"><path d="M0 3Q0-1 3-1Q6-1 6 3Q6 7 3 10Q0 7 0 3Z" fill="#FF6B9D"/><path d="M6 3Q6-1 9-1Q12-1 12 3Q12 7 9 10Q6 7 6 3Z" fill="#FF6B9D"/><circle cx="3" cy="2" r="1.5" fill="white" opacity="0.8"/><circle cx="9" cy="1" r="0.8" fill="white" opacity="0.5"/></g></React.Fragment>,
-    stars:<React.Fragment><g transform="translate(37,42)"><polygon points="6,0 7.5,4 12,4.5 8.5,7.5 9.5,12 6,9.5 2.5,12 3.5,7.5 0,4.5 4.5,4" fill="#FFD700"/><circle cx="5" cy="5" r="1.5" fill="white" opacity="0.7"/></g><g transform="translate(55,42)"><polygon points="6,0 7.5,4 12,4.5 8.5,7.5 9.5,12 6,9.5 2.5,12 3.5,7.5 0,4.5 4.5,4" fill="#FFD700"/><circle cx="5" cy="5" r="1.5" fill="white" opacity="0.7"/></g></React.Fragment>,
-    happy:<React.Fragment><ellipse cx="43" cy="48" rx="6" ry="7" fill="#2D1B00"/><ellipse cx="61" cy="48" rx="6" ry="7" fill="#2D1B00"/><circle cx="45" cy="45" r="2.5" fill="white"/><circle cx="63" cy="45" r="2.5" fill="white"/><circle cx="41" cy="48" r="1.2" fill="white" opacity="0.5"/><circle cx="59" cy="48" r="1.2" fill="white" opacity="0.5"/></React.Fragment>,
-    wink:<React.Fragment><g transform="translate(37,42)"><polygon points="6,0 7.5,4 12,4.5 8.5,7.5 9.5,12 6,9.5 2.5,12 3.5,7.5 0,4.5 4.5,4" fill="#FFD700"/><circle cx="5" cy="5" r="1.5" fill="white" opacity="0.7"/></g><path d="M56 49Q61 44 66 49" stroke="#2D1B00" strokeWidth="2.8" fill="none" strokeLinecap="round"/><text x="69" y="45" fontSize="7" fill="#FFD700">✦</text></React.Fragment>
+    hearts:<React.Fragment>
+      <g transform="translate(30,38)"><path d="M0 2.5Q0-0.5 2.5-0.5Q5-0.5 5 2.5Q5 5.5 2.5 8Q0 5.5 0 2.5Z" fill="#FF6B9D"/><path d="M5 2.5Q5-0.5 7.5-0.5Q10-0.5 10 2.5Q10 5.5 7.5 8Q5 5.5 5 2.5Z" fill="#FF6B9D"/><circle cx="2.5" cy="1.5" r="1.2" fill="white" opacity="0.8"/></g>
+      <g transform="translate(58,38)"><path d="M0 2.5Q0-0.5 2.5-0.5Q5-0.5 5 2.5Q5 5.5 2.5 8Q0 5.5 0 2.5Z" fill="#FF6B9D"/><path d="M5 2.5Q5-0.5 7.5-0.5Q10-0.5 10 2.5Q10 5.5 7.5 8Q5 5.5 5 2.5Z" fill="#FF6B9D"/><circle cx="2.5" cy="1.5" r="1.2" fill="white" opacity="0.8"/></g>
+    </React.Fragment>,
+    stars:<React.Fragment>
+      <g transform="translate(30,37)"><polygon points="5,0 6.5,3.5 10,4 7.5,6.5 8,10 5,8.2 2,10 2.5,6.5 0,4 3.5,3.5" fill="#FFD700"/><circle cx="4" cy="4" r="1.3" fill="white" opacity="0.7"/></g>
+      <g transform="translate(58,37)"><polygon points="5,0 6.5,3.5 10,4 7.5,6.5 8,10 5,8.2 2,10 2.5,6.5 0,4 3.5,3.5" fill="#FFD700"/><circle cx="4" cy="4" r="1.3" fill="white" opacity="0.7"/></g>
+    </React.Fragment>,
+    happy:<React.Fragment>
+      <ellipse cx="35" cy="42" rx="5" ry="5.5" fill="#2D1B00"/><ellipse cx="63" cy="42" rx="5" ry="5.5" fill="#2D1B00"/>
+      <circle cx="37" cy="40" r="2" fill="white"/><circle cx="65" cy="40" r="2" fill="white"/>
+      <circle cx="34" cy="43" r="1" fill="white" opacity="0.4"/><circle cx="62" cy="43" r="1" fill="white" opacity="0.4"/>
+    </React.Fragment>,
+    wink:<React.Fragment>
+      <g transform="translate(30,37)"><polygon points="5,0 6.5,3.5 10,4 7.5,6.5 8,10 5,8.2 2,10 2.5,6.5 0,4 3.5,3.5" fill="#FFD700"/><circle cx="4" cy="4" r="1.3" fill="white" opacity="0.7"/></g>
+      <path d="M58 43Q63 38 68 43" stroke="#2D1B00" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <text x="71" y="39" fontSize="6" fill="#FFD700">✦</text>
+    </React.Fragment>
   };
   const mthV={
-    hearts:<React.Fragment><path d="M46 59Q48 56 50 59Q52 56 54 59" stroke="#2D1B00" strokeWidth="1.8" fill="none" strokeLinecap="round"/><ellipse cx="50" cy="61" rx="2.5" ry="2" fill="#FF9999"/></React.Fragment>,
-    stars:<React.Fragment><ellipse cx="50" cy="60" rx="6" ry="5" fill="#2D1B00"/><ellipse cx="50" cy="58.5" rx="4.5" ry="2" fill="#FF9999"/></React.Fragment>,
-    happy:<path d="M46 59Q48 56 50 59Q52 56 54 59" stroke="#2D1B00" strokeWidth="1.8" fill="none" strokeLinecap="round"/>,
-    wink:<React.Fragment><path d="M46 59Q48 56 50 59Q52 56 54 59" stroke="#2D1B00" strokeWidth="1.8" fill="none" strokeLinecap="round"/><ellipse cx="50" cy="61" rx="2" ry="1.5" fill="#FF9999"/></React.Fragment>
+    hearts:<React.Fragment><path d="M44 52Q46 49.5 49 52Q52 49.5 54 52" stroke="#2D1B00" strokeWidth="1.5" fill="none" strokeLinecap="round"/><ellipse cx="49" cy="53.5" rx="2" ry="1.5" fill="#FF9999"/></React.Fragment>,
+    stars:<React.Fragment><ellipse cx="49" cy="53" rx="5" ry="4" fill="#2D1B00"/><ellipse cx="49" cy="51.5" rx="3.5" ry="1.5" fill="#FF9999"/></React.Fragment>,
+    happy:<path d="M44 52Q46 49.5 49 52Q52 49.5 54 52" stroke="#2D1B00" strokeWidth="1.5" fill="none" strokeLinecap="round"/>,
+    wink:<React.Fragment><path d="M44 52Q46 49.5 49 52Q52 49.5 54 52" stroke="#2D1B00" strokeWidth="1.5" fill="none" strokeLinecap="round"/><ellipse cx="49" cy="53.5" rx="1.5" ry="1.2" fill="#FF9999"/></React.Fragment>
   };
   return(
-    <svg width={size} height={size} viewBox="0 0 100 118" style={animate?{animation:"yukiFloat 3s ease-in-out infinite"}:{}}>
+    <svg width={size} height={size} viewBox="0 0 100 115" style={animate?{animation:"yukiFloat 3s ease-in-out infinite"}:{}}>
       <defs>
-        <linearGradient id="hG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#1B3A5C"/><stop offset="100%" stopColor="#2C5F8A"/></linearGradient>
-        <linearGradient id="uG" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stopColor="#1B3A5C"/><stop offset="100%" stopColor="#15304D"/></linearGradient>
-        <linearGradient id="fG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#F4A940"/><stop offset="100%" stopColor="#E8922A"/></linearGradient>
-        <radialGradient id="bG"><stop offset="0%" stopColor="#FFB3B3" stopOpacity="0.75"/><stop offset="100%" stopColor="#FFB3B3" stopOpacity="0"/></radialGradient>
+        <linearGradient id="hG2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#1B3A5C"/><stop offset="100%" stopColor="#2C5F8A"/></linearGradient>
+        <linearGradient id="uG2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stopColor="#1B3A5C"/><stop offset="100%" stopColor="#15304D"/></linearGradient>
+        <linearGradient id="fG2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#F4A940"/><stop offset="100%" stopColor="#E8922A"/></linearGradient>
+        <radialGradient id="bG2"><stop offset="0%" stopColor="#FFB3B3" stopOpacity="0.7"/><stop offset="100%" stopColor="#FFB3B3" stopOpacity="0"/></radialGradient>
       </defs>
       {/* Tail */}
-      <g style={{transformOrigin:"28px 95px",animation:"tailWag 1.5s ease-in-out infinite"}}>
-        <path d="M28 95Q14 85 10 72Q8 65 14 62" stroke="url(#fG)" strokeWidth="6" fill="none" strokeLinecap="round"/>
-        <circle cx="14" cy="62" r="4" fill="#F7BC5E"/>
-        <path d="M22 88Q16 82 13 74" stroke="#D4802A" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.4"/>
+      <g style={{animation:"tailWag 1.5s ease-in-out infinite"}}>
+        <path d="M26 92Q12 82 8 68Q6 60 12 56" stroke="#F4A940" strokeWidth="5.5" fill="none" strokeLinecap="round"/>
+        <circle cx="12" cy="56" r="3.5" fill="#F7BC5E"/>
       </g>
-      {/* Ears */}
-      <g style={{transformOrigin:"32px 18px",animation:"earTwitch 4s ease-in-out infinite"}}><path d="M24 24L28 4L38 20Z" fill="url(#fG)"/><path d="M27 22L29.5 8L35 19Z" fill="#FFBBAA"/></g>
-      <g style={{transformOrigin:"68px 18px",animation:"earTwitch 4s ease-in-out infinite 2s"}}><path d="M76 24L72 4L62 20Z" fill="url(#fG)"/><path d="M73 22L70.5 8L65 19Z" fill="#FFBBAA"/></g>
-      {/* Hat */}
-      <ellipse cx="50" cy="24" rx="28" ry="5" fill="#0F2840"/>
-      <ellipse cx="50" cy="23.5" rx="27" ry="4.5" fill="url(#hG)"/>
-      <path d="M30 23Q30 10 50 7Q70 10 70 23Z" fill="url(#hG)"/>
-      <rect x="30" y="18" width="40" height="5" fill="#C9A84C"/>
-      <rect x="30" y="18" width="40" height="1.5" fill="#E8C864" opacity="0.5"/>
-      <circle cx="50" cy="14" r="5.5" fill="#C9A84C"/><circle cx="50" cy="14" r="4" fill="#1B3A5C"/>
-      <text x="50" y="16.5" textAnchor="middle" fontSize="5.5" fill="#E8C864" fontWeight="bold">JR</text>
-      {/* Cat head */}
-      <ellipse cx="50" cy="44" rx="25" ry="24" fill="url(#fG)"/>
-      <ellipse cx="50" cy="52" rx="14" ry="10" fill="#F7BC5E"/>
-      <ellipse cx="50" cy="58" rx="8" ry="5" fill="#FCCF78" opacity="0.6"/>
-      <path d="M42 30L44 36" stroke="#D4802A" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.35"/>
-      <path d="M50 28L50 35" stroke="#D4802A" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.35"/>
-      <path d="M58 30L56 36" stroke="#D4802A" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.35"/>
-      <circle cx="30" cy="52" r="6" fill="url(#bG)"/><circle cx="70" cy="52" r="6" fill="url(#bG)"/>
+      {/* LEFT EAR — proper cat triangle */}
+      <g style={{transformOrigin:"30px 12px",animation:"earTwitch 5s ease-in-out infinite"}}>
+        <path d="M22 28L18 2L38 22Z" fill="url(#fG2)" stroke="#E8922A" strokeWidth="0.5"/>
+        <path d="M24 25L20.5 7L35 21Z" fill="#FFBBAA"/>
+      </g>
+      {/* RIGHT EAR */}
+      <g style={{transformOrigin:"68px 12px",animation:"earTwitch 5s ease-in-out infinite 2.5s"}}>
+        <path d="M76 28L80 2L60 22Z" fill="url(#fG2)" stroke="#E8922A" strokeWidth="0.5"/>
+        <path d="M74 25L77.5 7L63 21Z" fill="#FFBBAA"/>
+      </g>
+      {/* CONDUCTOR HAT — sits between ears */}
+      <ellipse cx="49" cy="22" rx="22" ry="4.5" fill="#0F2840"/>
+      <ellipse cx="49" cy="21.5" rx="21" ry="4" fill="url(#hG2)"/>
+      <path d="M32 21Q32 10 49 7Q66 10 66 21Z" fill="url(#hG2)"/>
+      <rect x="32" y="16.5" width="34" height="4.5" fill="#C9A84C"/>
+      <rect x="32" y="16.5" width="34" height="1.2" fill="#E8C864" opacity="0.5"/>
+      <circle cx="49" cy="13" r="4.5" fill="#C9A84C"/><circle cx="49" cy="13" r="3.2" fill="#1B3A5C"/>
+      <text x="49" y="15" textAnchor="middle" fontSize="4.5" fill="#E8C864" fontWeight="bold">JR</text>
+      {/* CAT HEAD — Sanrio style: wider at cheeks, narrower at top, soft triangle shape */}
+      <path d="M20 32 Q16 40 18 50 Q20 58 28 62 Q36 66 49 66 Q62 66 70 62 Q78 58 80 50 Q82 40 78 32 Q72 24 49 22 Q26 24 20 32Z" fill="url(#fG2)"/>
+      {/* Lighter cheek/muzzle — Sanrio style puffy cheeks */}
+      <ellipse cx="49" cy="50" rx="16" ry="12" fill="#F7BC5E"/>
+      <ellipse cx="49" cy="55" rx="9" ry="6" fill="#FCCF78" opacity="0.5"/>
+      {/* Sanrio-style tabby "M" mark */}
+      <path d="M40 29L44 33L49 28L54 33L58 29" stroke="#D4802A" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.3"/>
+      {/* Blush ovals — prominent Sanrio style */}
+      <ellipse cx="27" cy="48" rx="6" ry="4" fill="url(#bG2)"/>
+      <ellipse cx="71" cy="48" rx="6" ry="4" fill="url(#bG2)"/>
+      {/* EYES */}
       {eyeV[expression]||eyeV.hearts}
-      {/* Whiskers */}
-      <line x1="14" y1="48" x2="32" y2="52" stroke="#D4802A" strokeWidth="1" opacity="0.5"/>
-      <line x1="12" y1="54" x2="31" y2="55" stroke="#D4802A" strokeWidth="1" opacity="0.5"/>
-      <line x1="15" y1="60" x2="32" y2="58" stroke="#D4802A" strokeWidth="1" opacity="0.5"/>
-      <line x1="86" y1="48" x2="68" y2="52" stroke="#D4802A" strokeWidth="1" opacity="0.5"/>
-      <line x1="88" y1="54" x2="69" y2="55" stroke="#D4802A" strokeWidth="1" opacity="0.5"/>
-      <line x1="85" y1="60" x2="68" y2="58" stroke="#D4802A" strokeWidth="1" opacity="0.5"/>
-      {/* Nose */}
-      <path d="M47 55L50 53L53 55Z" fill="#FF8888"/><ellipse cx="50" cy="55.5" rx="3.5" ry="2" fill="#FF8888"/>
+      {/* Whiskers — 3 per side, slightly curved */}
+      <path d="M10 42Q18 44 26 44" stroke="#D4802A" strokeWidth="0.8" fill="none" opacity="0.45"/>
+      <path d="M8 48Q17 48 26 48" stroke="#D4802A" strokeWidth="0.8" fill="none" opacity="0.45"/>
+      <path d="M11 54Q19 52 27 51" stroke="#D4802A" strokeWidth="0.8" fill="none" opacity="0.45"/>
+      <path d="M88 42Q80 44 72 44" stroke="#D4802A" strokeWidth="0.8" fill="none" opacity="0.45"/>
+      <path d="M90 48Q81 48 72 48" stroke="#D4802A" strokeWidth="0.8" fill="none" opacity="0.45"/>
+      <path d="M87 54Q79 52 71 51" stroke="#D4802A" strokeWidth="0.8" fill="none" opacity="0.45"/>
+      {/* Nose — small Sanrio triangle */}
+      <path d="M46 48L49 46L52 48Z" fill="#FF8888"/>
+      {/* Nose to mouth line */}
+      <line x1="49" y1="48" x2="49" y2="50" stroke="#2D1B00" strokeWidth="1" strokeLinecap="round"/>
+      {/* Mouth */}
       {mthV[expression]||mthV.hearts}
-      {/* Body */}
-      <rect x="42" y="66" width="16" height="6" fill="url(#fG)" rx="3"/>
-      <path d="M24 72Q24 70 34 68L42 68Q50 70 58 68L66 68Q76 70 76 72L78 108L22 108Z" fill="url(#uG)"/>
-      <circle cx="42" cy="80" r="2" fill="#C9A84C"/><circle cx="58" cy="80" r="2" fill="#C9A84C"/>
-      <circle cx="42" cy="88" r="2" fill="#C9A84C"/><circle cx="58" cy="88" r="2" fill="#C9A84C"/>
-      <circle cx="42" cy="96" r="2" fill="#C9A84C"/><circle cx="58" cy="96" r="2" fill="#C9A84C"/>
-      <line x1="50" y1="72" x2="50" y2="108" stroke="#C9A84C" strokeWidth="0.8" opacity="0.4"/>
-      <path d="M42 68L50 77L58 68" stroke="white" strokeWidth="2.5" fill="none" strokeLinejoin="round"/>
-      <path d="M42 68L36 72" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round"/>
-      <path d="M58 68L64 72" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round"/>
-      <rect x="24" y="70" width="13" height="4" rx="2" fill="#C9A84C"/><rect x="63" y="70" width="13" height="4" rx="2" fill="#C9A84C"/>
-      <rect x="59" y="82" width="15" height="7" rx="2" fill="white" opacity="0.9"/>
-      <text x="66.5" y="88" textAnchor="middle" fontSize="4.5" fill="#1B3A5C" fontWeight="bold">BONITO</text>
-      {/* Arms + gloves */}
-      <path d="M24 74Q14 78 10 70Q8 65 13 60" stroke="#1B3A5C" strokeWidth="9" fill="none" strokeLinecap="round"/>
-      <circle cx="13" cy="59" r="5" fill="white"/><path d="M10 56Q13 52 16 56" stroke="white" strokeWidth="2" fill="white"/>
-      <circle cx="12" cy="60" r="1" fill="#FFD0D0"/><circle cx="15" cy="59" r="0.8" fill="#FFD0D0"/>
-      <path d="M76 74Q86 80 88 90" stroke="#1B3A5C" strokeWidth="9" fill="none" strokeLinecap="round"/>
-      <circle cx="88" cy="92" r="5" fill="white"/>
-      <circle cx="87" cy="93" r="1" fill="#FFD0D0"/><circle cx="90" cy="92" r="0.8" fill="#FFD0D0"/>
+      {/* Neck */}
+      <rect x="41" y="64" width="16" height="5" fill="url(#fG2)" rx="3"/>
+      {/* BODY */}
+      <path d="M24 70Q24 68 34 66L41 66Q49 68 57 66L64 66Q74 68 74 70L76 106L22 106Z" fill="url(#uG2)"/>
+      <circle cx="42" cy="78" r="1.8" fill="#C9A84C"/><circle cx="56" cy="78" r="1.8" fill="#C9A84C"/>
+      <circle cx="42" cy="86" r="1.8" fill="#C9A84C"/><circle cx="56" cy="86" r="1.8" fill="#C9A84C"/>
+      <circle cx="42" cy="94" r="1.8" fill="#C9A84C"/><circle cx="56" cy="94" r="1.8" fill="#C9A84C"/>
+      <path d="M41 66L49 74L57 66" stroke="white" strokeWidth="2.2" fill="none" strokeLinejoin="round"/>
+      <rect x="24" y="68" width="12" height="3.5" rx="1.5" fill="#C9A84C"/><rect x="62" y="68" width="12" height="3.5" rx="1.5" fill="#C9A84C"/>
+      <rect x="57" y="80" width="13" height="6" rx="2" fill="white" opacity="0.9"/>
+      <text x="63.5" y="85" textAnchor="middle" fontSize="4" fill="#1B3A5C" fontWeight="bold">BONITO</text>
+      {/* Arms */}
+      <path d="M24 72Q14 76 10 68Q8 63 13 58" stroke="#1B3A5C" strokeWidth="8" fill="none" strokeLinecap="round"/>
+      <circle cx="13" cy="57" r="4.5" fill="white"/><circle cx="12" cy="58" r="0.8" fill="#FFD0D0"/><circle cx="15" cy="57" r="0.7" fill="#FFD0D0"/>
+      <path d="M74 72Q84 78 86 88" stroke="#1B3A5C" strokeWidth="8" fill="none" strokeLinecap="round"/>
+      <circle cx="86" cy="90" r="4.5" fill="white"/><circle cx="85" cy="91" r="0.8" fill="#FFD0D0"/>
       {/* Bell collar */}
-      <path d="M42 68Q50 71 58 68" stroke="#FF6B9D" strokeWidth="2.5" fill="none"/>
-      <circle cx="50" cy="70" r="2.5" fill="#FFD700" stroke="#E8B800" strokeWidth="0.5"/>
-      {/* Whistle */}
-      <path d="M13 59L13 54" stroke="#999" strokeWidth="0.8"/><rect x="11" y="51" width="5" height="3" rx="1" fill="#C0C0C0"/>
-      {/* Sparkles */}
-      {expression==="hearts"&&<React.Fragment><text x="18" y="38" fontSize="8" fill="#FF6B9D" opacity="0.7">♥</text><text x="78" y="40" fontSize="6" fill="#FF6B9D" opacity="0.5">♥</text><text x="84" y="32" fontSize="4" fill="#FF6B9D" opacity="0.4">♥</text></React.Fragment>}
-      {expression==="stars"&&<React.Fragment><text x="16" y="38" fontSize="7" fill="#FFD700" opacity="0.8">✦</text><text x="80" y="38" fontSize="5" fill="#FFD700" opacity="0.6">✧</text><text x="85" y="30" fontSize="4" fill="#9B59FF" opacity="0.5">⋆</text></React.Fragment>}
-      {expression==="wink"&&<text x="78" y="38" fontSize="6" fill="#FFD700" opacity="0.6">✦</text>}
+      <path d="M41 66Q49 69 57 66" stroke="#FF6B9D" strokeWidth="2.2" fill="none"/>
+      <circle cx="49" cy="68" r="2.2" fill="#FFD700" stroke="#E8B800" strokeWidth="0.4"/>
+      {/* Expression sparkles */}
+      {expression==="hearts"&&<React.Fragment><text x="16" y="34" fontSize="7" fill="#FF6B9D" opacity="0.6">♥</text><text x="80" y="36" fontSize="5" fill="#FF6B9D" opacity="0.4">♥</text></React.Fragment>}
+      {expression==="stars"&&<React.Fragment><text x="14" y="34" fontSize="6" fill="#FFD700" opacity="0.7">✦</text><text x="82" y="34" fontSize="5" fill="#FFD700" opacity="0.5">✧</text></React.Fragment>}
     </svg>
   );
 }
 
-/* === Background Stickers === */
 function AnimatedStickers(){
-  const s=[{emoji:"🌸",x:3,y:5,size:28,speed:4,delay:0,anim:"stickerDrift1"},{emoji:"🍡",x:88,y:8,size:24,speed:5,delay:0.5,anim:"stickerBounce"},{emoji:"⛩️",x:12,y:22,size:22,speed:6,delay:1,anim:"stickerSpin"},{emoji:"🎀",x:82,y:25,size:20,speed:3.5,delay:0.3,anim:"stickerDrift2"},{emoji:"🍙",x:5,y:40,size:22,speed:4.5,delay:1.5,anim:"stickerBounce"},{emoji:"🗻",x:92,y:42,size:26,speed:7,delay:0,anim:"stickerDrift1"},{emoji:"✨",x:15,y:58,size:18,speed:2.5,delay:0.8,anim:"stickerSparkle"},{emoji:"🎌",x:90,y:60,size:22,speed:4,delay:1.2,anim:"stickerWave"},{emoji:"🐱",x:8,y:75,size:24,speed:5,delay:0.6,anim:"stickerBounce"},{emoji:"🏮",x:85,y:78,size:26,speed:3,delay:1.8,anim:"stickerSwing"},{emoji:"💖",x:50,y:12,size:16,speed:3,delay:2,anim:"stickerPulse"},{emoji:"🚄",x:45,y:88,size:20,speed:4,delay:0.4,anim:"stickerZoom"},{emoji:"🎵",x:25,y:92,size:16,speed:3.5,delay:1.3,anim:"stickerDrift2"},{emoji:"🍣",x:70,y:15,size:20,speed:4.2,delay:0.9,anim:"stickerBounce"},{emoji:"🌈",x:35,y:35,size:18,speed:6,delay:2.2,anim:"stickerDrift1"},{emoji:"🎐",x:60,y:55,size:22,speed:5,delay:1.6,anim:"stickerSwing"},{emoji:"🍵",x:75,y:92,size:18,speed:4,delay:0.7,anim:"stickerBounce"},{emoji:"🌙",x:20,y:48,size:16,speed:5.5,delay:1.9,anim:"stickerPulse"},{emoji:"🎏",x:65,y:70,size:24,speed:3.8,delay:0.2,anim:"stickerWave"},{emoji:"🐾",x:40,y:65,size:14,speed:3,delay:2.5,anim:"stickerDrift2"}];
-  return(<div style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:0,overflow:"hidden"}}>{s.map((s,i)=><div key={i} style={{position:"absolute",left:s.x+"%",top:s.y+"%",fontSize:s.size,animation:s.anim+" "+s.speed+"s ease-in-out infinite",animationDelay:s.delay+"s",opacity:0.18,filter:"saturate(1.3)"}}>{s.emoji}</div>)}</div>);
+  const s=[{emoji:"🌸",x:3,y:5,size:28,speed:4,delay:0,anim:"stickerDrift1"},{emoji:"🍡",x:88,y:8,size:24,speed:5,delay:.5,anim:"stickerBounce"},{emoji:"⛩️",x:12,y:22,size:22,speed:6,delay:1,anim:"stickerWave"},{emoji:"🎀",x:82,y:25,size:20,speed:3.5,delay:.3,anim:"stickerDrift2"},{emoji:"🍙",x:5,y:40,size:22,speed:4.5,delay:1.5,anim:"stickerBounce"},{emoji:"🗻",x:92,y:42,size:26,speed:7,delay:0,anim:"stickerDrift1"},{emoji:"✨",x:15,y:58,size:18,speed:2.5,delay:.8,anim:"stickerSparkle"},{emoji:"🎌",x:90,y:60,size:22,speed:4,delay:1.2,anim:"stickerWave"},{emoji:"🐱",x:8,y:75,size:24,speed:5,delay:.6,anim:"stickerBounce"},{emoji:"🏮",x:85,y:78,size:26,speed:3,delay:1.8,anim:"stickerSwing"},{emoji:"💖",x:50,y:12,size:16,speed:3,delay:2,anim:"stickerPulse"},{emoji:"🚄",x:45,y:88,size:20,speed:4,delay:.4,anim:"stickerZoom"},{emoji:"🍣",x:70,y:15,size:20,speed:4.2,delay:.9,anim:"stickerBounce"},{emoji:"🐾",x:40,y:65,size:14,speed:3,delay:2.5,anim:"stickerDrift2"},{emoji:"🎐",x:60,y:55,size:22,speed:5,delay:1.6,anim:"stickerSwing"},{emoji:"🍵",x:75,y:92,size:18,speed:4,delay:.7,anim:"stickerBounce"}];
+  return(<div style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:0,overflow:"hidden"}}>{s.map((s,i)=><div key={i} style={{position:"absolute",left:s.x+"%",top:s.y+"%",fontSize:s.size,animation:s.anim+" "+s.speed+"s ease-in-out infinite",animationDelay:s.delay+"s",opacity:.18}}>{s.emoji}</div>)}</div>);
 }
 
 function SpeechBubble({message}){
-  return(<div style={{background:"white",borderRadius:22,padding:"14px 18px",fontSize:14,fontFamily:"'M PLUS Rounded 1c', sans-serif",color:"#333",boxShadow:"0 4px 20px rgba(255,107,157,0.15)",border:"3px solid #FFE0F0",position:"relative",maxWidth:280,lineHeight:1.6}}>
+  return(<div style={{background:"white",borderRadius:22,padding:"14px 18px",fontSize:13,fontFamily:"'M PLUS Rounded 1c',sans-serif",color:"#333",boxShadow:"0 4px 20px rgba(255,107,157,0.15)",border:"3px solid #FFE0F0",position:"relative",maxWidth:260,lineHeight:1.6}}>
     <span style={{position:"absolute",top:-10,right:10,fontSize:14,animation:"stickerPulse 2s ease-in-out infinite"}}>✨</span>
     <span style={{position:"absolute",bottom:-8,right:25,fontSize:12,animation:"stickerBounce 2.5s ease-in-out infinite"}}>🐾</span>
     {message}
@@ -201,91 +219,300 @@ function SpeechBubble({message}){
   </div>);
 }
 
-/* === MAIN APP === */
+/* ===== EDITABLE FIELD COMPONENT ===== */
+function EditableField({value,onSave,placeholder="",multiline=false,style={}}){
+  const[editing,setEditing]=useState(false);
+  const[val,setVal]=useState(value);
+  useEffect(()=>setVal(value),[value]);
+  if(!editing)return(<div style={{display:"flex",alignItems:"flex-start",gap:6,...style}}>
+    <span style={{flex:1,fontSize:13,color:value?"#555":"#CCC",lineHeight:1.5}}>{value||placeholder}</span>
+    <button className="edit-btn" onClick={()=>setEditing(true)} style={{flexShrink:0}}>✏️</button>
+  </div>);
+  return(<div style={{display:"flex",flexDirection:"column",gap:6,...style}}>
+    {multiline?<textarea className="note-area" value={val} onChange={e=>setVal(e.target.value)} placeholder={placeholder} autoFocus/>:
+    <input type="text" value={val} onChange={e=>setVal(e.target.value)} placeholder={placeholder} autoFocus style={{border:"2px solid #FFE0F0",borderRadius:12,padding:"8px 12px",fontSize:13,outline:"none",background:"#FFFAFC",fontFamily:"'M PLUS Rounded 1c',sans-serif"}} onKeyDown={e=>{if(e.key==="Enter"){onSave(val);setEditing(false)}}}/>}
+    <div style={{display:"flex",gap:6,justifyContent:"flex-end"}}>
+      <button className="edit-btn" onClick={()=>{setVal(value);setEditing(false)}}>Cancel</button>
+      <button className="save-btn" onClick={()=>{onSave(val);setEditing(false)}}>💾 Save</button>
+    </div>
+  </div>);
+}
+
+/* ===== NOTE BOX COMPONENT ===== */
+function NoteBox({value,onSave,placeholder="Add a note..."}){
+  const[editing,setEditing]=useState(false);
+  const[val,setVal]=useState(value||"");
+  useEffect(()=>setVal(value||""),[value]);
+  return(<div style={{background:"#FFFAFC",border:"2px dashed #FFE0F0",borderRadius:16,padding:12,marginTop:8}}>
+    <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}>
+      <span style={{fontSize:13,fontWeight:900,color:"#FF6B9D"}}>📝 Notes</span>
+      {!editing&&<button className="edit-btn" onClick={()=>setEditing(true)} style={{marginLeft:"auto"}}>✏️</button>}
+    </div>
+    {editing?<React.Fragment>
+      <textarea className="note-area" value={val} onChange={e=>setVal(e.target.value)} placeholder={placeholder} autoFocus/>
+      <div style={{display:"flex",gap:6,justifyContent:"flex-end",marginTop:6}}>
+        <button className="edit-btn" onClick={()=>{setVal(value||"");setEditing(false)}}>Cancel</button>
+        <button className="save-btn" onClick={()=>{onSave(val);setEditing(false)}}>💾 Save</button>
+      </div>
+    </React.Fragment>:
+    <p style={{fontSize:12,color:val?"#666":"#CCC",lineHeight:1.5,whiteSpace:"pre-wrap"}}>{val||placeholder}</p>}
+  </div>);
+}
+
+/* ===== PROFILE SELECTOR ===== */
+function ProfileSelector({currentProfile,onSwitch}){
+  return(<div style={{display:"flex",gap:8,padding:"10px 16px",justifyContent:"center"}}>
+    {["A","B"].map(p=>{
+      const c=PROFILE_COLORS[p];const active=currentProfile===p;
+      return(<button key={p} onClick={()=>onSwitch(p)} style={{background:active?`linear-gradient(135deg,${c.primary},${c.accent})`:"white",color:active?"white":c.primary,border:`2.5px solid ${active?c.primary:c.primary+"30"}`,borderRadius:16,padding:"8px 20px",fontSize:13,fontWeight:900,fontFamily:"'M PLUS Rounded 1c',sans-serif",cursor:"pointer",transition:"all .2s",boxShadow:active?`0 4px 12px ${c.primary}40`:"none",display:"flex",alignItems:"center",gap:6}}>
+        <span>{p==="A"?"🌸":"🍃"}</span>{c.name}
+      </button>);
+    })}
+  </div>);
+}
+
+/* ===== MAIN APP ===== */
 function App(){
+  const[profile,setProfile]=useState("A");
   const[activeTab,setActiveTab]=useState("home");
   const[selectedDay,setSelectedDay]=useState(null);
-  const[packingList,setPackingList]=useState(PACKING_INIT);
-  const[guideExpression,setGuideExpression]=useState("hearts");
+  const[days,setDays]=useState(DEFAULT_DAYS);
+  const[stays,setStays]=useState(DEFAULT_STAYS);
+  const[packingList,setPackingList]=useState(DEFAULT_PACKING);
+  const[generalNotes,setGeneralNotes]=useState("");
+  const[partnerDays,setPartnerDays]=useState(null);
+  const[partnerNotes,setPartnerNotes]=useState("");
+  const[guideExpr,setGuideExpr]=useState("hearts");
   const[showSplash,setShowSplash]=useState(true);
   const[expandedEvent,setExpandedEvent]=useState(null);
-  useEffect(()=>{const t=setTimeout(()=>setShowSplash(false),3200);return()=>clearTimeout(t)},[]);
-  useEffect(()=>{const ex=["hearts","stars","hearts","wink","stars","happy","hearts"];const iv=setInterval(()=>setGuideExpression(ex[Math.floor(Math.random()*ex.length)]),3000);return()=>clearInterval(iv)},[]);
-  const togglePacking=(i)=>setPackingList(p=>p.map((item,idx)=>idx===i?{...item,checked:!item.checked}:item));
+  const[loaded,setLoaded]=useState(false);
+  const[newPackItem,setNewPackItem]=useState("");
+  const[editingEvent,setEditingEvent]=useState(null);
+
+  // Load profile data
+  useEffect(()=>{
+    (async()=>{
+      const d=await loadData(profile+"-days",DEFAULT_DAYS);
+      const s=await loadData(profile+"-stays",DEFAULT_STAYS);
+      const p=await loadData(profile+"-packing",DEFAULT_PACKING);
+      const n=await loadData(profile+"-notes","");
+      setDays(d);setStays(s);setPackingList(p);setGeneralNotes(n);
+      // Load partner data
+      const other=profile==="A"?"B":"A";
+      const pd=await loadData(other+"-days",DEFAULT_DAYS);
+      const pn=await loadData(other+"-notes","");
+      setPartnerDays(pd);setPartnerNotes(pn);
+      setLoaded(true);setSelectedDay(null);setExpandedEvent(null);
+    })();
+  },[profile]);
+
+  // Auto-save
+  const autoSave=useCallback(async(newDays,newStays,newPacking,newNotes)=>{
+    if(!loaded)return;
+    await saveData(profile+"-days",newDays||days);
+    await saveData(profile+"-stays",newStays||stays);
+    await saveData(profile+"-packing",newPacking||packingList);
+    await saveData(profile+"-notes",newNotes!==undefined?newNotes:generalNotes);
+  },[profile,days,stays,packingList,generalNotes,loaded]);
+
+  const updateDay=(dayId,changes)=>{const nd=days.map(d=>d.id===dayId?{...d,...changes}:d);setDays(nd);autoSave(nd,null,null,undefined)};
+  const updateEvent=(dayId,evIdx,changes)=>{const nd=days.map(d=>{if(d.id!==dayId)return d;const ne=[...d.events];ne[evIdx]={...ne[evIdx],...changes};return{...d,events:ne}});setDays(nd);autoSave(nd,null,null,undefined)};
+  const addEvent=(dayId)=>{const nd=days.map(d=>{if(d.id!==dayId)return d;return{...d,events:[...d.events,{time:"12:00",title:"New Stop",icon:"📍",type:"explore",note:"",mapQuery:""}]}});setDays(nd);autoSave(nd,null,null,undefined)};
+  const removeEvent=(dayId,evIdx)=>{const nd=days.map(d=>{if(d.id!==dayId)return d;const ne=[...d.events];ne.splice(evIdx,1);return{...d,events:ne}});setDays(nd);autoSave(nd,null,null,undefined)};
+  const updateStay=(idx,changes)=>{const ns=[...stays];ns[idx]={...ns[idx],...changes};setStays(ns);autoSave(null,ns,null,undefined)};
+  const togglePacking=(i)=>{const np=packingList.map((item,idx)=>idx===i?{...item,checked:!item.checked}:item);setPackingList(np);autoSave(null,null,np,undefined)};
+  const addPackItem=()=>{if(!newPackItem.trim())return;const np=[...packingList,{item:newPackItem.trim(),checked:false,emoji:"📦"}];setPackingList(np);setNewPackItem("");autoSave(null,null,np,undefined)};
+  const removePackItem=(i)=>{const np=[...packingList];np.splice(i,1);setPackingList(np);autoSave(null,null,np,undefined)};
+  const saveNotes=(n)=>{setGeneralNotes(n);autoSave(null,null,null,n)};
   const openMaps=(q)=>window.open("https://www.google.com/maps/search/"+q,"_blank");
   const openAirbnb=(q)=>window.open("https://www.airbnb.com/s/"+q+"/homes","_blank");
 
+  useEffect(()=>{const t=setTimeout(()=>setShowSplash(false),2800);return()=>clearTimeout(t)},[]);
+  useEffect(()=>{const ex=["hearts","stars","hearts","wink","stars","happy","hearts"];const iv=setInterval(()=>setGuideExpr(ex[Math.floor(Math.random()*ex.length)]),3000);return()=>clearInterval(iv)},[]);
+
+  const pc=PROFILE_COLORS[profile];
+
   if(showSplash){
-    const ss=[{e:"🌸",x:8,y:12,s:36},{e:"⭐",x:85,y:10,s:28},{e:"🎀",x:10,y:80,s:32},{e:"✨",x:88,y:75,s:26},{e:"💖",x:50,y:8,s:24},{e:"🌟",x:25,y:90,s:22},{e:"🍡",x:78,y:88,s:28},{e:"🐾",x:18,y:45,s:22},{e:"🗻",x:80,y:45,s:30},{e:"⛩️",x:5,y:55,s:26},{e:"🐱",x:92,y:55,s:24},{e:"🏮",x:42,y:90,s:26}];
-    return(<div style={{minHeight:"100vh",background:"linear-gradient(135deg,#FFE0F0 0%,#FFF0F5 25%,#E8F0FF 50%,#F0E6FF 75%,#FFE0F0 100%)",backgroundSize:"400% 400%",animation:"gradientShift 4s ease infinite",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",fontFamily:"'M PLUS Rounded 1c', sans-serif",overflow:"hidden",position:"relative"}}>
-      {ss.map((s,i)=><div key={i} style={{position:"fixed",fontSize:s.s,left:s.x+"%",top:s.y+"%",animation:"splashSticker "+(2.5+Math.random()*2)+"s ease-in-out infinite",animationDelay:(i*0.2)+"s",opacity:0.5}}>{s.e}</div>)}
-      <div style={{position:"fixed",bottom:55,left:0,right:0,overflow:"hidden",height:50,opacity:0.25}}><div style={{animation:"trainRoll 6s linear infinite"}}><ShinkansenTrain width={240}/></div></div>
+    return(<div style={{minHeight:"100vh",background:"linear-gradient(135deg,#FFE0F0 0%,#FFF0F5 25%,#E8F0FF 50%,#F0E6FF 75%,#FFE0F0 100%)",backgroundSize:"400% 400%",animation:"gradientShift 4s ease infinite",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",overflow:"hidden",position:"relative"}}>
+      {[{e:"🌸",x:8,y:12,s:36},{e:"⭐",x:85,y:10,s:28},{e:"🎀",x:10,y:80,s:32},{e:"✨",x:88,y:75,s:26},{e:"💖",x:50,y:8,s:24},{e:"🐾",x:18,y:45,s:22},{e:"🗻",x:80,y:45,s:30},{e:"🐱",x:92,y:55,s:24}].map((s,i)=><div key={i} style={{position:"fixed",fontSize:s.s,left:s.x+"%",top:s.y+"%",animation:"splashSticker "+(2.5+Math.random()*2)+"s ease-in-out infinite",animationDelay:(i*.2)+"s",opacity:.5}}>{s.e}</div>)}
+      <div style={{position:"fixed",bottom:55,left:0,right:0,overflow:"hidden",height:50,opacity:.25}}><div style={{animation:"trainRoll 6s linear infinite"}}><ShinkansenTrain width={240}/></div></div>
       <div style={{animation:"splashBounce 1.8s ease-in-out infinite",zIndex:10}}><ConductorBonito expression="stars" size={180} animate={false}/></div>
-      <h1 style={{fontFamily:"'Zen Maru Gothic', sans-serif",fontSize:38,background:"linear-gradient(135deg,#FF6B9D,#9B59FF,#FF6B9D)",backgroundSize:"200% auto",animation:"splashFadeIn 0.8s ease-out 0.5s both,shimmer 3s linear infinite",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginTop:6,letterSpacing:2,zIndex:10}}>日本の冒険！</h1>
-      <p style={{fontSize:16,color:"#9B59FF",animation:"splashFadeIn 0.8s ease-out 0.8s both",fontWeight:700,zIndex:10}}>～ All Aboard the Bonito Express ～ 🐱🚄✨</p>
-      <div style={{display:"flex",gap:10,marginTop:16,zIndex:10,animation:"splashFadeIn 0.8s ease-out 1.2s both"}}>{["🐾","💖","⭐","💖","🐾"].map((e,i)=><span key={i} style={{fontSize:18,animation:"sparkleFloat 1.5s ease-in-out infinite",animationDelay:(i*0.25)+"s"}}>{e}</span>)}</div>
+      <h1 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:36,background:"linear-gradient(135deg,#FF6B9D,#9B59FF,#FF6B9D)",backgroundSize:"200% auto",animation:"splashFadeIn .8s ease-out .5s both,shimmer 3s linear infinite",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",marginTop:6,letterSpacing:2,zIndex:10}}>日本の冒険！</h1>
+      <p style={{fontSize:15,color:"#9B59FF",animation:"splashFadeIn .8s ease-out .8s both",fontWeight:700,zIndex:10}}>～ All Aboard the Bonito Express ～ 🐱🚄</p>
     </div>);
   }
 
-  return(<div style={{minHeight:"100vh",background:"linear-gradient(180deg,#FFF5F9 0%,#FFF0F5 30%,#F8F0FF 60%,#FFF5F9 100%)",fontFamily:"'M PLUS Rounded 1c', sans-serif",paddingBottom:90,position:"relative",overflow:"hidden"}}>
+  return(<div style={{minHeight:"100vh",background:"linear-gradient(180deg,#FFF5F9 0%,#FFF0F5 30%,#F8F0FF 60%,#FFF5F9 100%)",fontFamily:"'M PLUS Rounded 1c',sans-serif",paddingBottom:90,position:"relative",overflow:"hidden"}}>
     <AnimatedStickers/>
     {/* HEADER */}
-    <div style={{background:"linear-gradient(135deg,#FF6B9D 0%,#FF8EC7 30%,#C77DFF 70%,#9B59FF 100%)",padding:"18px 20px 32px",borderRadius:"0 0 32px 32px",position:"relative",zIndex:10,boxShadow:"0 8px 30px rgba(255,107,157,0.35)",overflow:"hidden"}}>
-      <span style={{position:"absolute",top:8,right:15,fontSize:20,animation:"stickerPulse 2s ease-in-out infinite",opacity:0.4}}>✨</span>
-      <span style={{position:"absolute",top:14,right:45,fontSize:14,animation:"stickerBounce 2.5s ease-in-out infinite 0.3s",opacity:0.3}}>🐾</span>
-      <span style={{position:"absolute",bottom:16,right:20,fontSize:16,animation:"stickerWave 3s ease-in-out infinite",opacity:0.3}}>🎌</span>
-      <div style={{position:"absolute",bottom:2,left:0,right:0,overflow:"hidden",height:26,opacity:0.18}}><div style={{animation:"trainMove 8s linear infinite"}}><ShinkansenTrain width={220}/></div></div>
+    <div style={{background:`linear-gradient(135deg,${pc.primary} 0%,${pc.primary}CC 40%,#C77DFF 70%,#9B59FF 100%)`,padding:"16px 20px 30px",borderRadius:"0 0 32px 32px",position:"relative",zIndex:10,boxShadow:"0 8px 30px rgba(255,107,157,0.3)",overflow:"hidden"}}>
+      <span style={{position:"absolute",top:8,right:15,fontSize:18,animation:"stickerPulse 2s ease-in-out infinite",opacity:.4}}>✨</span>
+      <span style={{position:"absolute",bottom:14,right:20,fontSize:14,animation:"stickerWave 3s ease-in-out infinite",opacity:.3}}>🎌</span>
+      <div style={{position:"absolute",bottom:2,left:0,right:0,overflow:"hidden",height:24,opacity:.18}}><div style={{animation:"trainMove 8s linear infinite"}}><ShinkansenTrain width={220}/></div></div>
       <div style={{display:"flex",alignItems:"center",gap:12}}>
-        <div style={{animation:"bobble 2.5s ease-in-out infinite",flexShrink:0}}><ConductorBonito expression={guideExpression} size={68} animate={false}/></div>
-        <div>
-          <h1 style={{fontFamily:"'Zen Maru Gothic', sans-serif",fontSize:21,color:"white",textShadow:"0 2px 10px rgba(0,0,0,0.15)",letterSpacing:1}}>🇯🇵 Japan Adventure <span style={{fontSize:14}}>🚄</span></h1>
-          <p style={{color:"rgba(255,255,255,0.9)",fontSize:11,fontWeight:700,marginTop:3}}>Conductor Bonito at your service! にゃ～ <span style={{animation:"stickerPulse 1.5s ease-in-out infinite"}}>🐾</span></p>
-        </div>
+        <div style={{animation:"bobble 2.5s ease-in-out infinite",flexShrink:0}}><ConductorBonito expression={guideExpr} size={64} animate={false}/></div>
+        <div><h1 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:20,color:"white",textShadow:"0 2px 10px rgba(0,0,0,0.15)"}}>🇯🇵 Japan Adventure 🚄</h1>
+        <p style={{color:"rgba(255,255,255,0.9)",fontSize:10,fontWeight:700,marginTop:2}}>Conductor Bonito · {pc.name} 🐾</p></div>
       </div>
     </div>
+    {/* PROFILE SELECTOR */}
+    <ProfileSelector currentProfile={profile} onSwitch={p=>{setProfile(p);setActiveTab("home")}}/>
     {/* GUIDE */}
-    <div style={{padding:"16px 20px",display:"flex",gap:10,alignItems:"flex-start",animation:"fadeSlideUp 0.5s ease-out",position:"relative",zIndex:5}}>
-      <div style={{flexShrink:0}}><ConductorBonito expression={guideExpression} size={58}/></div>
-      <SpeechBubble message={GUIDE_MESSAGES[activeTab]}/>
+    <div style={{padding:"8px 20px 12px",display:"flex",gap:10,alignItems:"flex-start",animation:"fadeSlideUp .5s ease-out",position:"relative",zIndex:5}}>
+      <div style={{flexShrink:0}}><ConductorBonito expression={guideExpr} size={50}/></div>
+      <SpeechBubble message={GUIDE_MSGS[activeTab]}/>
     </div>
     {/* CONTENT */}
     <div style={{padding:"0 16px",position:"relative",zIndex:5}}>
-      {activeTab==="home"&&<div style={{animation:"fadeSlideUp 0.4s ease-out"}}>
-        <div style={{display:"flex",justifyContent:"center",gap:8,marginBottom:14}}>{["🌸","🗼","⛩️","🍡","🚄","🎌","🏯","🐾"].map((e,i)=><span key={i} style={{fontSize:22,animation:"stickerBounce "+(2+i*0.2)+"s ease-in-out infinite",animationDelay:(i*0.12)+"s"}}>{e}</span>)}</div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:20}}>
-          {[{label:"Days",value:"5",emoji:"📅",color:"#FF6B9D",sticker:"🗓️"},{label:"Cities",value:"3",emoji:"🏙️",color:"#9B59FF",sticker:"🗾"},{label:"Stops",value:"28",emoji:"📍",color:"#00C9A7",sticker:"🚉"}].map((s,i)=><div key={i} style={{background:"white",borderRadius:22,padding:"16px 10px",textAlign:"center",boxShadow:"0 4px 18px rgba(0,0,0,0.04)",border:"2.5px solid "+s.color+"25",animation:"fadeSlideUp 0.4s ease-out",animationDelay:(i*0.1)+"s",animationFillMode:"both",position:"relative",overflow:"hidden"}}><span style={{position:"absolute",top:4,right:6,fontSize:12,opacity:0.4,animation:"stickerPulse 2.5s ease-in-out infinite "+(i*0.3)+"s"}}>{s.sticker}</span><div style={{fontSize:28}}>{s.emoji}</div><div style={{fontSize:28,fontWeight:900,color:s.color,fontFamily:"'Zen Maru Gothic', sans-serif"}}>{s.value}</div><div style={{fontSize:11,color:"#AAA",fontWeight:700}}>{s.label}</div></div>)}
+
+      {/* HOME */}
+      {activeTab==="home"&&<div style={{animation:"fadeSlideUp .4s ease-out"}}>
+        <div style={{display:"flex",justifyContent:"center",gap:8,marginBottom:14}}>{["🌸","🗼","⛩️","🍡","🚄","🎌","🏯","🐾"].map((e,i)=><span key={i} style={{fontSize:20,animation:"stickerBounce "+(2+i*.2)+"s ease-in-out infinite",animationDelay:(i*.12)+"s"}}>{e}</span>)}</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:18}}>
+          {[{label:"Days",value:days.length+"",emoji:"📅",color:pc.primary},{label:"Cities",value:"3",emoji:"🏙️",color:"#9B59FF"},{label:"Stops",value:days.reduce((a,d)=>a+d.events.length,0)+"",emoji:"📍",color:"#00C9A7"}].map((s,i)=><div key={i} style={{background:"white",borderRadius:22,padding:"14px 8px",textAlign:"center",boxShadow:"0 4px 18px rgba(0,0,0,0.04)",border:"2.5px solid "+s.color+"25",animation:"fadeSlideUp .4s ease-out",animationDelay:(i*.1)+"s",animationFillMode:"both"}}><div style={{fontSize:26}}>{s.emoji}</div><div style={{fontSize:26,fontWeight:900,color:s.color,fontFamily:"'Zen Maru Gothic',sans-serif"}}>{s.value}</div><div style={{fontSize:10,color:"#AAA",fontWeight:700}}>{s.label}</div></div>)}
         </div>
-        <h2 style={{fontFamily:"'Zen Maru Gothic', sans-serif",fontSize:18,color:"#FF6B9D",marginBottom:12,display:"flex",alignItems:"center",gap:8}}><span style={{animation:"stickerWave 2s ease-in-out infinite"}}>🐱</span> Your Journey Route <span style={{fontSize:14,animation:"stickerPulse 2s ease-in-out infinite 0.5s"}}>✨</span></h2>
-        {DAYS.map((day,i)=><div key={day.id} onClick={()=>{setSelectedDay(day);setActiveTab("itinerary")}} style={{background:"white",borderRadius:22,padding:16,marginBottom:12,display:"flex",alignItems:"center",gap:14,boxShadow:"0 4px 16px rgba(0,0,0,0.04)",border:"2.5px solid "+day.color+"18",cursor:"pointer",transition:"all 0.25s ease",animation:"fadeSlideUp 0.4s ease-out",animationDelay:(i*0.07)+"s",animationFillMode:"both",position:"relative",overflow:"hidden"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateX(8px) scale(1.01)";e.currentTarget.style.borderColor=day.color+"60"}} onMouseLeave={e=>{e.currentTarget.style.transform="translateX(0) scale(1)";e.currentTarget.style.borderColor=day.color+"18"}}><span style={{position:"absolute",top:6,right:40,fontSize:12,opacity:0.2,animation:"stickerPulse 3s ease-in-out infinite "+(i*0.2)+"s"}}>{["🌸","⭐","💖","✨","🎀"][i]}</span><div style={{width:54,height:54,borderRadius:18,background:"linear-gradient(135deg,"+day.color+","+day.color+"88)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,flexShrink:0,boxShadow:"0 4px 14px "+day.color+"35"}}>{day.emoji}</div><div style={{flex:1}}><div style={{fontSize:10,color:day.color,fontWeight:900,textTransform:"uppercase",letterSpacing:1.2}}>{day.date}</div><div style={{fontSize:16,fontWeight:900,color:"#333"}}>{day.title}</div><div style={{fontSize:12,color:"#AAA"}}>{day.subtitle} · {day.events.length} stations 🚉</div></div><div style={{color:day.color,fontSize:22,fontWeight:900}}>→</div></div>)}
-        <div style={{display:"flex",justifyContent:"center",gap:10,marginTop:10,opacity:0.4}}>{["🍣","🎐","🐱","🍵","🎏"].map((e,i)=><span key={i} style={{fontSize:20,animation:"stickerDrift1 "+(3+i*0.3)+"s ease-in-out infinite "+(i*0.2)+"s"}}>{e}</span>)}</div>
+        <h2 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:17,color:pc.primary,marginBottom:10,display:"flex",alignItems:"center",gap:6}}><span style={{animation:"stickerWave 2s ease-in-out infinite"}}>🐱</span> Your Journey Route ✨</h2>
+        {days.map((day,i)=><div key={day.id} onClick={()=>{setSelectedDay(day);setActiveTab("itinerary")}} style={{background:"white",borderRadius:20,padding:14,marginBottom:10,display:"flex",alignItems:"center",gap:12,boxShadow:"0 4px 16px rgba(0,0,0,0.04)",border:"2.5px solid "+day.color+"18",cursor:"pointer",transition:"all .25s ease",animation:"fadeSlideUp .4s ease-out",animationDelay:(i*.07)+"s",animationFillMode:"both"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateX(6px)";e.currentTarget.style.borderColor=day.color+"60"}} onMouseLeave={e=>{e.currentTarget.style.transform="translateX(0)";e.currentTarget.style.borderColor=day.color+"18"}}>
+          <div style={{width:50,height:50,borderRadius:16,background:"linear-gradient(135deg,"+day.color+","+day.color+"88)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0,boxShadow:"0 4px 14px "+day.color+"35"}}>{day.emoji}</div>
+          <div style={{flex:1}}><div style={{fontSize:10,color:day.color,fontWeight:900,textTransform:"uppercase",letterSpacing:1}}>{day.date}</div><div style={{fontSize:15,fontWeight:900,color:"#333"}}>{day.title}</div><div style={{fontSize:11,color:"#AAA"}}>{day.subtitle} · {day.events.length} stops</div>{day.note&&<div style={{fontSize:10,color:"#FF6B9D",marginTop:2}}>📝 Has notes</div>}</div>
+          <div style={{color:day.color,fontSize:20,fontWeight:900}}>→</div>
+        </div>)}
       </div>}
-      {activeTab==="itinerary"&&<div style={{animation:"fadeSlideUp 0.4s ease-out"}}>
-        <div style={{display:"flex",gap:8,marginBottom:16,overflowX:"auto",paddingBottom:6}}>{DAYS.map(day=><button key={day.id} onClick={()=>setSelectedDay(day)} style={{background:selectedDay?.id===day.id?"linear-gradient(135deg,"+day.color+","+day.color+"BB)":"white",color:selectedDay?.id===day.id?"white":"#777",border:"2.5px solid "+(selectedDay?.id===day.id?day.color:"#EEE"),borderRadius:16,padding:"8px 16px",fontSize:13,fontWeight:900,fontFamily:"'M PLUS Rounded 1c', sans-serif",cursor:"pointer",whiteSpace:"nowrap",transition:"all 0.2s ease",boxShadow:selectedDay?.id===day.id?"0 4px 14px "+day.color+"40":"0 2px 8px rgba(0,0,0,0.03)"}}>{day.emoji} {day.date}</button>)}</div>
+
+      {/* ITINERARY */}
+      {activeTab==="itinerary"&&<div style={{animation:"fadeSlideUp .4s ease-out"}}>
+        <div style={{display:"flex",gap:6,marginBottom:14,overflowX:"auto",paddingBottom:4}}>{days.map(day=><button key={day.id} onClick={()=>{setSelectedDay(day);setExpandedEvent(null)}} style={{background:selectedDay?.id===day.id?`linear-gradient(135deg,${day.color},${day.color}BB)`:"white",color:selectedDay?.id===day.id?"white":"#777",border:"2.5px solid "+(selectedDay?.id===day.id?day.color:"#EEE"),borderRadius:14,padding:"7px 14px",fontSize:12,fontWeight:900,fontFamily:"'M PLUS Rounded 1c',sans-serif",cursor:"pointer",whiteSpace:"nowrap",transition:"all .2s",boxShadow:selectedDay?.id===day.id?"0 4px 14px "+day.color+"40":"none"}}>{day.emoji} {day.date}</button>)}</div>
         {selectedDay&&<React.Fragment>
-          <div style={{background:"linear-gradient(135deg,"+selectedDay.color+"12,"+selectedDay.color+"05)",borderRadius:22,padding:"16px 18px",marginBottom:16,border:"2.5px solid "+selectedDay.color+"18",position:"relative"}}><span style={{position:"absolute",top:8,right:14,fontSize:16,animation:"stickerPulse 2s ease-in-out infinite",opacity:0.5}}>✨</span><h2 style={{fontFamily:"'Zen Maru Gothic', sans-serif",fontSize:22,color:selectedDay.color}}>{selectedDay.emoji} {selectedDay.title} 🚉</h2><p style={{fontSize:13,color:"#999",marginTop:4}}>{selectedDay.subtitle}</p></div>
-          <div style={{position:"relative",paddingLeft:32}}>
-            <div style={{position:"absolute",left:15,top:20,bottom:20,width:4,background:"linear-gradient(to bottom,"+selectedDay.color+","+selectedDay.color+"30)",borderRadius:2}}/>
-            {selectedDay.events.map((ev,i)=>{const tc=typeColors[ev.type];const isExp=expandedEvent===selectedDay.id+"-"+i;return(<div key={i} style={{marginBottom:12,animation:"fadeSlideUp 0.4s ease-out",animationDelay:(i*0.06)+"s",animationFillMode:"both"}}><div style={{position:"absolute",left:9,width:16,height:16,borderRadius:"50%",background:isExp?selectedDay.color:"white",border:"3px solid "+selectedDay.color,boxShadow:"0 2px 8px "+selectedDay.color+"30",marginTop:18,transition:"all 0.2s ease"}}/><div onClick={()=>setExpandedEvent(isExp?null:selectedDay.id+"-"+i)} style={{background:"white",borderRadius:20,padding:"14px 16px",boxShadow:isExp?"0 6px 20px "+selectedDay.color+"15":"0 3px 12px rgba(0,0,0,0.03)",border:"2.5px solid "+(isExp?selectedDay.color+"50":tc.border+"25"),cursor:"pointer",transition:"all 0.2s ease",position:"relative"}}>{i===0&&<span style={{position:"absolute",top:-6,right:12,fontSize:14,animation:"stickerBounce 2s ease-in-out infinite"}}>🎉</span>}<div style={{display:"flex",alignItems:"center",gap:10}}><div style={{width:42,height:42,borderRadius:14,background:tc.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0,border:"1.5px solid "+tc.border+"30"}}>{ev.icon}</div><div style={{flex:1}}><span style={{fontSize:10,color:selectedDay.color,fontWeight:900,background:selectedDay.color+"12",padding:"2px 8px",borderRadius:8}}>{ev.time}</span><div style={{fontSize:14,fontWeight:900,color:"#333",marginTop:3}}>{ev.title}</div></div><span style={{fontSize:14,transition:"transform 0.2s",transform:isExp?"rotate(90deg)":"rotate(0)"}}>▸</span></div>{isExp&&<div style={{marginTop:12,paddingTop:12,borderTop:"2px dashed "+selectedDay.color+"15"}}><p style={{fontSize:13,color:"#666",lineHeight:1.7,marginBottom:14}}>🐱 {ev.note}</p><button onClick={(e)=>{e.stopPropagation();openMaps(ev.mapQuery)}} style={{background:"linear-gradient(135deg,#4285F4,#34A853)",color:"white",border:"none",borderRadius:14,padding:"11px 16px",fontSize:12,fontWeight:900,fontFamily:"'M PLUS Rounded 1c', sans-serif",cursor:"pointer",display:"flex",alignItems:"center",gap:8,width:"100%",justifyContent:"center",boxShadow:"0 4px 14px rgba(66,133,244,0.25)"}}>📍 Open in Google Maps</button></div>}</div></div>)})}
+          <div style={{background:`linear-gradient(135deg,${selectedDay.color}12,${selectedDay.color}05)`,borderRadius:20,padding:"14px 16px",marginBottom:14,border:`2.5px solid ${selectedDay.color}18`,position:"relative"}}>
+            <h2 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:20,color:selectedDay.color}}>{selectedDay.emoji} {selectedDay.title}</h2>
+            <EditableField value={selectedDay.subtitle} onSave={v=>updateDay(selectedDay.id,{subtitle:v})} placeholder="Add subtitle..." style={{marginTop:4}}/>
+            <NoteBox value={selectedDay.note} onSave={v=>updateDay(selectedDay.id,{note:v})} placeholder="Add day notes..."/>
           </div>
+          <div style={{position:"relative",paddingLeft:30}}>
+            <div style={{position:"absolute",left:13,top:20,bottom:20,width:4,background:`linear-gradient(to bottom,${selectedDay.color},${selectedDay.color}30)`,borderRadius:2}}/>
+            {selectedDay.events.map((ev,i)=>{const tc=typeColors[ev.type];const isExp=expandedEvent===selectedDay.id+"-"+i;return(
+              <div key={i} style={{marginBottom:10,animation:"fadeSlideUp .4s ease-out",animationDelay:(i*.05)+"s",animationFillMode:"both"}}>
+                <div style={{position:"absolute",left:8,width:14,height:14,borderRadius:"50%",background:isExp?selectedDay.color:"white",border:"3px solid "+selectedDay.color,marginTop:16,transition:"all .2s"}}/>
+                <div onClick={()=>setExpandedEvent(isExp?null:selectedDay.id+"-"+i)} style={{background:"white",borderRadius:18,padding:"12px 14px",boxShadow:isExp?"0 6px 20px "+selectedDay.color+"15":"0 2px 10px rgba(0,0,0,0.03)",border:"2.5px solid "+(isExp?selectedDay.color+"50":tc.border+"20"),cursor:"pointer",transition:"all .2s"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <div style={{width:38,height:38,borderRadius:12,background:tc.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>{ev.icon}</div>
+                    <div style={{flex:1}}>
+                      <span style={{fontSize:10,color:selectedDay.color,fontWeight:900,background:selectedDay.color+"12",padding:"2px 8px",borderRadius:8}}>{ev.time}</span>
+                      <div style={{fontSize:13,fontWeight:900,color:"#333",marginTop:2}}>{ev.title}</div>
+                    </div>
+                    <span style={{fontSize:12,transition:"transform .2s",transform:isExp?"rotate(90deg)":"rotate(0)"}}>▸</span>
+                  </div>
+                  {isExp&&<div style={{marginTop:10,paddingTop:10,borderTop:`2px dashed ${selectedDay.color}15`}}>
+                    <EditableField value={ev.time} onSave={v=>updateEvent(selectedDay.id,i,{time:v})} placeholder="Time" style={{marginBottom:6}}/>
+                    <EditableField value={ev.title} onSave={v=>updateEvent(selectedDay.id,i,{title:v})} placeholder="Title" style={{marginBottom:6}}/>
+                    <EditableField value={ev.note} onSave={v=>updateEvent(selectedDay.id,i,{note:v})} placeholder="Add a note..." multiline style={{marginBottom:6}}/>
+                    <EditableField value={ev.mapQuery} onSave={v=>updateEvent(selectedDay.id,i,{mapQuery:v})} placeholder="Google Maps search query" style={{marginBottom:8}}/>
+                    <div style={{display:"flex",gap:6}}>
+                      {ev.mapQuery&&<button onClick={e=>{e.stopPropagation();openMaps(ev.mapQuery)}} style={{flex:1,background:"linear-gradient(135deg,#4285F4,#34A853)",color:"white",border:"none",borderRadius:12,padding:"10px 14px",fontSize:11,fontWeight:900,cursor:"pointer",fontFamily:"'M PLUS Rounded 1c',sans-serif"}}>📍 Google Maps</button>}
+                      <button onClick={e=>{e.stopPropagation();removeEvent(selectedDay.id,i)}} style={{background:"#FF4444",color:"white",border:"none",borderRadius:12,padding:"10px 14px",fontSize:11,fontWeight:900,cursor:"pointer",fontFamily:"'M PLUS Rounded 1c',sans-serif"}}>🗑️</button>
+                    </div>
+                  </div>}
+                </div>
+              </div>
+            )})}
+          </div>
+          <button onClick={()=>addEvent(selectedDay.id)} style={{width:"100%",background:"white",border:"2.5px dashed "+selectedDay.color+"40",borderRadius:16,padding:"12px",fontSize:13,fontWeight:900,color:selectedDay.color,cursor:"pointer",fontFamily:"'M PLUS Rounded 1c',sans-serif",marginTop:4,transition:"all .2s"}} onMouseEnter={e=>e.currentTarget.style.borderStyle="solid"} onMouseLeave={e=>e.currentTarget.style.borderStyle="dashed"}>➕ Add Stop</button>
         </React.Fragment>}
       </div>}
-      {activeTab==="stays"&&<div style={{animation:"fadeSlideUp 0.4s ease-out"}}>
-        <h2 style={{fontFamily:"'Zen Maru Gothic', sans-serif",fontSize:20,color:"#FF6B9D",marginBottom:16}}><span style={{animation:"stickerBounce 2s ease-in-out infinite"}}>🏠</span> Where You're Staying <span style={{fontSize:14,animation:"stickerPulse 2s ease-in-out infinite 0.3s"}}>✨</span></h2>
-        {ACCOMMODATIONS.map((acc,i)=><div key={i} style={{background:"white",borderRadius:26,padding:20,marginBottom:16,boxShadow:"0 4px 22px rgba(0,0,0,0.05)",border:"2.5px solid "+acc.color+"18",animation:"fadeSlideUp 0.4s ease-out",animationDelay:(i*0.1)+"s",animationFillMode:"both",position:"relative",overflow:"hidden"}}><span style={{position:"absolute",top:8,right:12,fontSize:18,animation:"stickerSwing 3s ease-in-out infinite",opacity:0.3}}>🏮</span><div style={{display:"flex",alignItems:"center",gap:14,marginBottom:14}}><div style={{width:58,height:58,borderRadius:20,background:"linear-gradient(135deg,"+acc.color+"25,"+acc.color+"08)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:32,border:"2px solid "+acc.color+"15"}}>{acc.emoji}</div><div><h3 style={{fontSize:17,fontWeight:900,color:"#333"}}>{acc.name}</h3><p style={{fontSize:12,color:"#AAA"}}>📍 {acc.location}</p></div></div><div style={{display:"flex",justifyContent:"space-between",background:acc.color+"06",borderRadius:16,padding:"12px 16px",marginBottom:14,border:"1.5px solid "+acc.color+"10"}}><div><div style={{fontSize:10,color:"#BBB",fontWeight:700,textTransform:"uppercase",letterSpacing:1}}>Dates</div><div style={{fontSize:15,fontWeight:900,color:"#333"}}>{acc.dates}</div></div><div style={{textAlign:"right"}}><div style={{fontSize:10,color:"#BBB",fontWeight:700,textTransform:"uppercase",letterSpacing:1}}>Price</div><div style={{fontSize:15,fontWeight:900,color:acc.color}}>{acc.price}</div></div></div><div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:14}}>{acc.amenities.map((a,j)=><span key={j} style={{background:acc.color+"08",color:acc.color,padding:"5px 12px",borderRadius:12,fontSize:11,fontWeight:700,border:"1.5px solid "+acc.color+"15"}}>{a}</span>)}</div><div style={{display:"flex",gap:10}}><button onClick={()=>openMaps(acc.airbnbSearch)} style={{flex:1,background:"linear-gradient(135deg,#4285F4,#34A853)",color:"white",border:"none",borderRadius:16,padding:"13px 16px",fontSize:12,fontWeight:900,cursor:"pointer",fontFamily:"'M PLUS Rounded 1c', sans-serif",boxShadow:"0 4px 14px rgba(66,133,244,0.25)",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>📍 Maps</button><button onClick={()=>openAirbnb(acc.airbnbSearch)} style={{flex:1,background:"linear-gradient(135deg,#FF5A5F,#FC642D)",color:"white",border:"none",borderRadius:16,padding:"13px 16px",fontSize:12,fontWeight:900,cursor:"pointer",fontFamily:"'M PLUS Rounded 1c', sans-serif",boxShadow:"0 4px 14px rgba(255,90,95,0.25)",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>🏠 Airbnb</button></div></div>)}
+
+      {/* STAYS */}
+      {activeTab==="stays"&&<div style={{animation:"fadeSlideUp .4s ease-out"}}>
+        <h2 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:18,color:pc.primary,marginBottom:14}}>🏠 Where You're Staying ✨</h2>
+        {stays.map((acc,i)=><div key={i} style={{background:"white",borderRadius:24,padding:18,marginBottom:14,boxShadow:"0 4px 22px rgba(0,0,0,0.05)",border:"2.5px solid "+acc.color+"18",animation:"fadeSlideUp .4s ease-out",animationDelay:(i*.1)+"s",animationFillMode:"both"}}>
+          <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:12}}>
+            <div style={{width:52,height:52,borderRadius:18,background:`linear-gradient(135deg,${acc.color}25,${acc.color}08)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:28}}>{acc.emoji}</div>
+            <div style={{flex:1}}>
+              <EditableField value={acc.name} onSave={v=>updateStay(i,{name:v})} placeholder="Stay name"/>
+              <EditableField value={acc.location} onSave={v=>updateStay(i,{location:v})} placeholder="Location" style={{marginTop:2}}/>
+            </div>
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between",background:acc.color+"06",borderRadius:14,padding:"10px 14px",marginBottom:12}}>
+            <div><div style={{fontSize:10,color:"#BBB",fontWeight:700}}>DATES</div><EditableField value={acc.dates} onSave={v=>updateStay(i,{dates:v})} placeholder="Dates"/></div>
+            <div style={{textAlign:"right"}}><div style={{fontSize:10,color:"#BBB",fontWeight:700}}>PRICE</div><EditableField value={acc.price} onSave={v=>updateStay(i,{price:v})} placeholder="Price"/></div>
+          </div>
+          <NoteBox value={acc.note} onSave={v=>updateStay(i,{note:v})} placeholder="Add notes about this stay..."/>
+          <div style={{display:"flex",gap:8,marginTop:10}}>
+            <button onClick={()=>openMaps(acc.airbnbSearch)} style={{flex:1,background:"linear-gradient(135deg,#4285F4,#34A853)",color:"white",border:"none",borderRadius:14,padding:"11px",fontSize:11,fontWeight:900,cursor:"pointer",fontFamily:"'M PLUS Rounded 1c',sans-serif"}}>📍 Maps</button>
+            <button onClick={()=>openAirbnb(acc.airbnbSearch)} style={{flex:1,background:"linear-gradient(135deg,#FF5A5F,#FC642D)",color:"white",border:"none",borderRadius:14,padding:"11px",fontSize:11,fontWeight:900,cursor:"pointer",fontFamily:"'M PLUS Rounded 1c',sans-serif"}}>🏠 Airbnb</button>
+          </div>
+        </div>)}
       </div>}
-      {activeTab==="packing"&&<div style={{animation:"fadeSlideUp 0.4s ease-out"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}><h2 style={{fontFamily:"'Zen Maru Gothic', sans-serif",fontSize:20,color:"#FF6B9D"}}><span style={{animation:"stickerBounce 2s ease-in-out infinite"}}>🎒</span> Packing List</h2><span style={{background:packingList.every(p=>p.checked)?"#77DD7715":"#FF6B9D10",color:packingList.every(p=>p.checked)?"#77DD77":"#FF6B9D",padding:"5px 14px",borderRadius:12,fontSize:12,fontWeight:900,border:"1.5px solid "+(packingList.every(p=>p.checked)?"#77DD7730":"#FF6B9D20")}}>{packingList.every(p=>p.checked)?"✅ All packed!":packingList.filter(p=>p.checked).length+"/"+packingList.length+" packed"}</span></div>
-        <div style={{background:"#FFE0F0",borderRadius:12,height:10,marginBottom:18,overflow:"hidden",border:"1.5px solid #FFD0E5"}}><div style={{background:"linear-gradient(90deg,#FF6B9D,#C77DFF,#9B59FF)",height:"100%",borderRadius:10,width:(packingList.filter(p=>p.checked).length/packingList.length*100)+"%",transition:"width 0.4s ease",backgroundSize:"200% 100%",animation:"shimmer 2s linear infinite"}}/></div>
-        {packingList.map((item,i)=><div key={i} onClick={()=>togglePacking(i)} style={{background:item.checked?"linear-gradient(135deg,#F0FFF0,#F5FFF5)":"white",borderRadius:18,padding:"14px 16px",marginBottom:8,display:"flex",alignItems:"center",gap:12,cursor:"pointer",border:"2.5px solid "+(item.checked?"#77DD7730":"#F0F0F0"),transition:"all 0.2s ease",animation:"fadeSlideUp 0.3s ease-out",animationDelay:(i*0.04)+"s",animationFillMode:"both",position:"relative"}}>{item.checked&&<span style={{position:"absolute",top:-4,right:10,fontSize:12,animation:"stickerPulse 2s ease-in-out infinite"}}>✨</span>}<div style={{width:30,height:30,borderRadius:10,border:"2.5px solid "+(item.checked?"#77DD77":"#DDD"),background:item.checked?"linear-gradient(135deg,#77DD77,#66CC66)":"white",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,color:"white",fontWeight:900,boxShadow:item.checked?"0 2px 8px rgba(119,221,119,0.3)":"none"}}>{item.checked?"✓":""}</div><span style={{fontSize:20}}>{item.emoji}</span><span style={{fontSize:14,fontWeight:700,color:item.checked?"#AAA":"#333",textDecoration:item.checked?"line-through":"none"}}>{item.item}</span></div>)}
+
+      {/* PACKING */}
+      {activeTab==="packing"&&<div style={{animation:"fadeSlideUp .4s ease-out"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+          <h2 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:18,color:pc.primary}}>🎒 Packing List</h2>
+          <span style={{background:packingList.every(p=>p.checked)?"#77DD7715":"#FF6B9D10",color:packingList.every(p=>p.checked)?"#77DD77":"#FF6B9D",padding:"4px 12px",borderRadius:10,fontSize:11,fontWeight:900}}>{packingList.every(p=>p.checked)?"✅ Done!":packingList.filter(p=>p.checked).length+"/"+packingList.length}</span>
+        </div>
+        <div style={{background:"#FFE0F0",borderRadius:10,height:8,marginBottom:14,overflow:"hidden"}}><div style={{background:"linear-gradient(90deg,#FF6B9D,#C77DFF,#9B59FF)",height:"100%",borderRadius:8,width:(packingList.filter(p=>p.checked).length/Math.max(packingList.length,1)*100)+"%",transition:"width .4s ease",backgroundSize:"200% 100%",animation:"shimmer 2s linear infinite"}}/></div>
+        {packingList.map((item,i)=><div key={i} style={{background:item.checked?"linear-gradient(135deg,#F0FFF0,#F5FFF5)":"white",borderRadius:16,padding:"12px 14px",marginBottom:6,display:"flex",alignItems:"center",gap:10,cursor:"pointer",border:"2px solid "+(item.checked?"#77DD7730":"#F0F0F0"),transition:"all .2s",animation:"fadeSlideUp .3s ease-out",animationDelay:(i*.03)+"s",animationFillMode:"both"}}>
+          <div onClick={()=>togglePacking(i)} style={{width:28,height:28,borderRadius:9,border:"2.5px solid "+(item.checked?"#77DD77":"#DDD"),background:item.checked?"#77DD77":"white",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,color:"white",fontWeight:900,flexShrink:0,cursor:"pointer"}}>{item.checked?"✓":""}</div>
+          <span style={{fontSize:18}}>{item.emoji}</span>
+          <span style={{fontSize:13,fontWeight:700,color:item.checked?"#AAA":"#333",textDecoration:item.checked?"line-through":"none",flex:1}}>{item.item}</span>
+          <button onClick={()=>removePackItem(i)} style={{background:"none",border:"none",fontSize:14,cursor:"pointer",opacity:.3,padding:4}}>✕</button>
+        </div>)}
+        <div style={{display:"flex",gap:6,marginTop:10}}>
+          <input value={newPackItem} onChange={e=>setNewPackItem(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")addPackItem()}} placeholder="Add item..." style={{flex:1,border:"2.5px dashed #FFE0F0",borderRadius:14,padding:"10px 14px",fontSize:12,outline:"none",background:"#FFFAFC",fontFamily:"'M PLUS Rounded 1c',sans-serif"}}/>
+          <button onClick={addPackItem} className="save-btn" style={{padding:"10px 16px"}}>➕</button>
+        </div>
       </div>}
-      {activeTab==="phrases"&&<div style={{animation:"fadeSlideUp 0.4s ease-out"}}>
-        <h2 style={{fontFamily:"'Zen Maru Gothic', sans-serif",fontSize:20,color:"#FF6B9D",marginBottom:16}}><span style={{animation:"stickerWave 2s ease-in-out infinite"}}>🗣️</span> Useful Phrases <span style={{fontSize:14,animation:"stickerBounce 2.5s ease-in-out infinite 0.3s"}}>🇯🇵</span></h2>
-        {PHRASES.map((p,i)=><div key={i} style={{background:"white",borderRadius:22,padding:"16px 18px",marginBottom:10,boxShadow:"0 3px 14px rgba(0,0,0,0.03)",border:"2.5px solid #FFE0F015",animation:"fadeSlideUp 0.3s ease-out",animationDelay:(i*0.05)+"s",animationFillMode:"both",position:"relative"}}><span style={{position:"absolute",top:8,right:12,fontSize:12,opacity:0.3,animation:"stickerDrift1 3s ease-in-out infinite "+(i*0.2)+"s"}}>{["🌸","⭐","🎀","✨","💖","🌟","🎵","🍡"][i]}</span><div style={{fontFamily:"'Zen Maru Gothic', sans-serif",fontSize:28,color:"#333",marginBottom:6}}>{p.jp}</div><div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><div><div style={{fontSize:14,color:"#FF6B9D",fontWeight:700}}>{p.romaji}</div><div style={{fontSize:12,color:"#AAA"}}>{p.en}</div></div><div style={{background:"linear-gradient(135deg,#FF6B9D15,#9B59FF10)",width:38,height:38,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,border:"1.5px solid #FF6B9D15"}}>🔊</div></div></div>)}
+
+      {/* NOTES */}
+      {activeTab==="notes"&&<div style={{animation:"fadeSlideUp .4s ease-out"}}>
+        <h2 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:18,color:pc.primary,marginBottom:14}}>📝 Trip Journal ✨</h2>
+        <div style={{background:"white",borderRadius:22,padding:18,boxShadow:"0 4px 20px rgba(0,0,0,0.04)",border:"2.5px solid #FFE0F020"}}>
+          <textarea className="note-area" value={generalNotes} onChange={e=>{setGeneralNotes(e.target.value);saveData(profile+"-notes",e.target.value)}} placeholder="Write anything — travel ideas, wishlists, restaurant recommendations, things to remember... 🐱✨" style={{minHeight:200,fontSize:14}}/>
+        </div>
+        <p style={{fontSize:11,color:"#CCC",textAlign:"center",marginTop:10}}>Auto-saved for {pc.name} 💾</p>
+      </div>}
+
+      {/* PHRASES */}
+      {activeTab==="phrases"&&<div style={{animation:"fadeSlideUp .4s ease-out"}}>
+        <h2 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:18,color:pc.primary,marginBottom:14}}>🗣️ Useful Phrases 🇯🇵</h2>
+        {PHRASES.map((p,i)=><div key={i} style={{background:"white",borderRadius:20,padding:"14px 16px",marginBottom:8,boxShadow:"0 3px 14px rgba(0,0,0,0.03)",border:"2.5px solid #FFE0F015",animation:"fadeSlideUp .3s ease-out",animationDelay:(i*.05)+"s",animationFillMode:"both",position:"relative"}}>
+          <span style={{position:"absolute",top:6,right:10,fontSize:11,opacity:.3,animation:"stickerDrift1 3s ease-in-out infinite "+(i*.2)+"s"}}>{["🌸","⭐","🎀","✨","💖","🌟","🎵","🍡"][i]}</span>
+          <div style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:26,color:"#333",marginBottom:4}}>{p.jp}</div>
+          <div style={{fontSize:13,color:"#FF6B9D",fontWeight:700}}>{p.romaji}</div>
+          <div style={{fontSize:11,color:"#AAA"}}>{p.en}</div>
+        </div>)}
+      </div>}
+
+      {/* PARTNER VIEW */}
+      {activeTab==="partner"&&<div style={{animation:"fadeSlideUp .4s ease-out"}}>
+        {(()=>{const other=profile==="A"?"B":"A";const oc=PROFILE_COLORS[other];return(<React.Fragment>
+          <h2 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:18,color:oc.primary,marginBottom:14}}>{other==="A"?"🌸":"🍃"} {oc.name}'s Itinerary 👀</h2>
+          {partnerDays&&partnerDays.map((day,i)=><div key={day.id} style={{background:"white",borderRadius:20,padding:14,marginBottom:10,border:"2.5px solid "+day.color+"18",animation:"fadeSlideUp .4s ease-out",animationDelay:(i*.07)+"s",animationFillMode:"both"}}>
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
+              <div style={{width:44,height:44,borderRadius:14,background:`linear-gradient(135deg,${day.color},${day.color}88)`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>{day.emoji}</div>
+              <div><div style={{fontSize:10,color:day.color,fontWeight:900,textTransform:"uppercase"}}>{day.date}</div><div style={{fontSize:14,fontWeight:900,color:"#333"}}>{day.title}</div><div style={{fontSize:11,color:"#AAA"}}>{day.subtitle}</div></div>
+            </div>
+            {day.note&&<div style={{background:"#FFFAFC",border:"1.5px dashed #FFE0F0",borderRadius:12,padding:10,marginBottom:8,fontSize:12,color:"#666"}}>📝 {day.note}</div>}
+            {day.events.map((ev,j)=><div key={j} style={{display:"flex",alignItems:"center",gap:8,padding:"6px 0",borderBottom:j<day.events.length-1?"1px solid #F8F0FF":"none"}}>
+              <span style={{fontSize:10,color:day.color,fontWeight:900,width:40}}>{ev.time}</span>
+              <span style={{fontSize:16}}>{ev.icon}</span>
+              <span style={{fontSize:12,fontWeight:700,color:"#555"}}>{ev.title}</span>
+            </div>)}
+          </div>)}
+          {partnerNotes&&<div style={{background:"white",borderRadius:20,padding:16,border:"2.5px solid "+oc.primary+"18",marginTop:10}}>
+            <h3 style={{fontSize:14,color:oc.primary,fontWeight:900,marginBottom:6}}>📝 Their Notes</h3>
+            <p style={{fontSize:12,color:"#666",whiteSpace:"pre-wrap",lineHeight:1.5}}>{partnerNotes}</p>
+          </div>}
+        </React.Fragment>)})()}
       </div>}
     </div>
+
     {/* BOTTOM NAV */}
-    <div style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(255,255,255,0.92)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderTop:"2.5px solid #FFE0F0",padding:"6px 8px 10px",display:"flex",justifyContent:"space-around",zIndex:100,boxShadow:"0 -4px 25px rgba(255,107,157,0.1)"}}>
-      {[{id:"home",icon:"🏠",label:"Home"},{id:"itinerary",icon:"🗺️",label:"Route"},{id:"stays",icon:"🏡",label:"Stays"},{id:"packing",icon:"🎒",label:"Pack"},{id:"phrases",icon:"🗣️",label:"Phrases"}].map(tab=><button key={tab.id} onClick={()=>{setActiveTab(tab.id);if(tab.id==="itinerary"&&!selectedDay)setSelectedDay(DAYS[0])}} style={{background:activeTab===tab.id?"linear-gradient(135deg,#FF6B9D18,#9B59FF12)":"transparent",border:activeTab===tab.id?"2px solid #FF6B9D20":"2px solid transparent",borderRadius:18,padding:"6px 16px",display:"flex",flexDirection:"column",alignItems:"center",gap:2,cursor:"pointer",transition:"all 0.2s ease",transform:activeTab===tab.id?"scale(1.08)":"scale(1)",animation:activeTab===tab.id?"tabGlow 2s ease-in-out infinite":"none"}}><span style={{fontSize:22}}>{tab.icon}</span><span style={{fontSize:10,fontWeight:900,color:activeTab===tab.id?"#FF6B9D":"#CCC",fontFamily:"'M PLUS Rounded 1c', sans-serif"}}>{tab.label}</span>{activeTab===tab.id&&<div style={{width:5,height:5,borderRadius:"50%",background:"linear-gradient(135deg,#FF6B9D,#9B59FF)",marginTop:1}}/>}</button>)}
+    <div style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(255,255,255,0.92)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderTop:"2.5px solid #FFE0F0",padding:"4px 4px 8px",display:"flex",justifyContent:"space-around",zIndex:100,boxShadow:"0 -4px 25px rgba(255,107,157,0.1)"}}>
+      {[{id:"home",icon:"🏠",label:"Home"},{id:"itinerary",icon:"🗺️",label:"Route"},{id:"stays",icon:"🏡",label:"Stays"},{id:"packing",icon:"🎒",label:"Pack"},{id:"notes",icon:"📝",label:"Notes"},{id:"phrases",icon:"🗣️",label:"Talk"},{id:"partner",icon:"👀",label:"Partner"}].map(tab=><button key={tab.id} onClick={()=>{setActiveTab(tab.id);if(tab.id==="itinerary"&&!selectedDay)setSelectedDay(days[0])}} style={{background:activeTab===tab.id?`linear-gradient(135deg,${pc.primary}18,#9B59FF12)`:"transparent",border:activeTab===tab.id?`2px solid ${pc.primary}20`:"2px solid transparent",borderRadius:16,padding:"5px 8px",display:"flex",flexDirection:"column",alignItems:"center",gap:1,cursor:"pointer",transition:"all .2s",transform:activeTab===tab.id?"scale(1.05)":"scale(1)",minWidth:0}}>
+        <span style={{fontSize:18}}>{tab.icon}</span>
+        <span style={{fontSize:8,fontWeight:900,color:activeTab===tab.id?pc.primary:"#CCC",fontFamily:"'M PLUS Rounded 1c',sans-serif"}}>{tab.label}</span>
+        {activeTab===tab.id&&<div style={{width:4,height:4,borderRadius:"50%",background:`linear-gradient(135deg,${pc.primary},#9B59FF)`}}/>}
+      </button>)}
     </div>
   </div>);
 }
