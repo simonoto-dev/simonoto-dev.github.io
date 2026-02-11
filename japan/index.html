@@ -71,7 +71,7 @@ const PROFILE_COLORS={A:{primary:"#FF6B9D",accent:"#E84393",name:"Profile A"},B:
 
 /* ===== SHINKANSEN SVG ===== */
 function ShinkansenTrain({width=280}){
-  return(<svg width={width} height={Math.round(width*0.14)} viewBox="0 0 280 40" style={{display:"block"}}>
+  return(<svg width={width} height={Math.round(width*0.14)} viewBox="0 0 280 40" style={{display:"block",transform:"scaleX(-1)"}}>
     <line x1="-10" y1="18" x2="-2" y2="18" stroke="white" strokeWidth="1.5" opacity="0.4"/>
     <line x1="-15" y1="24" x2="-4" y2="24" stroke="white" strokeWidth="1" opacity="0.3"/>
     <path d="M0 28Q8 28 18 24Q28 18 40 16L40 28Q40 32 36 32L4 32Q0 32 0 28Z" fill="white"/>
@@ -99,8 +99,8 @@ function ShinkansenTrain({width=280}){
 function ConductorBonito({expression="hearts",size=120,animate=true}){
   const eyeV={
     hearts:<React.Fragment>
-      <g transform="translate(30,38)"><path d="M0 2.5Q0-0.5 2.5-0.5Q5-0.5 5 2.5Q5 5.5 2.5 8Q0 5.5 0 2.5Z" fill="#FF6B9D"/><path d="M5 2.5Q5-0.5 7.5-0.5Q10-0.5 10 2.5Q10 5.5 7.5 8Q5 5.5 5 2.5Z" fill="#FF6B9D"/><circle cx="2.5" cy="1.5" r="1.2" fill="white" opacity="0.8"/></g>
-      <g transform="translate(58,38)"><path d="M0 2.5Q0-0.5 2.5-0.5Q5-0.5 5 2.5Q5 5.5 2.5 8Q0 5.5 0 2.5Z" fill="#FF6B9D"/><path d="M5 2.5Q5-0.5 7.5-0.5Q10-0.5 10 2.5Q10 5.5 7.5 8Q5 5.5 5 2.5Z" fill="#FF6B9D"/><circle cx="2.5" cy="1.5" r="1.2" fill="white" opacity="0.8"/></g>
+      <g transform="translate(28,36)"><path d="M6 11 C6 11 0 7 0 3.5 C0 1 1.5 0 3 0 C4.5 0 6 1.5 6 3 C6 1.5 7.5 0 9 0 C10.5 0 12 1 12 3.5 C12 7 6 11 6 11Z" fill="#FF6B9D"/><circle cx="3.5" cy="3" r="1.5" fill="white" opacity="0.7"/></g>
+      <g transform="translate(56,36)"><path d="M6 11 C6 11 0 7 0 3.5 C0 1 1.5 0 3 0 C4.5 0 6 1.5 6 3 C6 1.5 7.5 0 9 0 C10.5 0 12 1 12 3.5 C12 7 6 11 6 11Z" fill="#FF6B9D"/><circle cx="3.5" cy="3" r="1.5" fill="white" opacity="0.7"/></g>
     </React.Fragment>,
     stars:<React.Fragment>
       <g transform="translate(30,37)"><polygon points="5,0 6.5,3.5 10,4 7.5,6.5 8,10 5,8.2 2,10 2.5,6.5 0,4 3.5,3.5" fill="#FFD700"/><circle cx="4" cy="4" r="1.3" fill="white" opacity="0.7"/></g>
@@ -118,10 +118,10 @@ function ConductorBonito({expression="hearts",size=120,animate=true}){
     </React.Fragment>
   };
   const mthV={
-    hearts:<React.Fragment><path d="M44 52Q46 49.5 49 52Q52 49.5 54 52" stroke="#2D1B00" strokeWidth="1.5" fill="none" strokeLinecap="round"/><ellipse cx="49" cy="53.5" rx="2" ry="1.5" fill="#FF9999"/></React.Fragment>,
-    stars:<React.Fragment><ellipse cx="49" cy="53" rx="5" ry="4" fill="#2D1B00"/><ellipse cx="49" cy="51.5" rx="3.5" ry="1.5" fill="#FF9999"/></React.Fragment>,
-    happy:<path d="M44 52Q46 49.5 49 52Q52 49.5 54 52" stroke="#2D1B00" strokeWidth="1.5" fill="none" strokeLinecap="round"/>,
-    wink:<React.Fragment><path d="M44 52Q46 49.5 49 52Q52 49.5 54 52" stroke="#2D1B00" strokeWidth="1.5" fill="none" strokeLinecap="round"/><ellipse cx="49" cy="53.5" rx="1.5" ry="1.2" fill="#FF9999"/></React.Fragment>
+    hearts:<React.Fragment><path d="M44 51Q46 54 49 51Q52 54 54 51" stroke="#2D1B00" strokeWidth="1.5" fill="none" strokeLinecap="round"/><ellipse cx="49" cy="53" rx="2.5" ry="1.8" fill="#FF9999"/></React.Fragment>,
+    stars:<React.Fragment><ellipse cx="49" cy="53" rx="5" ry="4.5" fill="#2D1B00"/><ellipse cx="49" cy="52" rx="4" ry="2" fill="#FF9999"/></React.Fragment>,
+    happy:<path d="M44 51Q46 54 49 51Q52 54 54 51" stroke="#2D1B00" strokeWidth="1.5" fill="none" strokeLinecap="round"/>,
+    wink:<React.Fragment><path d="M44 51Q46 54 49 51Q52 54 54 51" stroke="#2D1B00" strokeWidth="1.5" fill="none" strokeLinecap="round"/><ellipse cx="49" cy="53" rx="2" ry="1.5" fill="#FF9999"/></React.Fragment>
   };
   return(
     <svg width={size} height={size} viewBox="0 0 100 115" style={animate?{animation:"yukiFloat 3s ease-in-out infinite"}:{}}>
@@ -174,9 +174,9 @@ function ConductorBonito({expression="hearts",size=120,animate=true}){
       <path d="M90 48Q81 48 72 48" stroke="#D4802A" strokeWidth="0.8" fill="none" opacity="0.45"/>
       <path d="M87 54Q79 52 71 51" stroke="#D4802A" strokeWidth="0.8" fill="none" opacity="0.45"/>
       {/* Nose — small Sanrio triangle */}
-      <path d="M46 48L49 46L52 48Z" fill="#FF8888"/>
+      <path d="M46 46L49 48.5L52 46Z" fill="#FF8888"/>
       {/* Nose to mouth line */}
-      <line x1="49" y1="48" x2="49" y2="50" stroke="#2D1B00" strokeWidth="1" strokeLinecap="round"/>
+      <line x1="49" y1="48.5" x2="49" y2="50" stroke="#2D1B00" strokeWidth="1" strokeLinecap="round"/>
       {/* Mouth */}
       {mthV[expression]||mthV.hearts}
       {/* Neck */}
@@ -188,8 +188,7 @@ function ConductorBonito({expression="hearts",size=120,animate=true}){
       <circle cx="42" cy="94" r="1.8" fill="#C9A84C"/><circle cx="56" cy="94" r="1.8" fill="#C9A84C"/>
       <path d="M41 66L49 74L57 66" stroke="white" strokeWidth="2.2" fill="none" strokeLinejoin="round"/>
       <rect x="24" y="68" width="12" height="3.5" rx="1.5" fill="#C9A84C"/><rect x="62" y="68" width="12" height="3.5" rx="1.5" fill="#C9A84C"/>
-      <rect x="57" y="80" width="13" height="6" rx="2" fill="white" opacity="0.9"/>
-      <text x="63.5" y="85" textAnchor="middle" fontSize="4" fill="#1B3A5C" fontWeight="bold">BONITO</text>
+      <rect x="55" y="79" width="18" height="8" rx="4" fill="white" opacity="0.95" stroke="#C9A84C" strokeWidth="0.5"/><text x="64" y="85" textAnchor="middle" fontSize="4.2" fill="#FF6B9D" fontWeight="900" fontFamily="'Zen Maru Gothic',sans-serif" letterSpacing="0.3">BONITO</text>
       {/* Arms */}
       <path d="M24 72Q14 76 10 68Q8 63 13 58" stroke="#1B3A5C" strokeWidth="8" fill="none" strokeLinecap="round"/>
       <circle cx="13" cy="57" r="4.5" fill="white"/><circle cx="12" cy="58" r="0.8" fill="#FFD0D0"/><circle cx="15" cy="57" r="0.7" fill="#FFD0D0"/>
@@ -226,14 +225,14 @@ function EditableField({value,onSave,placeholder="",multiline=false,style={}}){
   useEffect(()=>setVal(value),[value]);
   if(!editing)return(<div style={{display:"flex",alignItems:"flex-start",gap:6,...style}}>
     <span style={{flex:1,fontSize:13,color:value?"#555":"#CCC",lineHeight:1.5}}>{value||placeholder}</span>
-    <button className="edit-btn" onClick={()=>setEditing(true)} style={{flexShrink:0}}>✏️</button>
+    <button className="edit-btn" onClick={e=>{e.stopPropagation();setEditing(true)}} style={{flexShrink:0}}>✏️</button>
   </div>);
   return(<div style={{display:"flex",flexDirection:"column",gap:6,...style}}>
-    {multiline?<textarea className="note-area" value={val} onChange={e=>setVal(e.target.value)} placeholder={placeholder} autoFocus/>:
-    <input type="text" value={val} onChange={e=>setVal(e.target.value)} placeholder={placeholder} autoFocus style={{border:"2px solid #FFE0F0",borderRadius:12,padding:"8px 12px",fontSize:13,outline:"none",background:"#FFFAFC",fontFamily:"'M PLUS Rounded 1c',sans-serif"}} onKeyDown={e=>{if(e.key==="Enter"){onSave(val);setEditing(false)}}}/>}
+    {multiline?<textarea className="note-area" onClick={e=>e.stopPropagation()} value={val} onChange={e=>setVal(e.target.value)} placeholder={placeholder} autoFocus/>:
+    <input type="text" onClick={e=>e.stopPropagation()} value={val} onChange={e=>setVal(e.target.value)} placeholder={placeholder} autoFocus style={{border:"2px solid #FFE0F0",borderRadius:12,padding:"8px 12px",fontSize:13,outline:"none",background:"#FFFAFC",fontFamily:"'M PLUS Rounded 1c',sans-serif"}} onKeyDown={e=>{e.stopPropagation();if(e.key==="Enter"){e.stopPropagation();onSave(val);setEditing(false)}}}/>}
     <div style={{display:"flex",gap:6,justifyContent:"flex-end"}}>
-      <button className="edit-btn" onClick={()=>{setVal(value);setEditing(false)}}>Cancel</button>
-      <button className="save-btn" onClick={()=>{onSave(val);setEditing(false)}}>💾 Save</button>
+      <button className="edit-btn" onClick={e=>{e.stopPropagation();setVal(value);setEditing(false)}}>Cancel</button>
+      <button className="save-btn" onClick={e=>{e.stopPropagation();onSave(val);setEditing(false)}}>💾 Save</button>
     </div>
   </div>);
 }
@@ -246,13 +245,13 @@ function NoteBox({value,onSave,placeholder="Add a note..."}){
   return(<div style={{background:"#FFFAFC",border:"2px dashed #FFE0F0",borderRadius:16,padding:12,marginTop:8}}>
     <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}>
       <span style={{fontSize:13,fontWeight:900,color:"#FF6B9D"}}>📝 Notes</span>
-      {!editing&&<button className="edit-btn" onClick={()=>setEditing(true)} style={{marginLeft:"auto"}}>✏️</button>}
+      {!editing&&<button className="edit-btn" onClick={e=>{e.stopPropagation();setEditing(true)}} style={{marginLeft:"auto"}}>✏️</button>}
     </div>
     {editing?<React.Fragment>
-      <textarea className="note-area" value={val} onChange={e=>setVal(e.target.value)} placeholder={placeholder} autoFocus/>
+      <textarea className="note-area" onClick={e=>e.stopPropagation()} value={val} onChange={e=>setVal(e.target.value)} placeholder={placeholder} autoFocus/>
       <div style={{display:"flex",gap:6,justifyContent:"flex-end",marginTop:6}}>
-        <button className="edit-btn" onClick={()=>{setVal(value||"");setEditing(false)}}>Cancel</button>
-        <button className="save-btn" onClick={()=>{onSave(val);setEditing(false)}}>💾 Save</button>
+        <button className="edit-btn" onClick={e=>{e.stopPropagation();setVal(value||"");setEditing(false)}}>Cancel</button>
+        <button className="save-btn" onClick={e=>{e.stopPropagation();onSave(val);setEditing(false)}}>💾 Save</button>
       </div>
     </React.Fragment>:
     <p style={{fontSize:12,color:val?"#666":"#CCC",lineHeight:1.5,whiteSpace:"pre-wrap"}}>{val||placeholder}</p>}
