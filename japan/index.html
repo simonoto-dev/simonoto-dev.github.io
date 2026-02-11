@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>🚂 Japan Adventure — Yuki Express</title>
+  <meta name="description" content="Kawaii Japan vacation planner with Conductor Yuki" />
+  <meta name="theme-color" content="#FF6B9D" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body, #root { min-height: 100vh; min-height: 100dvh; }
+    body { font-family: 'M PLUS Rounded 1c', sans-serif; -webkit-font-smoothing: antialiased; background: #FFF5F9; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #FFB3D9; border-radius: 3px; }
+
+    @keyframes yukiFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    @keyframes fadeSlideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes trainMove { 0%{transform:translateX(-120%)} 100%{transform:translateX(250%)} }
+    @keyframes bobble { 0%,100%{transform:rotate(-3deg)} 50%{transform:rotate(3deg)} }
+    @keyframes shimmer { 0%{background-position:-200% center} 100%{background-position:200% center} }
+    @keyframes stickerDrift1 { 0%,100%{transform:translate(0,0) rotate(0deg)} 25%{transform:translate(5px,-8px) rotate(5deg)} 50%{transform:translate(-3px,-14px) rotate(-3deg)} 75%{transform:translate(4px,-6px) rotate(4deg)} }
+    @keyframes stickerDrift2 { 0%,100%{transform:translate(0,0) rotate(0deg)} 33%{transform:translate(-6px,-10px) rotate(-6deg)} 66%{transform:translate(4px,-5px) rotate(4deg)} }
+    @keyframes stickerBounce { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-12px) scale(1.15)} }
+    @keyframes stickerSpin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+    @keyframes stickerSparkle { 0%,100%{opacity:0.1;transform:scale(0.8)} 50%{opacity:0.3;transform:scale(1.3)} }
+    @keyframes stickerWave { 0%,100%{transform:rotate(-10deg)} 50%{transform:rotate(10deg)} }
+    @keyframes stickerSwing { 0%,100%{transform:rotate(-8deg) translateY(0)} 50%{transform:rotate(8deg) translateY(-5px)} }
+    @keyframes stickerPulse { 0%,100%{transform:scale(1);opacity:0.15} 50%{transform:scale(1.3);opacity:0.3} }
+    @keyframes stickerZoom { 0%,100%{transform:translateX(0) scale(1)} 50%{transform:translateX(8px) scale(1.1)} }
+    @keyframes tabGlow { 0%,100%{box-shadow:0 0 0 rgba(255,107,157,0)} 50%{box-shadow:0 0 12px rgba(255,107,157,0.3)} }
+    @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+    @keyframes splashBounce { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-25px) scale(1.03)} }
+    @keyframes splashFadeIn { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes splashSticker { 0%,100%{transform:translateY(0) rotate(0deg) scale(1)} 25%{transform:translateY(-12px) rotate(5deg) scale(1.1)} 50%{transform:translateY(-20px) rotate(-3deg) scale(1.05)} 75%{transform:translateY(-8px) rotate(2deg) scale(1.08)} }
+    @keyframes trainRoll { 0%{transform:translateX(-150%)} 100%{transform:translateX(150%)} }
+    @keyframes sparkleFloat { 0%,100%{opacity:0;transform:scale(0) translateY(0)} 50%{opacity:1;transform:scale(1) translateY(-20px)} }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useCallback } = React;
+
+    /* ===== DATA ===== */
+    const DAYS = [
+      {
+        id: 1, date: "Day 1", title: "Tokyo Arrival ✈️", subtitle: "Shibuya & Harajuku", color: "#FF6B9D", emoji: "🗼",
+        events: [
+          { time: "14:00", title: "Arrive at Narita Airport", icon: "✈️", type: "travel", note: "Take Narita Express to Shibuya (~90 min)", mapQuery: "Narita+Airport+Tokyo" },
+          { time: "16:00", title: "Check in to Airbnb", icon: "🏠", type: "stay", note: "Drop bags, freshen up", mapQuery: "Shibuya+Station+Tokyo" },
+          { time: "17:30", title: "Explore Takeshita Street", icon: "🛍️", type: "explore", note: "Harajuku's famous kawaii shopping street!", mapQuery: "Takeshita+Street+Harajuku+Tokyo" },
+          { time: "19:00", title: "Dinner at Genki Sushi", icon: "🍣", type: "food", note: "Conveyor belt sushi experience", mapQuery: "Genki+Sushi+Shibuya+Tokyo" },
+          { time: "21:00", title: "Shibuya Crossing at Night", icon: "🌃", type: "explore", note: "See the famous scramble crossing lit up!", mapQuery: "Shibuya+Crossing+Tokyo" },
+        ],
+      },
+      {
+        id: 2, date: "Day 2", title: "Classic Tokyo 🏯", subtitle: "Asakusa & Akihabara", color: "#9B59FF", emoji: "⛩️",
+        events: [
+          { time: "08:00", title: "Breakfast at Tsukiji Outer Market", icon: "🐟", type: "food", note: "Fresh sushi & tamagoyaki for breakfast", mapQuery: "Tsukiji+Outer+Market+Tokyo" },
+          { time: "10:00", title: "Senso-ji Temple", icon: "⛩️", type: "explore", note: "Tokyo's oldest temple — get fortunes!", mapQuery: "Senso-ji+Temple+Tokyo" },
+          { time: "12:30", title: "Lunch in Asakusa", icon: "🍜", type: "food", note: "Try tempura or monjayaki", mapQuery: "Asakusa+Tokyo" },
+          { time: "14:00", title: "Akihabara Electric Town", icon: "🎮", type: "explore", note: "Anime, games, & electronics paradise", mapQuery: "Akihabara+Tokyo" },
+          { time: "17:00", title: "TeamLab Planets", icon: "🎨", type: "explore", note: "Immersive digital art — book tickets!", mapQuery: "TeamLab+Planets+Tokyo" },
+          { time: "20:00", title: "Ramen in Shinjuku", icon: "🍜", type: "food", note: "Fuunji tsukemen or Ichiran ramen", mapQuery: "Shinjuku+Ramen+Street+Tokyo" },
+        ],
+      },
+      {
+        id: 3, date: "Day 3", title: "Day Trip 🗻", subtitle: "Kamakura", color: "#00C9A7", emoji: "🌸",
+        events: [
+          { time: "07:30", title: "Early Train Departure", icon: "🚄", type: "travel", note: "Take JR line to Kamakura (~1 hr)", mapQuery: "Kamakura+Station" },
+          { time: "09:00", title: "Great Buddha (Daibutsu)", icon: "🗿", type: "explore", note: "Iconic 13m bronze Buddha statue", mapQuery: "Kotoku-in+Kamakura" },
+          { time: "11:00", title: "Hokokuji Bamboo Temple", icon: "🎋", type: "explore", note: "Stunning bamboo grove + matcha tea", mapQuery: "Hokokuji+Temple+Kamakura" },
+          { time: "12:30", title: "Komachi-dori Street Lunch", icon: "🍡", type: "food", note: "Street food & cute shops", mapQuery: "Komachi-dori+Kamakura" },
+          { time: "14:30", title: "Enoshima Island", icon: "🏝️", type: "explore", note: "Sea caves, shrines & ocean views", mapQuery: "Enoshima+Island" },
+          { time: "18:00", title: "Return to Tokyo", icon: "🚃", type: "travel", note: "Rest up for tomorrow!", mapQuery: "Shibuya+Station+Tokyo" },
+        ],
+      },
+      {
+        id: 4, date: "Day 4", title: "Culture Day 🎌", subtitle: "Meiji Shrine & Omotesando", color: "#FF9F43", emoji: "🎎",
+        events: [
+          { time: "08:00", title: "Meiji Shrine Morning Walk", icon: "⛩️", type: "explore", note: "Peaceful morning at this forest shrine", mapQuery: "Meiji+Shrine+Tokyo" },
+          { time: "10:30", title: "Omotesando Shopping", icon: "🛍️", type: "explore", note: "High-end fashion boulevard", mapQuery: "Omotesando+Tokyo" },
+          { time: "12:00", title: "Cat Cafe Visit", icon: "🐱", type: "explore", note: "Cuddle with cats! Book ahead.", mapQuery: "Cat+Cafe+Harajuku+Tokyo" },
+          { time: "14:00", title: "Yoyogi Park Picnic", icon: "🌳", type: "explore", note: "Grab konbini snacks and relax", mapQuery: "Yoyogi+Park+Tokyo" },
+          { time: "16:00", title: "Shinjuku Gyoen Garden", icon: "🌺", type: "explore", note: "Beautiful traditional garden", mapQuery: "Shinjuku+Gyoen+Tokyo" },
+          { time: "19:00", title: "Golden Gai Bar Hopping", icon: "🍶", type: "food", note: "Tiny themed bars — unforgettable!", mapQuery: "Golden+Gai+Shinjuku+Tokyo" },
+        ],
+      },
+      {
+        id: 5, date: "Day 5", title: "Kyoto Bound 🚅", subtitle: "Shinkansen & Temples", color: "#E84393", emoji: "🚄",
+        events: [
+          { time: "07:00", title: "Shinkansen to Kyoto", icon: "🚅", type: "travel", note: "Bullet train from Tokyo Station (~2.5 hrs)", mapQuery: "Tokyo+Station" },
+          { time: "10:00", title: "Check in Kyoto Airbnb", icon: "🏠", type: "stay", note: "Traditional machiya house stay!", mapQuery: "Kyoto+Station" },
+          { time: "11:30", title: "Fushimi Inari Shrine", icon: "⛩️", type: "explore", note: "Thousands of orange torii gates!", mapQuery: "Fushimi+Inari+Shrine+Kyoto" },
+          { time: "14:00", title: "Nishiki Market Lunch", icon: "🍡", type: "food", note: "Kyoto's kitchen — street food heaven", mapQuery: "Nishiki+Market+Kyoto" },
+          { time: "16:00", title: "Kinkaku-ji Golden Pavilion", icon: "🏯", type: "explore", note: "The iconic golden temple", mapQuery: "Kinkaku-ji+Kyoto" },
+          { time: "19:00", title: "Pontocho Alley Dinner", icon: "🏮", type: "food", note: "Atmospheric riverside dining", mapQuery: "Pontocho+Alley+Kyoto" },
+        ],
+      },
+    ];
+
+    const ACCOMMODATIONS = [
+      { name: "Shibuya Cozy Apartment", location: "Shibuya, Tokyo", dates: "Days 1-4", price: "¥12,000/night", amenities: ["WiFi", "Kitchen", "Washer", "Near Station"], emoji: "🏠", color: "#FF6B9D", airbnbSearch: "Shibuya+Tokyo+Japan" },
+      { name: "Kyoto Machiya House", location: "Higashiyama, Kyoto", dates: "Days 5-7", price: "¥15,000/night", amenities: ["Traditional", "Garden", "Futon", "Tea Room"], emoji: "🏡", color: "#9B59FF", airbnbSearch: "Higashiyama+Kyoto+Japan" },
+    ];
+
+    const PACKING_INIT = [
+      { item: "Passport & Copies", checked: false, emoji: "📕" },
+      { item: "JR Pass / IC Card", checked: false, emoji: "🎫" },
+      { item: "Portable WiFi / SIM", checked: false, emoji: "📶" },
+      { item: "Comfortable Walking Shoes", checked: false, emoji: "👟" },
+      { item: "Universal Adapter", checked: false, emoji: "🔌" },
+      { item: "Cash (Yen)", checked: false, emoji: "💴" },
+      { item: "Rain Jacket / Umbrella", checked: false, emoji: "☂️" },
+      { item: "Sunscreen", checked: false, emoji: "🧴" },
+      { item: "Medications", checked: false, emoji: "💊" },
+      { item: "Snacks for Flight", checked: false, emoji: "🍙" },
+    ];
+
+    const PHRASES = [
+      { jp: "こんにちは", en: "Hello", romaji: "Konnichiwa" },
+      { jp: "ありがとう", en: "Thank you", romaji: "Arigatou" },
+      { jp: "すみません", en: "Excuse me", romaji: "Sumimasen" },
+      { jp: "いくらですか", en: "How much?", romaji: "Ikura desu ka" },
+      { jp: "お願いします", en: "Please", romaji: "Onegaishimasu" },
+      { jp: "美味しい！", en: "Delicious!", romaji: "Oishii!" },
+      { jp: "トイレはどこ", en: "Where's the toilet?", romaji: "Toire wa doko" },
+      { jp: "駅はどこ", en: "Where's the station?", romaji: "Eki wa doko" },
+    ];
+
+    const typeColors = {
+      travel: { bg: "#E8F8FF", border: "#7EC8E3" },
+      food: { bg: "#FFF5E6", border: "#FFB347" },
+      explore: { bg: "#F0FFF0", border: "#77DD77" },
+      stay: { bg: "#FFF0F5", border: "#FF6B9D" },
+    };
+
+    const GUIDE_MESSAGES = {
+      home: "いらっしゃいませ～！ Welcome aboard the Yuki Express! 🚂 I'm Conductor Yuki — all aboard for your Japan adventure! Next stop: unforgettable memories! 🌸✨",
+      itinerary: "Doors closing～! 🚃💨 Here's your daily route map! Tap any station to see it on Google Maps! Remember to tap your IC card! ピッ！",
+      stays: "Arriving at your cozy stations! 🏠✨ I found the most kawaii spots near all the best train lines!",
+      packing: "Pre-departure checklist! 🎒 A good conductor always double-checks! Tap to mark items as packed! ✓",
+      phrases: "Attention passengers! 🗣️📢 Learn these phrases and you'll charm everyone in Japan! がんばって！",
+    };
+
+    /* ===== CONDUCTOR YUKI SVG ===== */
+    function TrainConductorYuki({ expression = "happy", size = 120, animate = true }) {
+      const eyeVariants = {
+        happy: (
+          <React.Fragment>
+            <ellipse cx="40" cy="48" rx="5.5" ry="6.5" fill="#2D1B00" />
+            <ellipse cx="60" cy="48" rx="5.5" ry="6.5" fill="#2D1B00" />
+            <circle cx="42" cy="46" r="2.2" fill="white" />
+            <circle cx="62" cy="46" r="2.2" fill="white" />
+            <circle cx="38.5" cy="49" r="1" fill="white" opacity="0.6" />
+            <circle cx="58.5" cy="49" r="1" fill="white" opacity="0.6" />
+            <path d="M33 44 L35 46" stroke="#2D1B00" strokeWidth="1.2" strokeLinecap="round" />
+            <path d="M34 42.5 L36 45" stroke="#2D1B00" strokeWidth="1.2" strokeLinecap="round" />
+            <path d="M67 44 L65 46" stroke="#2D1B00" strokeWidth="1.2" strokeLinecap="round" />
+            <path d="M66 42.5 L64 45" stroke="#2D1B00" strokeWidth="1.2" strokeLinecap="round" />
+          </React.Fragment>
+        ),
+        wink: (
+          <React.Fragment>
+            <ellipse cx="40" cy="48" rx="5.5" ry="6.5" fill="#2D1B00" />
+            <circle cx="42" cy="46" r="2.2" fill="white" />
+            <circle cx="38.5" cy="49" r="1" fill="white" opacity="0.6" />
+            <path d="M33 44 L35 46" stroke="#2D1B00" strokeWidth="1.2" strokeLinecap="round" />
+            <path d="M34 42.5 L36 45" stroke="#2D1B00" strokeWidth="1.2" strokeLinecap="round" />
+            <path d="M55 48 Q60 43 65 48" stroke="#2D1B00" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            <text x="68" y="44" fontSize="6" fill="#FFD700">✦</text>
+          </React.Fragment>
+        ),
+        excited: (
+          <React.Fragment>
+            <text x="40" y="52" textAnchor="middle" fontSize="14" fill="#FF6B9D">★</text>
+            <text x="60" y="52" textAnchor="middle" fontSize="14" fill="#9B59FF">★</text>
+          </React.Fragment>
+        ),
+        love: (
+          <React.Fragment>
+            <text x="40" y="52" textAnchor="middle" fontSize="13" fill="#FF6B9D">♥</text>
+            <text x="60" y="52" textAnchor="middle" fontSize="13" fill="#FF6B9D">♥</text>
+          </React.Fragment>
+        ),
+      };
+
+      const mouthVariants = {
+        happy: <path d="M43 58 Q50 66 57 58" stroke="#2D1B00" strokeWidth="2" fill="none" strokeLinecap="round" />,
+        wink: (
+          <React.Fragment>
+            <path d="M44 59 Q50 65 56 59" stroke="#2D1B00" strokeWidth="2" fill="none" strokeLinecap="round" />
+            <path d="M47 59 Q50 62 53 59" fill="#FF8888" />
+          </React.Fragment>
+        ),
+        excited: (
+          <React.Fragment>
+            <ellipse cx="50" cy="60" rx="7" ry="6" fill="#2D1B00" />
+            <ellipse cx="50" cy="58" rx="5" ry="2.5" fill="#FF8888" />
+          </React.Fragment>
+        ),
+        love: <path d="M43 58 Q50 68 57 58" stroke="#2D1B00" strokeWidth="2" fill="#FFCCCC" strokeLinecap="round" />,
+      };
+
+      return (
+        <svg width={size} height={size} viewBox="0 0 100 115" style={animate ? { animation: "yukiFloat 3s ease-in-out infinite" } : {}}>
+          <defs>
+            <linearGradient id="hatGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#1B3A5C" /><stop offset="100%" stopColor="#2C5F8A" /></linearGradient>
+            <linearGradient id="uniformGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stopColor="#1B3A5C" /><stop offset="100%" stopColor="#15304D" /></linearGradient>
+            <radialGradient id="blushL" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#FFB3B3" stopOpacity="0.7" /><stop offset="100%" stopColor="#FFB3B3" stopOpacity="0" /></radialGradient>
+          </defs>
+          {/* Hair */}
+          <path d="M26 30 Q22 20 28 14 Q34 8 50 6 Q66 8 72 14 Q78 20 74 30 L74 40 Q70 36 66 38 L64 30 Q60 24 50 22 Q40 24 36 30 L34 38 Q30 36 26 40 Z" fill="#1A0A00" />
+          <path d="M24 34 Q20 30 22 26 Q24 30 28 32 Z" fill="#2D1200" />
+          <path d="M76 34 Q80 30 78 26 Q76 30 72 32 Z" fill="#2D1200" />
+          <path d="M34 30 Q38 24 42 28 Q44 22 50 26 Q56 22 58 28 Q62 24 66 30 L64 34 Q58 28 50 30 Q42 28 36 34 Z" fill="#1A0A00" />
+          {/* Hat */}
+          <ellipse cx="50" cy="22" rx="30" ry="5" fill="#0F2840" />
+          <ellipse cx="50" cy="21.5" rx="29" ry="4.5" fill="url(#hatGrad)" />
+          <path d="M28 21 Q28 6 50 4 Q72 6 72 21 Z" fill="url(#hatGrad)" />
+          <rect x="28" y="16" width="44" height="5" fill="#C9A84C" />
+          <rect x="28" y="16" width="44" height="1.5" fill="#E8C864" opacity="0.6" />
+          <circle cx="50" cy="12" r="6" fill="#C9A84C" /><circle cx="50" cy="12" r="4.5" fill="#1B3A5C" />
+          <text x="50" y="14.5" textAnchor="middle" fontSize="6" fill="#E8C864" fontWeight="bold">JR</text>
+          <path d="M34 8 Q42 5 50 6" stroke="white" strokeWidth="1" fill="none" opacity="0.2" />
+          {/* Face */}
+          <ellipse cx="50" cy="46" rx="24" ry="22" fill="#FFE5C4" />
+          <ellipse cx="50" cy="50" rx="20" ry="18" fill="#FFE0BD" opacity="0.3" />
+          <circle cx="30" cy="54" r="6" fill="url(#blushL)" />
+          <circle cx="70" cy="54" r="6" fill="url(#blushL)" />
+          {eyeVariants[expression] || eyeVariants.happy}
+          <path d="M34 40 Q40 37 46 40" stroke="#2D1B00" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+          <path d="M54 40 Q60 37 66 40" stroke="#2D1B00" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+          {mouthVariants[expression] || mouthVariants.happy}
+          {/* Neck & Body */}
+          <rect x="44" y="66" width="12" height="6" fill="#FFE0BD" rx="2" />
+          <path d="M26 72 Q26 70 34 68 L44 68 Q50 70 56 68 L66 68 Q74 70 74 72 L76 105 L24 105 Z" fill="url(#uniformGrad)" />
+          <circle cx="42" cy="78" r="2" fill="#C9A84C" /><circle cx="58" cy="78" r="2" fill="#C9A84C" />
+          <circle cx="42" cy="86" r="2" fill="#C9A84C" /><circle cx="58" cy="86" r="2" fill="#C9A84C" />
+          <circle cx="42" cy="94" r="2" fill="#C9A84C" /><circle cx="58" cy="94" r="2" fill="#C9A84C" />
+          <line x1="50" y1="72" x2="50" y2="105" stroke="#C9A84C" strokeWidth="0.8" opacity="0.5" />
+          <path d="M44 68 L50 76 L56 68" stroke="white" strokeWidth="2.5" fill="none" strokeLinejoin="round" />
+          <path d="M44 68 L38 72" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" />
+          <path d="M56 68 L62 72" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" />
+          <rect x="26" y="70" width="12" height="4" rx="2" fill="#C9A84C" /><rect x="62" y="70" width="12" height="4" rx="2" fill="#C9A84C" />
+          <line x1="28" y1="72" x2="36" y2="72" stroke="#E8C864" strokeWidth="1" /><line x1="64" y1="72" x2="72" y2="72" stroke="#E8C864" strokeWidth="1" />
+          <rect x="60" y="80" width="12" height="6" rx="2" fill="white" opacity="0.9" />
+          <text x="66" y="85" textAnchor="middle" fontSize="4" fill="#1B3A5C" fontWeight="bold">YUKI</text>
+          {/* Arms & Gloves */}
+          <path d="M26 74 Q16 80 12 72 Q10 68 14 64" stroke="#1B3A5C" strokeWidth="9" fill="none" strokeLinecap="round" />
+          <circle cx="14" cy="63" r="5" fill="white" /><path d="M11 60 Q14 56 17 60" stroke="white" strokeWidth="2" fill="white" />
+          <path d="M74 74 Q84 80 86 88" stroke="#1B3A5C" strokeWidth="9" fill="none" strokeLinecap="round" />
+          <circle cx="86" cy="90" r="5" fill="white" />
+          {/* Whistle */}
+          <path d="M14 63 L14 58" stroke="#888" strokeWidth="0.8" />
+          <rect x="12" y="55" width="5" height="3" rx="1" fill="#C0C0C0" /><circle cx="11" cy="56.5" r="1" fill="#888" />
+          {/* Pocket watch */}
+          <path d="M42 86 Q38 90 36 88" stroke="#C9A84C" strokeWidth="1" fill="none" />
+          <circle cx="35" cy="88" r="2.5" fill="#C9A84C" stroke="#E8C864" strokeWidth="0.5" />
+          {expression === "excited" && <React.Fragment><text x="18" y="40" fontSize="7" fill="#FFD700" opacity="0.8">✦</text><text x="80" y="40" fontSize="5" fill="#FF6B9D" opacity="0.8">✧</text></React.Fragment>}
+          {expression === "love" && <React.Fragment><text x="20" y="38" fontSize="8" fill="#FF6B9D" opacity="0.7">♥</text><text x="76" y="42" fontSize="6" fill="#FF6B9D" opacity="0.5">♥</text></React.Fragment>}
+        </svg>
+      );
+    }
+
+    /* ===== ANIMATED BACKGROUND STICKERS ===== */
+    function AnimatedStickers() {
+      const stickers = [
+        { emoji: "🌸", x: 3, y: 5, size: 28, speed: 4, delay: 0, anim: "stickerDrift1" },
+        { emoji: "🍡", x: 88, y: 8, size: 24, speed: 5, delay: 0.5, anim: "stickerBounce" },
+        { emoji: "⛩️", x: 12, y: 22, size: 22, speed: 6, delay: 1, anim: "stickerSpin" },
+        { emoji: "🎀", x: 82, y: 25, size: 20, speed: 3.5, delay: 0.3, anim: "stickerDrift2" },
+        { emoji: "🍙", x: 5, y: 40, size: 22, speed: 4.5, delay: 1.5, anim: "stickerBounce" },
+        { emoji: "🗻", x: 92, y: 42, size: 26, speed: 7, delay: 0, anim: "stickerDrift1" },
+        { emoji: "✨", x: 15, y: 58, size: 18, speed: 2.5, delay: 0.8, anim: "stickerSparkle" },
+        { emoji: "🎌", x: 90, y: 60, size: 22, speed: 4, delay: 1.2, anim: "stickerWave" },
+        { emoji: "🐱", x: 8, y: 75, size: 24, speed: 5, delay: 0.6, anim: "stickerBounce" },
+        { emoji: "🏮", x: 85, y: 78, size: 26, speed: 3, delay: 1.8, anim: "stickerSwing" },
+        { emoji: "💖", x: 50, y: 12, size: 16, speed: 3, delay: 2, anim: "stickerPulse" },
+        { emoji: "🚄", x: 45, y: 88, size: 20, speed: 4, delay: 0.4, anim: "stickerZoom" },
+        { emoji: "🎵", x: 25, y: 92, size: 16, speed: 3.5, delay: 1.3, anim: "stickerDrift2" },
+        { emoji: "🍣", x: 70, y: 15, size: 20, speed: 4.2, delay: 0.9, anim: "stickerBounce" },
+        { emoji: "🌈", x: 35, y: 35, size: 18, speed: 6, delay: 2.2, anim: "stickerDrift1" },
+        { emoji: "🎐", x: 60, y: 55, size: 22, speed: 5, delay: 1.6, anim: "stickerSwing" },
+        { emoji: "🍵", x: 75, y: 92, size: 18, speed: 4, delay: 0.7, anim: "stickerBounce" },
+        { emoji: "🌙", x: 20, y: 48, size: 16, speed: 5.5, delay: 1.9, anim: "stickerPulse" },
+        { emoji: "🎏", x: 65, y: 70, size: 24, speed: 3.8, delay: 0.2, anim: "stickerWave" },
+        { emoji: "🐾", x: 40, y: 65, size: 14, speed: 3, delay: 2.5, anim: "stickerDrift2" },
+      ];
+      return (
+        <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
+          {stickers.map((s, i) => (
+            <div key={i} style={{ position: "absolute", left: s.x+"%", top: s.y+"%", fontSize: s.size, animation: s.anim+" "+s.speed+"s ease-in-out infinite", animationDelay: s.delay+"s", opacity: 0.18, filter: "saturate(1.3)", willChange: "transform, opacity" }}>{s.emoji}</div>
+          ))}
+        </div>
+      );
+    }
+
+    function SpeechBubble({ message }) {
+      return (
+        <div style={{ background: "white", borderRadius: 22, padding: "14px 18px", fontSize: 14, fontFamily: "'M PLUS Rounded 1c', sans-serif", color: "#333", boxShadow: "0 4px 20px rgba(255,107,157,0.15)", border: "3px solid #FFE0F0", position: "relative", maxWidth: 280, lineHeight: 1.6 }}>
+          <span style={{ position: "absolute", top: -10, right: 10, fontSize: 14, animation: "stickerPulse 2s ease-in-out infinite" }}>✨</span>
+          <span style={{ position: "absolute", bottom: -8, right: 25, fontSize: 12, animation: "stickerBounce 2.5s ease-in-out infinite" }}>🌸</span>
+          {message}
+          <div style={{ position: "absolute", left: -12, bottom: 15, width: 0, height: 0, borderTop: "10px solid transparent", borderBottom: "10px solid transparent", borderRight: "14px solid white" }} />
+        </div>
+      );
+    }
+
+    /* ===== MAIN APP ===== */
+    function App() {
+      const [activeTab, setActiveTab] = useState("home");
+      const [selectedDay, setSelectedDay] = useState(null);
+      const [packingList, setPackingList] = useState(PACKING_INIT);
+      const [guideExpression, setGuideExpression] = useState("happy");
+      const [showSplash, setShowSplash] = useState(true);
+      const [expandedEvent, setExpandedEvent] = useState(null);
+
+      useEffect(() => { const t = setTimeout(() => setShowSplash(false), 3200); return () => clearTimeout(t); }, []);
+      useEffect(() => {
+        const ex = ["happy", "wink", "excited", "love", "happy", "happy"];
+        const iv = setInterval(() => setGuideExpression(ex[Math.floor(Math.random() * ex.length)]), 3500);
+        return () => clearInterval(iv);
+      }, []);
+
+      const togglePacking = (i) => setPackingList(p => p.map((item, idx) => idx === i ? { ...item, checked: !item.checked } : item));
+      const openMaps = (q) => window.open("https://www.google.com/maps/search/" + q, "_blank");
+      const openAirbnb = (q) => window.open("https://www.airbnb.com/s/" + q + "/homes", "_blank");
+
+      /* SPLASH */
+      if (showSplash) {
+        const splashStickers = [
+          { e: "🌸", x: 8, y: 12, s: 36 }, { e: "⭐", x: 85, y: 10, s: 28 },
+          { e: "🎀", x: 10, y: 80, s: 32 }, { e: "✨", x: 88, y: 75, s: 26 },
+          { e: "💖", x: 50, y: 8, s: 24 }, { e: "🌟", x: 25, y: 90, s: 22 },
+          { e: "🍡", x: 78, y: 88, s: 28 }, { e: "🎵", x: 18, y: 45, s: 22 },
+          { e: "🗻", x: 80, y: 45, s: 30 }, { e: "⛩️", x: 5, y: 55, s: 26 },
+          { e: "🐱", x: 92, y: 55, s: 24 }, { e: "🏮", x: 42, y: 90, s: 26 },
+        ];
+        return (
+          <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, #FFE0F0 0%, #FFF0F5 25%, #E8F0FF 50%, #F0E6FF 75%, #FFE0F0 100%)", backgroundSize: "400% 400%", animation: "gradientShift 4s ease infinite", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "'M PLUS Rounded 1c', sans-serif", overflow: "hidden", position: "relative" }}>
+            {splashStickers.map((s, i) => (
+              <div key={i} style={{ position: "fixed", fontSize: s.s, left: s.x+"%", top: s.y+"%", animation: "splashSticker "+(2.5+Math.random()*2)+"s ease-in-out infinite", animationDelay: (i*0.2)+"s", opacity: 0.5 }}>{s.e}</div>
+            ))}
+            <div style={{ position: "fixed", bottom: 60, left: 0, right: 0, overflow: "hidden", height: 40 }}>
+              <div style={{ animation: "trainRoll 5s linear infinite", whiteSpace: "nowrap", fontSize: 30 }}>🚂🚃🚃🚃💨</div>
+            </div>
+            <div style={{ animation: "splashBounce 1.8s ease-in-out infinite", zIndex: 10 }}>
+              <TrainConductorYuki expression="excited" size={180} animate={false} />
+            </div>
+            <h1 style={{ fontFamily: "'Zen Maru Gothic', sans-serif", fontSize: 38, background: "linear-gradient(135deg, #FF6B9D, #9B59FF, #FF6B9D)", backgroundSize: "200% auto", animation: "splashFadeIn 0.8s ease-out 0.5s both, shimmer 3s linear infinite", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", marginTop: 6, letterSpacing: 2, zIndex: 10 }}>日本の冒険！</h1>
+            <p style={{ fontSize: 16, color: "#9B59FF", animation: "splashFadeIn 0.8s ease-out 0.8s both", fontWeight: 700, zIndex: 10 }}>～ All Aboard the Yuki Express ～ 🚂✨</p>
+            <div style={{ display: "flex", gap: 10, marginTop: 16, zIndex: 10, animation: "splashFadeIn 0.8s ease-out 1.2s both" }}>
+              {["🌸","💖","⭐","💖","🌸"].map((e,i) => <span key={i} style={{ fontSize: 18, animation: "sparkleFloat 1.5s ease-in-out infinite", animationDelay: (i*0.25)+"s" }}>{e}</span>)}
+            </div>
+          </div>
+        );
+      }
+
+      /* MAIN */
+      return (
+        <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #FFF5F9 0%, #FFF0F5 30%, #F8F0FF 60%, #FFF5F9 100%)", fontFamily: "'M PLUS Rounded 1c', sans-serif", paddingBottom: 90, position: "relative", overflow: "hidden" }}>
+          <AnimatedStickers />
+
+          {/* HEADER */}
+          <div style={{ background: "linear-gradient(135deg, #FF6B9D 0%, #FF8EC7 30%, #C77DFF 70%, #9B59FF 100%)", padding: "18px 20px 28px", borderRadius: "0 0 32px 32px", position: "relative", zIndex: 10, boxShadow: "0 8px 30px rgba(255,107,157,0.35)", overflow: "hidden" }}>
+            <span style={{ position: "absolute", top: 8, right: 15, fontSize: 20, animation: "stickerPulse 2s ease-in-out infinite", opacity: 0.4 }}>✨</span>
+            <span style={{ position: "absolute", top: 14, right: 45, fontSize: 14, animation: "stickerBounce 2.5s ease-in-out infinite 0.3s", opacity: 0.3 }}>🌸</span>
+            <span style={{ position: "absolute", bottom: 12, right: 20, fontSize: 16, animation: "stickerWave 3s ease-in-out infinite", opacity: 0.3 }}>🎌</span>
+            <div style={{ position: "absolute", bottom: 6, left: 0, right: 0, overflow: "hidden", height: 22, opacity: 0.15 }}>
+              <div style={{ animation: "trainMove 7s linear infinite", whiteSpace: "nowrap", fontSize: 18 }}>🚂🚃🚃🚃🚃💨 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🚂🚃🚃💨</div>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ animation: "bobble 2.5s ease-in-out infinite", flexShrink: 0 }}>
+                <TrainConductorYuki expression={guideExpression} size={65} animate={false} />
+              </div>
+              <div>
+                <h1 style={{ fontFamily: "'Zen Maru Gothic', sans-serif", fontSize: 21, color: "white", textShadow: "0 2px 10px rgba(0,0,0,0.15)", letterSpacing: 1 }}>🇯🇵 Japan Adventure <span style={{ fontSize: 14 }}>🚂</span></h1>
+                <p style={{ color: "rgba(255,255,255,0.9)", fontSize: 11, fontWeight: 700, marginTop: 3 }}>Conductor Yuki at your service! <span style={{ animation: "stickerPulse 1.5s ease-in-out infinite" }}>✨</span></p>
+              </div>
+            </div>
+          </div>
+
+          {/* GUIDE */}
+          <div style={{ padding: "16px 20px", display: "flex", gap: 10, alignItems: "flex-start", animation: "fadeSlideUp 0.5s ease-out", position: "relative", zIndex: 5 }}>
+            <div style={{ flexShrink: 0 }}><TrainConductorYuki expression={guideExpression} size={58} /></div>
+            <SpeechBubble message={GUIDE_MESSAGES[activeTab]} />
+          </div>
+
+          {/* CONTENT */}
+          <div style={{ padding: "0 16px", position: "relative", zIndex: 5 }}>
+
+            {/* HOME */}
+            {activeTab === "home" && (
+              <div style={{ animation: "fadeSlideUp 0.4s ease-out" }}>
+                <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 14 }}>
+                  {["🌸","🗼","⛩️","🍡","🚄","🎌","🏯","🌸"].map((e,i) => <span key={i} style={{ fontSize: 22, animation: "stickerBounce "+(2+i*0.2)+"s ease-in-out infinite", animationDelay: (i*0.12)+"s" }}>{e}</span>)}
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 20 }}>
+                  {[{ label:"Days",value:"5",emoji:"📅",color:"#FF6B9D",sticker:"🗓️" },{ label:"Cities",value:"3",emoji:"🏙️",color:"#9B59FF",sticker:"🗾" },{ label:"Stops",value:"28",emoji:"📍",color:"#00C9A7",sticker:"🚉" }].map((s,i) => (
+                    <div key={i} style={{ background:"white",borderRadius:22,padding:"16px 10px",textAlign:"center",boxShadow:"0 4px 18px rgba(0,0,0,0.04)",border:"2.5px solid "+s.color+"25",animation:"fadeSlideUp 0.4s ease-out",animationDelay:(i*0.1)+"s",animationFillMode:"both",position:"relative",overflow:"hidden" }}>
+                      <span style={{ position:"absolute",top:4,right:6,fontSize:12,opacity:0.4,animation:"stickerPulse 2.5s ease-in-out infinite "+(i*0.3)+"s" }}>{s.sticker}</span>
+                      <div style={{ fontSize:28 }}>{s.emoji}</div>
+                      <div style={{ fontSize:28,fontWeight:900,color:s.color,fontFamily:"'Zen Maru Gothic', sans-serif" }}>{s.value}</div>
+                      <div style={{ fontSize:11,color:"#AAA",fontWeight:700 }}>{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+                <h2 style={{ fontFamily:"'Zen Maru Gothic', sans-serif",fontSize:18,color:"#FF6B9D",marginBottom:12,display:"flex",alignItems:"center",gap:8 }}>
+                  <span style={{ animation:"stickerWave 2s ease-in-out infinite" }}>🚂</span> Your Journey Route <span style={{ fontSize:14,animation:"stickerPulse 2s ease-in-out infinite 0.5s" }}>✨</span>
+                </h2>
+                {DAYS.map((day,i) => (
+                  <div key={day.id} onClick={() => { setSelectedDay(day); setActiveTab("itinerary"); }} style={{ background:"white",borderRadius:22,padding:16,marginBottom:12,display:"flex",alignItems:"center",gap:14,boxShadow:"0 4px 16px rgba(0,0,0,0.04)",border:"2.5px solid "+day.color+"18",cursor:"pointer",transition:"all 0.25s ease",animation:"fadeSlideUp 0.4s ease-out",animationDelay:(i*0.07)+"s",animationFillMode:"both",position:"relative",overflow:"hidden" }}
+                    onMouseEnter={e => { e.currentTarget.style.transform="translateX(8px) scale(1.01)"; e.currentTarget.style.borderColor=day.color+"60"; }}
+                    onMouseLeave={e => { e.currentTarget.style.transform="translateX(0) scale(1)"; e.currentTarget.style.borderColor=day.color+"18"; }}>
+                    <span style={{ position:"absolute",top:6,right:40,fontSize:12,opacity:0.2,animation:"stickerPulse 3s ease-in-out infinite "+(i*0.2)+"s" }}>{["🌸","⭐","💖","✨","🎀"][i]}</span>
+                    <div style={{ width:54,height:54,borderRadius:18,background:"linear-gradient(135deg, "+day.color+", "+day.color+"88)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:28,flexShrink:0,boxShadow:"0 4px 14px "+day.color+"35" }}>{day.emoji}</div>
+                    <div style={{ flex:1 }}>
+                      <div style={{ fontSize:10,color:day.color,fontWeight:900,textTransform:"uppercase",letterSpacing:1.2 }}>{day.date}</div>
+                      <div style={{ fontSize:16,fontWeight:900,color:"#333" }}>{day.title}</div>
+                      <div style={{ fontSize:12,color:"#AAA" }}>{day.subtitle} · {day.events.length} stations 🚉</div>
+                    </div>
+                    <div style={{ color:day.color,fontSize:22,fontWeight:900 }}>→</div>
+                  </div>
+                ))}
+                <div style={{ display:"flex",justifyContent:"center",gap:10,marginTop:10,opacity:0.4 }}>
+                  {["🍣","🎐","🐱","🍵","🎏"].map((e,i) => <span key={i} style={{ fontSize:20,animation:"stickerDrift1 "+(3+i*0.3)+"s ease-in-out infinite "+(i*0.2)+"s" }}>{e}</span>)}
+                </div>
+              </div>
+            )}
+
+            {/* ITINERARY */}
+            {activeTab === "itinerary" && (
+              <div style={{ animation: "fadeSlideUp 0.4s ease-out" }}>
+                <div style={{ display:"flex",gap:8,marginBottom:16,overflowX:"auto",paddingBottom:6 }}>
+                  {DAYS.map(day => (
+                    <button key={day.id} onClick={() => setSelectedDay(day)} style={{ background:selectedDay?.id===day.id?"linear-gradient(135deg, "+day.color+", "+day.color+"BB)":"white",color:selectedDay?.id===day.id?"white":"#777",border:"2.5px solid "+(selectedDay?.id===day.id?day.color:"#EEE"),borderRadius:16,padding:"8px 16px",fontSize:13,fontWeight:900,fontFamily:"'M PLUS Rounded 1c', sans-serif",cursor:"pointer",whiteSpace:"nowrap",transition:"all 0.2s ease",boxShadow:selectedDay?.id===day.id?"0 4px 14px "+day.color+"40":"0 2px 8px rgba(0,0,0,0.03)" }}>{day.emoji} {day.date}</button>
+                  ))}
+                </div>
+                {selectedDay && (
+                  <React.Fragment>
+                    <div style={{ background:"linear-gradient(135deg, "+selectedDay.color+"12, "+selectedDay.color+"05)",borderRadius:22,padding:"16px 18px",marginBottom:16,border:"2.5px solid "+selectedDay.color+"18",position:"relative" }}>
+                      <span style={{ position:"absolute",top:8,right:14,fontSize:16,animation:"stickerPulse 2s ease-in-out infinite",opacity:0.5 }}>✨</span>
+                      <h2 style={{ fontFamily:"'Zen Maru Gothic', sans-serif",fontSize:22,color:selectedDay.color }}>{selectedDay.emoji} {selectedDay.title} 🚉</h2>
+                      <p style={{ fontSize:13,color:"#999",marginTop:4 }}>{selectedDay.subtitle}</p>
+                    </div>
+                    <div style={{ position:"relative",paddingLeft:32 }}>
+                      <div style={{ position:"absolute",left:15,top:20,bottom:20,width:4,background:"linear-gradient(to bottom, "+selectedDay.color+", "+selectedDay.color+"30)",borderRadius:2 }} />
+                      {selectedDay.events.map((ev,i) => {
+                        const tc = typeColors[ev.type];
+                        const isExp = expandedEvent === selectedDay.id+"-"+i;
+                        return (
+                          <div key={i} style={{ marginBottom:12,animation:"fadeSlideUp 0.4s ease-out",animationDelay:(i*0.06)+"s",animationFillMode:"both" }}>
+                            <div style={{ position:"absolute",left:9,width:16,height:16,borderRadius:"50%",background:isExp?selectedDay.color:"white",border:"3px solid "+selectedDay.color,boxShadow:"0 2px 8px "+selectedDay.color+"30",marginTop:18,transition:"all 0.2s ease" }} />
+                            <div onClick={() => setExpandedEvent(isExp?null:selectedDay.id+"-"+i)} style={{ background:"white",borderRadius:20,padding:"14px 16px",boxShadow:isExp?"0 6px 20px "+selectedDay.color+"15":"0 3px 12px rgba(0,0,0,0.03)",border:"2.5px solid "+(isExp?selectedDay.color+"50":tc.border+"25"),cursor:"pointer",transition:"all 0.2s ease",position:"relative" }}>
+                              {i===0 && <span style={{ position:"absolute",top:-6,right:12,fontSize:14,animation:"stickerBounce 2s ease-in-out infinite" }}>🎉</span>}
+                              <div style={{ display:"flex",alignItems:"center",gap:10 }}>
+                                <div style={{ width:42,height:42,borderRadius:14,background:tc.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0,border:"1.5px solid "+tc.border+"30" }}>{ev.icon}</div>
+                                <div style={{ flex:1 }}>
+                                  <span style={{ fontSize:10,color:selectedDay.color,fontWeight:900,background:selectedDay.color+"12",padding:"2px 8px",borderRadius:8 }}>{ev.time}</span>
+                                  <div style={{ fontSize:14,fontWeight:900,color:"#333",marginTop:3 }}>{ev.title}</div>
+                                </div>
+                                <span style={{ fontSize:14,transition:"transform 0.2s",transform:isExp?"rotate(90deg)":"rotate(0)" }}>▸</span>
+                              </div>
+                              {isExp && (
+                                <div style={{ marginTop:12,paddingTop:12,borderTop:"2px dashed "+selectedDay.color+"15" }}>
+                                  <p style={{ fontSize:13,color:"#666",lineHeight:1.7,marginBottom:14 }}>💬 {ev.note}</p>
+                                  <button onClick={(e) => { e.stopPropagation(); openMaps(ev.mapQuery); }} style={{ background:"linear-gradient(135deg, #4285F4, #34A853)",color:"white",border:"none",borderRadius:14,padding:"11px 16px",fontSize:12,fontWeight:900,fontFamily:"'M PLUS Rounded 1c', sans-serif",cursor:"pointer",display:"flex",alignItems:"center",gap:8,width:"100%",justifyContent:"center",boxShadow:"0 4px 14px rgba(66,133,244,0.25)" }}>📍 Open in Google Maps</button>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </React.Fragment>
+                )}
+              </div>
+            )}
+
+            {/* STAYS */}
+            {activeTab === "stays" && (
+              <div style={{ animation:"fadeSlideUp 0.4s ease-out" }}>
+                <h2 style={{ fontFamily:"'Zen Maru Gothic', sans-serif",fontSize:20,color:"#FF6B9D",marginBottom:16 }}>
+                  <span style={{ animation:"stickerBounce 2s ease-in-out infinite" }}>🏠</span> Where You're Staying <span style={{ fontSize:14,animation:"stickerPulse 2s ease-in-out infinite 0.3s" }}>✨</span>
+                </h2>
+                {ACCOMMODATIONS.map((acc,i) => (
+                  <div key={i} style={{ background:"white",borderRadius:26,padding:20,marginBottom:16,boxShadow:"0 4px 22px rgba(0,0,0,0.05)",border:"2.5px solid "+acc.color+"18",animation:"fadeSlideUp 0.4s ease-out",animationDelay:(i*0.1)+"s",animationFillMode:"both",position:"relative",overflow:"hidden" }}>
+                    <span style={{ position:"absolute",top:8,right:12,fontSize:18,animation:"stickerSwing 3s ease-in-out infinite",opacity:0.3 }}>🏮</span>
+                    <div style={{ display:"flex",alignItems:"center",gap:14,marginBottom:14 }}>
+                      <div style={{ width:58,height:58,borderRadius:20,background:"linear-gradient(135deg, "+acc.color+"25, "+acc.color+"08)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:32,border:"2px solid "+acc.color+"15" }}>{acc.emoji}</div>
+                      <div>
+                        <h3 style={{ fontSize:17,fontWeight:900,color:"#333" }}>{acc.name}</h3>
+                        <p style={{ fontSize:12,color:"#AAA" }}>📍 {acc.location}</p>
+                      </div>
+                    </div>
+                    <div style={{ display:"flex",justifyContent:"space-between",background:acc.color+"06",borderRadius:16,padding:"12px 16px",marginBottom:14,border:"1.5px solid "+acc.color+"10" }}>
+                      <div><div style={{ fontSize:10,color:"#BBB",fontWeight:700,textTransform:"uppercase",letterSpacing:1 }}>Dates</div><div style={{ fontSize:15,fontWeight:900,color:"#333" }}>{acc.dates}</div></div>
+                      <div style={{ textAlign:"right" }}><div style={{ fontSize:10,color:"#BBB",fontWeight:700,textTransform:"uppercase",letterSpacing:1 }}>Price</div><div style={{ fontSize:15,fontWeight:900,color:acc.color }}>{acc.price}</div></div>
+                    </div>
+                    <div style={{ display:"flex",flexWrap:"wrap",gap:6,marginBottom:14 }}>
+                      {acc.amenities.map((a,j) => <span key={j} style={{ background:acc.color+"08",color:acc.color,padding:"5px 12px",borderRadius:12,fontSize:11,fontWeight:700,border:"1.5px solid "+acc.color+"15" }}>{a}</span>)}
+                    </div>
+                    <div style={{ display:"flex",gap:10 }}>
+                      <button onClick={() => openMaps(acc.airbnbSearch)} style={{ flex:1,background:"linear-gradient(135deg, #4285F4, #34A853)",color:"white",border:"none",borderRadius:16,padding:"13px 16px",fontSize:12,fontWeight:900,cursor:"pointer",fontFamily:"'M PLUS Rounded 1c', sans-serif",boxShadow:"0 4px 14px rgba(66,133,244,0.25)",display:"flex",alignItems:"center",justifyContent:"center",gap:6 }}>📍 Maps</button>
+                      <button onClick={() => openAirbnb(acc.airbnbSearch)} style={{ flex:1,background:"linear-gradient(135deg, #FF5A5F, #FC642D)",color:"white",border:"none",borderRadius:16,padding:"13px 16px",fontSize:12,fontWeight:900,cursor:"pointer",fontFamily:"'M PLUS Rounded 1c', sans-serif",boxShadow:"0 4px 14px rgba(255,90,95,0.25)",display:"flex",alignItems:"center",justifyContent:"center",gap:6 }}>🏠 Airbnb</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* PACKING */}
+            {activeTab === "packing" && (
+              <div style={{ animation:"fadeSlideUp 0.4s ease-out" }}>
+                <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16 }}>
+                  <h2 style={{ fontFamily:"'Zen Maru Gothic', sans-serif",fontSize:20,color:"#FF6B9D" }}><span style={{ animation:"stickerBounce 2s ease-in-out infinite" }}>🎒</span> Packing List</h2>
+                  <span style={{ background:packingList.every(p=>p.checked)?"#77DD7715":"#FF6B9D10",color:packingList.every(p=>p.checked)?"#77DD77":"#FF6B9D",padding:"5px 14px",borderRadius:12,fontSize:12,fontWeight:900,border:"1.5px solid "+(packingList.every(p=>p.checked)?"#77DD7730":"#FF6B9D20") }}>
+                    {packingList.every(p=>p.checked)?"✅ All packed!":packingList.filter(p=>p.checked).length+"/"+packingList.length+" packed"}
+                  </span>
+                </div>
+                <div style={{ background:"#FFE0F0",borderRadius:12,height:10,marginBottom:18,overflow:"hidden",border:"1.5px solid #FFD0E5" }}>
+                  <div style={{ background:"linear-gradient(90deg, #FF6B9D, #C77DFF, #9B59FF)",height:"100%",borderRadius:10,width:(packingList.filter(p=>p.checked).length/packingList.length*100)+"%",transition:"width 0.4s ease",backgroundSize:"200% 100%",animation:"shimmer 2s linear infinite" }} />
+                </div>
+                {packingList.map((item,i) => (
+                  <div key={i} onClick={() => togglePacking(i)} style={{ background:item.checked?"linear-gradient(135deg, #F0FFF0, #F5FFF5)":"white",borderRadius:18,padding:"14px 16px",marginBottom:8,display:"flex",alignItems:"center",gap:12,cursor:"pointer",border:"2.5px solid "+(item.checked?"#77DD7730":"#F0F0F0"),transition:"all 0.2s ease",animation:"fadeSlideUp 0.3s ease-out",animationDelay:(i*0.04)+"s",animationFillMode:"both",position:"relative" }}>
+                    {item.checked && <span style={{ position:"absolute",top:-4,right:10,fontSize:12,animation:"stickerPulse 2s ease-in-out infinite" }}>✨</span>}
+                    <div style={{ width:30,height:30,borderRadius:10,border:"2.5px solid "+(item.checked?"#77DD77":"#DDD"),background:item.checked?"linear-gradient(135deg, #77DD77, #66CC66)":"white",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,color:"white",fontWeight:900,boxShadow:item.checked?"0 2px 8px rgba(119,221,119,0.3)":"none" }}>
+                      {item.checked?"✓":""}
+                    </div>
+                    <span style={{ fontSize:20 }}>{item.emoji}</span>
+                    <span style={{ fontSize:14,fontWeight:700,color:item.checked?"#AAA":"#333",textDecoration:item.checked?"line-through":"none" }}>{item.item}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* PHRASES */}
+            {activeTab === "phrases" && (
+              <div style={{ animation:"fadeSlideUp 0.4s ease-out" }}>
+                <h2 style={{ fontFamily:"'Zen Maru Gothic', sans-serif",fontSize:20,color:"#FF6B9D",marginBottom:16 }}>
+                  <span style={{ animation:"stickerWave 2s ease-in-out infinite" }}>🗣️</span> Useful Phrases <span style={{ fontSize:14,animation:"stickerBounce 2.5s ease-in-out infinite 0.3s" }}>🇯🇵</span>
+                </h2>
+                {PHRASES.map((p,i) => (
+                  <div key={i} style={{ background:"white",borderRadius:22,padding:"16px 18px",marginBottom:10,boxShadow:"0 3px 14px rgba(0,0,0,0.03)",border:"2.5px solid #FFE0F015",animation:"fadeSlideUp 0.3s ease-out",animationDelay:(i*0.05)+"s",animationFillMode:"both",position:"relative" }}>
+                    <span style={{ position:"absolute",top:8,right:12,fontSize:12,opacity:0.3,animation:"stickerDrift1 3s ease-in-out infinite "+(i*0.2)+"s" }}>{["🌸","⭐","🎀","✨","💖","🌟","🎵","🍡"][i]}</span>
+                    <div style={{ fontFamily:"'Zen Maru Gothic', sans-serif",fontSize:28,color:"#333",marginBottom:6 }}>{p.jp}</div>
+                    <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center" }}>
+                      <div>
+                        <div style={{ fontSize:14,color:"#FF6B9D",fontWeight:700 }}>{p.romaji}</div>
+                        <div style={{ fontSize:12,color:"#AAA" }}>{p.en}</div>
+                      </div>
+                      <div style={{ background:"linear-gradient(135deg, #FF6B9D15, #9B59FF10)",width:38,height:38,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,border:"1.5px solid #FF6B9D15" }}>🔊</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* BOTTOM NAV */}
+          <div style={{ position:"fixed",bottom:0,left:0,right:0,background:"rgba(255,255,255,0.92)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderTop:"2.5px solid #FFE0F0",padding:"6px 8px 10px",display:"flex",justifyContent:"space-around",zIndex:100,boxShadow:"0 -4px 25px rgba(255,107,157,0.1)" }}>
+            {[{id:"home",icon:"🏠",label:"Home"},{id:"itinerary",icon:"🗺️",label:"Route"},{id:"stays",icon:"🏡",label:"Stays"},{id:"packing",icon:"🎒",label:"Pack"},{id:"phrases",icon:"🗣️",label:"Phrases"}].map(tab => (
+              <button key={tab.id} onClick={() => { setActiveTab(tab.id); if(tab.id==="itinerary"&&!selectedDay) setSelectedDay(DAYS[0]); }} style={{ background:activeTab===tab.id?"linear-gradient(135deg, #FF6B9D18, #9B59FF12)":"transparent",border:activeTab===tab.id?"2px solid #FF6B9D20":"2px solid transparent",borderRadius:18,padding:"6px 16px",display:"flex",flexDirection:"column",alignItems:"center",gap:2,cursor:"pointer",transition:"all 0.2s ease",transform:activeTab===tab.id?"scale(1.08)":"scale(1)",animation:activeTab===tab.id?"tabGlow 2s ease-in-out infinite":"none" }}>
+                <span style={{ fontSize:22 }}>{tab.icon}</span>
+                <span style={{ fontSize:10,fontWeight:900,color:activeTab===tab.id?"#FF6B9D":"#CCC",fontFamily:"'M PLUS Rounded 1c', sans-serif" }}>{tab.label}</span>
+                {activeTab===tab.id && <div style={{ width:5,height:5,borderRadius:"50%",background:"linear-gradient(135deg, #FF6B9D, #9B59FF)",marginTop:1 }} />}
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
