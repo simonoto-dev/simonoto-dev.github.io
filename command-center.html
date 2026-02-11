@@ -108,7 +108,29 @@ input,textarea,select,button{font-family:inherit;font-size:inherit;}
 </style>
 </head>
 <body>
-<div class="app" id="app"></div>
+<div id="auth-gate" style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0f;">
+<div style="text-align:center;padding:40px;">
+<div style="font-size:40px;margin-bottom:16px;">🎛️</div>
+<div style="font-family:'DM Serif Display',Georgia,serif;font-size:24px;color:#D4943A;margin-bottom:8px;">SIMONOTO</div>
+<div style="color:#888899;font-size:12px;margin-bottom:24px;">Command Center — Private Access</div>
+<input id="auth-pw" type="password" placeholder="Enter password" style="width:240px;padding:10px 16px;border-radius:10px;border:1px solid #2a2a35;background:#13131a;color:#e8e8ef;font-size:14px;text-align:center;outline:none;" onkeydown="if(event.key==='Enter')checkAuth()">
+<br><button onclick="checkAuth()" style="margin-top:12px;padding:8px 32px;border-radius:10px;border:none;background:#D4943A;color:#000;font-weight:600;font-size:14px;cursor:pointer;">Enter</button>
+<div id="auth-err" style="color:#f87171;font-size:12px;margin-top:10px;display:none;">Incorrect password</div>
+</div>
+</div>
+<div class="app" id="app" style="display:none;"></div>
+<script>
+const AUTH_KEY='simonoto-cc-auth';
+const PW_HASH='49c23c06'; // password: groove
+function simpleHash(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;}return Math.abs(h).toString(16).slice(0,12);}
+function checkAuth(){
+  const pw=document.getElementById('auth-pw').value;
+  if(simpleHash(pw)===PW_HASH){sessionStorage.setItem(AUTH_KEY,'1');showApp();}
+  else{document.getElementById('auth-err').style.display='block';}
+}
+function showApp(){document.getElementById('auth-gate').style.display='none';document.getElementById('app').style.display='flex';}
+if(sessionStorage.getItem(AUTH_KEY)==='1')showApp();
+</script>
 <script>
 const STORAGE_KEY="simonoto-cc-v2";
 const DEFAULT_DATA={
