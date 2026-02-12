@@ -49,10 +49,22 @@
 <script type="text/babel">
 const{useState,useEffect,useCallback}=React;
 
-/* ===== STORAGE HELPERS ===== */
+/* ===== STORAGE HELPERS (with localStorage fallback) ===== */
 const STORE_KEY="bonito-japan-";
-async function loadData(key,fallback){try{const r=await window.storage.get(STORE_KEY+key);return r?JSON.parse(r.value):fallback}catch(e){return fallback}}
-async function saveData(key,val){try{await window.storage.set(STORE_KEY+key,JSON.stringify(val))}catch(e){console.error("save error",e)}}
+const hasClaudeStorage=typeof window.storage!=="undefined"&&window.storage&&typeof window.storage.get==="function";
+async function loadData(key,fallback){
+  try{
+    if(hasClaudeStorage){const r=await window.storage.get(STORE_KEY+key);return r?JSON.parse(r.value):fallback}
+    else{const r=localStorage.getItem(STORE_KEY+key);return r?JSON.parse(r):fallback}
+  }catch(e){return fallback}
+}
+async function saveData(key,val){
+  try{
+    const s=JSON.stringify(val);
+    if(hasClaudeStorage){await window.storage.set(STORE_KEY+key,s)}
+    else{localStorage.setItem(STORE_KEY+key,s)}
+  }catch(e){console.error("save error",e)}
+}
 
 /* ===== DEFAULT DATA ===== */
 const DEFAULT_DAYS=[
@@ -136,7 +148,7 @@ function ConductorBonito({expression="hearts",size=120,animate=true}){
         <path d="M26 92Q12 82 8 68Q6 60 12 56" stroke="#F4A940" strokeWidth="5.5" fill="none" strokeLinecap="round"/>
         <circle cx="12" cy="56" r="3.5" fill="#F7BC5E"/>
       </g>
-      {/* LEFT EAR — proper cat triangle */}
+      {/* LEFT EAR */}
       <g style={{transformOrigin:"30px 12px",animation:"earTwitch 5s ease-in-out infinite"}}>
         <path d="M22 28L18 2L38 22Z" fill="url(#fG2)" stroke="#E8922A" strokeWidth="0.5"/>
         <path d="M24 25L20.5 7L35 21Z" fill="#FFBBAA"/>
@@ -146,7 +158,7 @@ function ConductorBonito({expression="hearts",size=120,animate=true}){
         <path d="M76 28L80 2L60 22Z" fill="url(#fG2)" stroke="#E8922A" strokeWidth="0.5"/>
         <path d="M74 25L77.5 7L63 21Z" fill="#FFBBAA"/>
       </g>
-      {/* CONDUCTOR HAT — sits between ears */}
+      {/* CONDUCTOR HAT */}
       <ellipse cx="49" cy="22" rx="22" ry="4.5" fill="#0F2840"/>
       <ellipse cx="49" cy="21.5" rx="21" ry="4" fill="url(#hG2)"/>
       <path d="M32 21Q32 10 49 7Q66 10 66 21Z" fill="url(#hG2)"/>
@@ -154,32 +166,23 @@ function ConductorBonito({expression="hearts",size=120,animate=true}){
       <rect x="32" y="16.5" width="34" height="1.2" fill="#E8C864" opacity="0.5"/>
       <circle cx="49" cy="13" r="4.5" fill="#C9A84C"/><circle cx="49" cy="13" r="3.2" fill="#1B3A5C"/>
       <text x="49" y="15" textAnchor="middle" fontSize="4.5" fill="#E8C864" fontWeight="bold">JR</text>
-      {/* CAT HEAD — Sanrio style: wider at cheeks, narrower at top, soft triangle shape */}
+      {/* CAT HEAD — Sanrio style */}
       <path d="M20 32 Q16 40 18 50 Q20 58 28 62 Q36 66 49 66 Q62 66 70 62 Q78 58 80 50 Q82 40 78 32 Q72 24 49 22 Q26 24 20 32Z" fill="url(#fG2)"/>
-      {/* Lighter cheek/muzzle — Sanrio style puffy cheeks */}
       <ellipse cx="49" cy="50" rx="16" ry="12" fill="#F7BC5E"/>
       <ellipse cx="49" cy="55" rx="9" ry="6" fill="#FCCF78" opacity="0.5"/>
-      {/* Sanrio-style tabby "M" mark */}
       <path d="M40 29L44 33L49 28L54 33L58 29" stroke="#D4802A" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.3"/>
-      {/* Blush ovals — prominent Sanrio style */}
       <ellipse cx="27" cy="48" rx="6" ry="4" fill="url(#bG2)"/>
       <ellipse cx="71" cy="48" rx="6" ry="4" fill="url(#bG2)"/>
-      {/* EYES */}
       {eyeV[expression]||eyeV.hearts}
-      {/* Whiskers — 3 per side, slightly curved */}
       <path d="M10 42Q18 44 26 44" stroke="#D4802A" strokeWidth="0.8" fill="none" opacity="0.45"/>
       <path d="M8 48Q17 48 26 48" stroke="#D4802A" strokeWidth="0.8" fill="none" opacity="0.45"/>
       <path d="M11 54Q19 52 27 51" stroke="#D4802A" strokeWidth="0.8" fill="none" opacity="0.45"/>
       <path d="M88 42Q80 44 72 44" stroke="#D4802A" strokeWidth="0.8" fill="none" opacity="0.45"/>
       <path d="M90 48Q81 48 72 48" stroke="#D4802A" strokeWidth="0.8" fill="none" opacity="0.45"/>
       <path d="M87 54Q79 52 71 51" stroke="#D4802A" strokeWidth="0.8" fill="none" opacity="0.45"/>
-      {/* Nose — small Sanrio triangle */}
       <path d="M46 46L49 48.5L52 46Z" fill="#FF8888"/>
-      {/* Nose to mouth line */}
       <line x1="49" y1="48.5" x2="49" y2="50" stroke="#2D1B00" strokeWidth="1" strokeLinecap="round"/>
-      {/* Mouth */}
       {mthV[expression]||mthV.hearts}
-      {/* Neck */}
       <rect x="41" y="64" width="16" height="5" fill="url(#fG2)" rx="3"/>
       {/* BODY */}
       <path d="M24 70Q24 68 34 66L41 66Q49 68 57 66L64 66Q74 68 74 70L76 106L22 106Z" fill="url(#uG2)"/>
@@ -189,15 +192,12 @@ function ConductorBonito({expression="hearts",size=120,animate=true}){
       <path d="M41 66L49 74L57 66" stroke="white" strokeWidth="2.2" fill="none" strokeLinejoin="round"/>
       <rect x="24" y="68" width="12" height="3.5" rx="1.5" fill="#C9A84C"/><rect x="62" y="68" width="12" height="3.5" rx="1.5" fill="#C9A84C"/>
       <rect x="55" y="79" width="18" height="8" rx="4" fill="white" opacity="0.95" stroke="#C9A84C" strokeWidth="0.5"/><text x="64" y="85" textAnchor="middle" fontSize="4.2" fill="#FF6B9D" fontWeight="900" fontFamily="'Zen Maru Gothic',sans-serif" letterSpacing="0.3">BONITO</text>
-      {/* Arms */}
       <path d="M24 72Q14 76 10 68Q8 63 13 58" stroke="#1B3A5C" strokeWidth="8" fill="none" strokeLinecap="round"/>
       <circle cx="13" cy="57" r="4.5" fill="white"/><circle cx="12" cy="58" r="0.8" fill="#FFD0D0"/><circle cx="15" cy="57" r="0.7" fill="#FFD0D0"/>
       <path d="M74 72Q84 78 86 88" stroke="#1B3A5C" strokeWidth="8" fill="none" strokeLinecap="round"/>
       <circle cx="86" cy="90" r="4.5" fill="white"/><circle cx="85" cy="91" r="0.8" fill="#FFD0D0"/>
-      {/* Bell collar */}
       <path d="M41 66Q49 69 57 66" stroke="#FF6B9D" strokeWidth="2.2" fill="none"/>
       <circle cx="49" cy="68" r="2.2" fill="#FFD700" stroke="#E8B800" strokeWidth="0.4"/>
-      {/* Expression sparkles */}
       {expression==="hearts"&&<React.Fragment><text x="16" y="34" fontSize="7" fill="#FF6B9D" opacity="0.6">♥</text><text x="80" y="36" fontSize="5" fill="#FF6B9D" opacity="0.4">♥</text></React.Fragment>}
       {expression==="stars"&&<React.Fragment><text x="14" y="34" fontSize="6" fill="#FFD700" opacity="0.7">✦</text><text x="82" y="34" fontSize="5" fill="#FFD700" opacity="0.5">✧</text></React.Fragment>}
     </svg>
@@ -229,7 +229,7 @@ function EditableField({value,onSave,placeholder="",multiline=false,style={}}){
   </div>);
   return(<div style={{display:"flex",flexDirection:"column",gap:6,...style}}>
     {multiline?<textarea className="note-area" onClick={e=>e.stopPropagation()} value={val} onChange={e=>setVal(e.target.value)} placeholder={placeholder} autoFocus/>:
-    <input type="text" onClick={e=>e.stopPropagation()} value={val} onChange={e=>setVal(e.target.value)} placeholder={placeholder} autoFocus style={{border:"2px solid #FFE0F0",borderRadius:12,padding:"8px 12px",fontSize:13,outline:"none",background:"#FFFAFC",fontFamily:"'M PLUS Rounded 1c',sans-serif"}} onKeyDown={e=>{e.stopPropagation();if(e.key==="Enter"){e.stopPropagation();onSave(val);setEditing(false)}}}/>}
+    <input type="text" onClick={e=>e.stopPropagation()} value={val} onChange={e=>setVal(e.target.value)} placeholder={placeholder} autoFocus style={{border:"2px solid #FFE0F0",borderRadius:12,padding:"8px 12px",fontSize:13,outline:"none",background:"#FFFAFC",fontFamily:"'M PLUS Rounded 1c',sans-serif"}} onKeyDown={e=>{e.stopPropagation();if(e.key==="Enter"){onSave(val);setEditing(false)}}}/>}
     <div style={{display:"flex",gap:6,justifyContent:"flex-end"}}>
       <button className="edit-btn" onClick={e=>{e.stopPropagation();setVal(value);setEditing(false)}}>Cancel</button>
       <button className="save-btn" onClick={e=>{e.stopPropagation();onSave(val);setEditing(false)}}>💾 Save</button>
@@ -274,7 +274,7 @@ function ProfileSelector({currentProfile,onSwitch}){
 function App(){
   const[profile,setProfile]=useState("A");
   const[activeTab,setActiveTab]=useState("home");
-  const[selectedDay,setSelectedDay]=useState(null);
+  const[selectedDayId,setSelectedDayId]=useState(null);
   const[days,setDays]=useState(DEFAULT_DAYS);
   const[stays,setStays]=useState(DEFAULT_STAYS);
   const[packingList,setPackingList]=useState(DEFAULT_PACKING);
@@ -286,9 +286,8 @@ function App(){
   const[expandedEvent,setExpandedEvent]=useState(null);
   const[loaded,setLoaded]=useState(false);
   const[newPackItem,setNewPackItem]=useState("");
-  const[editingEvent,setEditingEvent]=useState(null);
+  const selectedDay=days.find(d=>d.id===selectedDayId)||null;
 
-  // Load profile data
   useEffect(()=>{
     (async()=>{
       const d=await loadData(profile+"-days",DEFAULT_DAYS);
@@ -296,33 +295,31 @@ function App(){
       const p=await loadData(profile+"-packing",DEFAULT_PACKING);
       const n=await loadData(profile+"-notes","");
       setDays(d);setStays(s);setPackingList(p);setGeneralNotes(n);
-      // Load partner data
       const other=profile==="A"?"B":"A";
       const pd=await loadData(other+"-days",DEFAULT_DAYS);
       const pn=await loadData(other+"-notes","");
       setPartnerDays(pd);setPartnerNotes(pn);
-      setLoaded(true);setSelectedDay(null);setExpandedEvent(null);
+      setLoaded(true);setSelectedDayId(null);setExpandedEvent(null);
     })();
   },[profile]);
 
-  // Auto-save
-  const autoSave=useCallback(async(newDays,newStays,newPacking,newNotes)=>{
-    if(!loaded)return;
-    await saveData(profile+"-days",newDays||days);
-    await saveData(profile+"-stays",newStays||stays);
-    await saveData(profile+"-packing",newPacking||packingList);
-    await saveData(profile+"-notes",newNotes!==undefined?newNotes:generalNotes);
-  },[profile,days,stays,packingList,generalNotes,loaded]);
+  const saveDays=async(d)=>{if(loaded)await saveData(profile+"-days",d)};
+  const saveStays=async(s)=>{if(loaded)await saveData(profile+"-stays",s)};
+  const savePacking=async(p)=>{if(loaded)await saveData(profile+"-packing",p)};
+  const saveNotesData=async(n)=>{if(loaded)await saveData(profile+"-notes",n)};
 
-  const updateDay=(dayId,changes)=>{const nd=days.map(d=>d.id===dayId?{...d,...changes}:d);setDays(nd);autoSave(nd,null,null,undefined)};
-  const updateEvent=(dayId,evIdx,changes)=>{const nd=days.map(d=>{if(d.id!==dayId)return d;const ne=[...d.events];ne[evIdx]={...ne[evIdx],...changes};return{...d,events:ne}});setDays(nd);autoSave(nd,null,null,undefined)};
-  const addEvent=(dayId)=>{const nd=days.map(d=>{if(d.id!==dayId)return d;return{...d,events:[...d.events,{time:"12:00",title:"New Stop",icon:"📍",type:"explore",note:"",mapQuery:""}]}});setDays(nd);autoSave(nd,null,null,undefined)};
-  const removeEvent=(dayId,evIdx)=>{const nd=days.map(d=>{if(d.id!==dayId)return d;const ne=[...d.events];ne.splice(evIdx,1);return{...d,events:ne}});setDays(nd);autoSave(nd,null,null,undefined)};
-  const updateStay=(idx,changes)=>{const ns=[...stays];ns[idx]={...ns[idx],...changes};setStays(ns);autoSave(null,ns,null,undefined)};
-  const togglePacking=(i)=>{const np=packingList.map((item,idx)=>idx===i?{...item,checked:!item.checked}:item);setPackingList(np);autoSave(null,null,np,undefined)};
-  const addPackItem=()=>{if(!newPackItem.trim())return;const np=[...packingList,{item:newPackItem.trim(),checked:false,emoji:"📦"}];setPackingList(np);setNewPackItem("");autoSave(null,null,np,undefined)};
-  const removePackItem=(i)=>{const np=[...packingList];np.splice(i,1);setPackingList(np);autoSave(null,null,np,undefined)};
-  const saveNotes=(n)=>{setGeneralNotes(n);autoSave(null,null,null,n)};
+  const updateDay=(dayId,changes)=>{const nd=days.map(d=>d.id===dayId?{...d,...changes}:d);setDays(nd);saveDays(nd)};
+  const updateEvent=(dayId,evIdx,changes)=>{const nd=days.map(d=>{if(d.id!==dayId)return d;const ne=[...d.events];ne[evIdx]={...ne[evIdx],...changes};return{...d,events:ne}});setDays(nd);saveDays(nd)};
+  const addEvent=(dayId)=>{const nd=days.map(d=>{if(d.id!==dayId)return d;return{...d,events:[...d.events,{time:"12:00",title:"New Stop",icon:"📍",type:"explore",note:"",mapQuery:""}]}});setDays(nd);saveDays(nd)};
+  const removeEvent=(dayId,evIdx)=>{const nd=days.map(d=>{if(d.id!==dayId)return d;const ne=[...d.events];ne.splice(evIdx,1);return{...d,events:ne}});setDays(nd);saveDays(nd)};
+  const updateStay=(idx,changes)=>{const ns=[...stays];ns[idx]={...ns[idx],...changes};setStays(ns);saveStays(ns)};
+  const togglePacking=(i)=>{const np=packingList.map((item,idx)=>idx===i?{...item,checked:!item.checked}:item);setPackingList(np);savePacking(np)};
+  const addPackItem=()=>{if(!newPackItem.trim())return;const np=[...packingList,{item:newPackItem.trim(),checked:false,emoji:"📦"}];setPackingList(np);setNewPackItem("");savePacking(np)};
+  const removePackItem=(i)=>{const np=[...packingList];np.splice(i,1);setPackingList(np);savePacking(np)};
+  const addDay=()=>{const newId=Math.max(...days.map(d=>d.id),0)+1;const colors=["#FF6B9D","#9B59FF","#00C9A7","#FF9F43","#E84393","#4ECDC4","#F39C12"];const emojis=["🌟","🎯","🗺️","🎌","✨","🎊","🌈"];const nd=[...days,{id:newId,date:"Day "+newId,title:"New Day "+emojis[newId%7],subtitle:"Edit me!",color:colors[newId%7],emoji:emojis[newId%7],note:"",events:[]}];setDays(nd);saveDays(nd);setSelectedDayId(newId)};
+  const removeDay=(dayId)=>{const nd=days.filter(d=>d.id!==dayId);setDays(nd);saveDays(nd);if(selectedDayId===dayId)setSelectedDayId(nd[0]?.id||null)};
+  const addStay=()=>{const colors=["#FF6B9D","#9B59FF","#00C9A7","#FF9F43"];const ns=[...stays,{name:"New Stay",location:"Edit location",dates:"Edit dates",price:"¥0/night",amenities:[],emoji:"🏠",color:colors[stays.length%4],airbnbSearch:"Japan",note:""}];setStays(ns);saveStays(ns)};
+  const removeStay=(i)=>{const ns=[...stays];ns.splice(i,1);setStays(ns);saveStays(ns)};
   const openMaps=(q)=>window.open("https://www.google.com/maps/search/"+q,"_blank");
   const openAirbnb=(q)=>window.open("https://www.airbnb.com/s/"+q+"/homes","_blank");
 
@@ -343,7 +340,6 @@ function App(){
 
   return(<div style={{minHeight:"100vh",background:"linear-gradient(180deg,#FFF5F9 0%,#FFF0F5 30%,#F8F0FF 60%,#FFF5F9 100%)",fontFamily:"'M PLUS Rounded 1c',sans-serif",paddingBottom:90,position:"relative",overflow:"hidden"}}>
     <AnimatedStickers/>
-    {/* HEADER */}
     <div style={{background:`linear-gradient(135deg,${pc.primary} 0%,${pc.primary}CC 40%,#C77DFF 70%,#9B59FF 100%)`,padding:"16px 20px 30px",borderRadius:"0 0 32px 32px",position:"relative",zIndex:10,boxShadow:"0 8px 30px rgba(255,107,157,0.3)",overflow:"hidden"}}>
       <span style={{position:"absolute",top:8,right:15,fontSize:18,animation:"stickerPulse 2s ease-in-out infinite",opacity:.4}}>✨</span>
       <span style={{position:"absolute",bottom:14,right:20,fontSize:14,animation:"stickerWave 3s ease-in-out infinite",opacity:.3}}>🎌</span>
@@ -354,36 +350,32 @@ function App(){
         <p style={{color:"rgba(255,255,255,0.9)",fontSize:10,fontWeight:700,marginTop:2}}>Conductor Bonito · {pc.name} 🐾</p></div>
       </div>
     </div>
-    {/* PROFILE SELECTOR */}
     <ProfileSelector currentProfile={profile} onSwitch={p=>{setProfile(p);setActiveTab("home")}}/>
-    {/* GUIDE */}
     <div style={{padding:"8px 20px 12px",display:"flex",gap:10,alignItems:"flex-start",animation:"fadeSlideUp .5s ease-out",position:"relative",zIndex:5}}>
       <div style={{flexShrink:0}}><ConductorBonito expression={guideExpr} size={50}/></div>
       <SpeechBubble message={GUIDE_MSGS[activeTab]}/>
     </div>
-    {/* CONTENT */}
     <div style={{padding:"0 16px",position:"relative",zIndex:5}}>
 
-      {/* HOME */}
       {activeTab==="home"&&<div style={{animation:"fadeSlideUp .4s ease-out"}}>
         <div style={{display:"flex",justifyContent:"center",gap:8,marginBottom:14}}>{["🌸","🗼","⛩️","🍡","🚄","🎌","🏯","🐾"].map((e,i)=><span key={i} style={{fontSize:20,animation:"stickerBounce "+(2+i*.2)+"s ease-in-out infinite",animationDelay:(i*.12)+"s"}}>{e}</span>)}</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:18}}>
           {[{label:"Days",value:days.length+"",emoji:"📅",color:pc.primary},{label:"Cities",value:"3",emoji:"🏙️",color:"#9B59FF"},{label:"Stops",value:days.reduce((a,d)=>a+d.events.length,0)+"",emoji:"📍",color:"#00C9A7"}].map((s,i)=><div key={i} style={{background:"white",borderRadius:22,padding:"14px 8px",textAlign:"center",boxShadow:"0 4px 18px rgba(0,0,0,0.04)",border:"2.5px solid "+s.color+"25",animation:"fadeSlideUp .4s ease-out",animationDelay:(i*.1)+"s",animationFillMode:"both"}}><div style={{fontSize:26}}>{s.emoji}</div><div style={{fontSize:26,fontWeight:900,color:s.color,fontFamily:"'Zen Maru Gothic',sans-serif"}}>{s.value}</div><div style={{fontSize:10,color:"#AAA",fontWeight:700}}>{s.label}</div></div>)}
         </div>
         <h2 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:17,color:pc.primary,marginBottom:10,display:"flex",alignItems:"center",gap:6}}><span style={{animation:"stickerWave 2s ease-in-out infinite"}}>🐱</span> Your Journey Route ✨</h2>
-        {days.map((day,i)=><div key={day.id} onClick={()=>{setSelectedDay(day);setActiveTab("itinerary")}} style={{background:"white",borderRadius:20,padding:14,marginBottom:10,display:"flex",alignItems:"center",gap:12,boxShadow:"0 4px 16px rgba(0,0,0,0.04)",border:"2.5px solid "+day.color+"18",cursor:"pointer",transition:"all .25s ease",animation:"fadeSlideUp .4s ease-out",animationDelay:(i*.07)+"s",animationFillMode:"both"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateX(6px)";e.currentTarget.style.borderColor=day.color+"60"}} onMouseLeave={e=>{e.currentTarget.style.transform="translateX(0)";e.currentTarget.style.borderColor=day.color+"18"}}>
+        {days.map((day,i)=><div key={day.id} onClick={()=>{setSelectedDayId(day.id);setActiveTab("itinerary")}} style={{background:"white",borderRadius:20,padding:14,marginBottom:10,display:"flex",alignItems:"center",gap:12,boxShadow:"0 4px 16px rgba(0,0,0,0.04)",border:"2.5px solid "+day.color+"18",cursor:"pointer",transition:"all .25s ease",animation:"fadeSlideUp .4s ease-out",animationDelay:(i*.07)+"s",animationFillMode:"both"}} onMouseEnter={e=>{e.currentTarget.style.transform="translateX(6px)";e.currentTarget.style.borderColor=day.color+"60"}} onMouseLeave={e=>{e.currentTarget.style.transform="translateX(0)";e.currentTarget.style.borderColor=day.color+"18"}}>
           <div style={{width:50,height:50,borderRadius:16,background:"linear-gradient(135deg,"+day.color+","+day.color+"88)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0,boxShadow:"0 4px 14px "+day.color+"35"}}>{day.emoji}</div>
           <div style={{flex:1}}><div style={{fontSize:10,color:day.color,fontWeight:900,textTransform:"uppercase",letterSpacing:1}}>{day.date}</div><div style={{fontSize:15,fontWeight:900,color:"#333"}}>{day.title}</div><div style={{fontSize:11,color:"#AAA"}}>{day.subtitle} · {day.events.length} stops</div>{day.note&&<div style={{fontSize:10,color:"#FF6B9D",marginTop:2}}>📝 Has notes</div>}</div>
           <div style={{color:day.color,fontSize:20,fontWeight:900}}>→</div>
         </div>)}
+        <button onClick={addDay} style={{width:"100%",background:"white",border:"2.5px dashed "+pc.primary+"40",borderRadius:20,padding:"14px",fontSize:13,fontWeight:900,color:pc.primary,cursor:"pointer",fontFamily:"'M PLUS Rounded 1c',sans-serif",marginTop:4,transition:"all .2s"}} onMouseEnter={e=>e.currentTarget.style.borderStyle="solid"} onMouseLeave={e=>e.currentTarget.style.borderStyle="dashed"}>➕ Add Day</button>
       </div>}
 
-      {/* ITINERARY */}
       {activeTab==="itinerary"&&<div style={{animation:"fadeSlideUp .4s ease-out"}}>
-        <div style={{display:"flex",gap:6,marginBottom:14,overflowX:"auto",paddingBottom:4}}>{days.map(day=><button key={day.id} onClick={()=>{setSelectedDay(day);setExpandedEvent(null)}} style={{background:selectedDay?.id===day.id?`linear-gradient(135deg,${day.color},${day.color}BB)`:"white",color:selectedDay?.id===day.id?"white":"#777",border:"2.5px solid "+(selectedDay?.id===day.id?day.color:"#EEE"),borderRadius:14,padding:"7px 14px",fontSize:12,fontWeight:900,fontFamily:"'M PLUS Rounded 1c',sans-serif",cursor:"pointer",whiteSpace:"nowrap",transition:"all .2s",boxShadow:selectedDay?.id===day.id?"0 4px 14px "+day.color+"40":"none"}}>{day.emoji} {day.date}</button>)}</div>
+        <div style={{display:"flex",gap:6,marginBottom:14,overflowX:"auto",paddingBottom:4}}>{days.map(day=><button key={day.id} onClick={()=>{setSelectedDayId(day.id);setExpandedEvent(null)}} style={{background:selectedDay?.id===day.id?`linear-gradient(135deg,${day.color},${day.color}BB)`:"white",color:selectedDay?.id===day.id?"white":"#777",border:"2.5px solid "+(selectedDay?.id===day.id?day.color:"#EEE"),borderRadius:14,padding:"7px 14px",fontSize:12,fontWeight:900,fontFamily:"'M PLUS Rounded 1c',sans-serif",cursor:"pointer",whiteSpace:"nowrap",transition:"all .2s",boxShadow:selectedDay?.id===day.id?"0 4px 14px "+day.color+"40":"none"}}>{day.emoji} {day.date}</button>)}</div>
         {selectedDay&&<React.Fragment>
           <div style={{background:`linear-gradient(135deg,${selectedDay.color}12,${selectedDay.color}05)`,borderRadius:20,padding:"14px 16px",marginBottom:14,border:`2.5px solid ${selectedDay.color}18`,position:"relative"}}>
-            <h2 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:20,color:selectedDay.color}}>{selectedDay.emoji} {selectedDay.title}</h2>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}><h2 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:20,color:selectedDay.color}}>{selectedDay.emoji} {selectedDay.title}</h2><button onClick={()=>{if(confirm("Delete this day?"))removeDay(selectedDay.id)}} style={{background:"#FF444420",color:"#FF4444",border:"1.5px solid #FF444440",borderRadius:10,padding:"4px 10px",fontSize:11,fontWeight:900,cursor:"pointer",fontFamily:"'M PLUS Rounded 1c',sans-serif"}}>🗑️</button></div>
             <EditableField value={selectedDay.subtitle} onSave={v=>updateDay(selectedDay.id,{subtitle:v})} placeholder="Add subtitle..." style={{marginTop:4}}/>
             <NoteBox value={selectedDay.note} onSave={v=>updateDay(selectedDay.id,{note:v})} placeholder="Add day notes..."/>
           </div>
@@ -419,7 +411,6 @@ function App(){
         </React.Fragment>}
       </div>}
 
-      {/* STAYS */}
       {activeTab==="stays"&&<div style={{animation:"fadeSlideUp .4s ease-out"}}>
         <h2 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:18,color:pc.primary,marginBottom:14}}>🏠 Where You're Staying ✨</h2>
         {stays.map((acc,i)=><div key={i} style={{background:"white",borderRadius:24,padding:18,marginBottom:14,boxShadow:"0 4px 22px rgba(0,0,0,0.05)",border:"2.5px solid "+acc.color+"18",animation:"fadeSlideUp .4s ease-out",animationDelay:(i*.1)+"s",animationFillMode:"both"}}>
@@ -438,11 +429,12 @@ function App(){
           <div style={{display:"flex",gap:8,marginTop:10}}>
             <button onClick={()=>openMaps(acc.airbnbSearch)} style={{flex:1,background:"linear-gradient(135deg,#4285F4,#34A853)",color:"white",border:"none",borderRadius:14,padding:"11px",fontSize:11,fontWeight:900,cursor:"pointer",fontFamily:"'M PLUS Rounded 1c',sans-serif"}}>📍 Maps</button>
             <button onClick={()=>openAirbnb(acc.airbnbSearch)} style={{flex:1,background:"linear-gradient(135deg,#FF5A5F,#FC642D)",color:"white",border:"none",borderRadius:14,padding:"11px",fontSize:11,fontWeight:900,cursor:"pointer",fontFamily:"'M PLUS Rounded 1c',sans-serif"}}>🏠 Airbnb</button>
+            <button onClick={()=>{if(confirm("Remove this stay?"))removeStay(i)}} style={{background:"#FF444420",color:"#FF4444",border:"1.5px solid #FF444440",borderRadius:14,padding:"11px",fontSize:11,fontWeight:900,cursor:"pointer",fontFamily:"'M PLUS Rounded 1c',sans-serif"}}>🗑️</button>
           </div>
         </div>)}
+        <button onClick={addStay} style={{width:"100%",background:"white",border:"2.5px dashed "+pc.primary+"40",borderRadius:20,padding:"14px",fontSize:13,fontWeight:900,color:pc.primary,cursor:"pointer",fontFamily:"'M PLUS Rounded 1c',sans-serif",marginTop:4,transition:"all .2s"}} onMouseEnter={e=>e.currentTarget.style.borderStyle="solid"} onMouseLeave={e=>e.currentTarget.style.borderStyle="dashed"}>➕ Add Stay</button>
       </div>}
 
-      {/* PACKING */}
       {activeTab==="packing"&&<div style={{animation:"fadeSlideUp .4s ease-out"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
           <h2 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:18,color:pc.primary}}>🎒 Packing List</h2>
@@ -459,18 +451,19 @@ function App(){
           <input value={newPackItem} onChange={e=>setNewPackItem(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")addPackItem()}} placeholder="Add item..." style={{flex:1,border:"2.5px dashed #FFE0F0",borderRadius:14,padding:"10px 14px",fontSize:12,outline:"none",background:"#FFFAFC",fontFamily:"'M PLUS Rounded 1c',sans-serif"}}/>
           <button onClick={addPackItem} className="save-btn" style={{padding:"10px 16px"}}>➕</button>
         </div>
+        <div style={{display:"flex",gap:4,flexWrap:"wrap",marginTop:8}}>
+          {["👕","👖","👟","🧴","💊","📱","📷","🔌","💴","🎫","☂️","🧳","🕶️","📕","🎒"].map(em=><button key={em} onClick={()=>{const np=packingList.length>0&&packingList[packingList.length-1].emoji==="📦"?packingList.map((item,idx)=>idx===packingList.length-1?{...item,emoji:em}:item):[...packingList];if(np!==packingList){setPackingList(np);savePacking(np)}}} style={{background:"white",border:"1.5px solid #FFE0F0",borderRadius:10,padding:"4px 7px",fontSize:14,cursor:"pointer",transition:"all .15s"}} title={"Set last item emoji to "+em}>{em}</button>)}
+        </div>
       </div>}
 
-      {/* NOTES */}
       {activeTab==="notes"&&<div style={{animation:"fadeSlideUp .4s ease-out"}}>
         <h2 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:18,color:pc.primary,marginBottom:14}}>📝 Trip Journal ✨</h2>
         <div style={{background:"white",borderRadius:22,padding:18,boxShadow:"0 4px 20px rgba(0,0,0,0.04)",border:"2.5px solid #FFE0F020"}}>
-          <textarea className="note-area" value={generalNotes} onChange={e=>{setGeneralNotes(e.target.value);saveData(profile+"-notes",e.target.value)}} placeholder="Write anything — travel ideas, wishlists, restaurant recommendations, things to remember... 🐱✨" style={{minHeight:200,fontSize:14}}/>
+          <textarea className="note-area" value={generalNotes} onChange={e=>{setGeneralNotes(e.target.value);saveNotesData(e.target.value)}} placeholder="Write anything — travel ideas, wishlists, restaurant recommendations, things to remember... 🐱✨" style={{minHeight:200,fontSize:14}}/>
         </div>
         <p style={{fontSize:11,color:"#CCC",textAlign:"center",marginTop:10}}>Auto-saved for {pc.name} 💾</p>
       </div>}
 
-      {/* PHRASES */}
       {activeTab==="phrases"&&<div style={{animation:"fadeSlideUp .4s ease-out"}}>
         <h2 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:18,color:pc.primary,marginBottom:14}}>🗣️ Useful Phrases 🇯🇵</h2>
         {PHRASES.map((p,i)=><div key={i} style={{background:"white",borderRadius:20,padding:"14px 16px",marginBottom:8,boxShadow:"0 3px 14px rgba(0,0,0,0.03)",border:"2.5px solid #FFE0F015",animation:"fadeSlideUp .3s ease-out",animationDelay:(i*.05)+"s",animationFillMode:"both",position:"relative"}}>
@@ -481,7 +474,6 @@ function App(){
         </div>)}
       </div>}
 
-      {/* PARTNER VIEW */}
       {activeTab==="partner"&&<div style={{animation:"fadeSlideUp .4s ease-out"}}>
         {(()=>{const other=profile==="A"?"B":"A";const oc=PROFILE_COLORS[other];return(<React.Fragment>
           <h2 style={{fontFamily:"'Zen Maru Gothic',sans-serif",fontSize:18,color:oc.primary,marginBottom:14}}>{other==="A"?"🌸":"🍃"} {oc.name}'s Itinerary 👀</h2>
@@ -505,9 +497,8 @@ function App(){
       </div>}
     </div>
 
-    {/* BOTTOM NAV */}
     <div style={{position:"fixed",bottom:0,left:0,right:0,background:"rgba(255,255,255,0.92)",backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderTop:"2.5px solid #FFE0F0",padding:"4px 4px 8px",display:"flex",justifyContent:"space-around",zIndex:100,boxShadow:"0 -4px 25px rgba(255,107,157,0.1)"}}>
-      {[{id:"home",icon:"🏠",label:"Home"},{id:"itinerary",icon:"🗺️",label:"Route"},{id:"stays",icon:"🏡",label:"Stays"},{id:"packing",icon:"🎒",label:"Pack"},{id:"notes",icon:"📝",label:"Notes"},{id:"phrases",icon:"🗣️",label:"Talk"},{id:"partner",icon:"👀",label:"Partner"}].map(tab=><button key={tab.id} onClick={()=>{setActiveTab(tab.id);if(tab.id==="itinerary"&&!selectedDay)setSelectedDay(days[0])}} style={{background:activeTab===tab.id?`linear-gradient(135deg,${pc.primary}18,#9B59FF12)`:"transparent",border:activeTab===tab.id?`2px solid ${pc.primary}20`:"2px solid transparent",borderRadius:16,padding:"5px 8px",display:"flex",flexDirection:"column",alignItems:"center",gap:1,cursor:"pointer",transition:"all .2s",transform:activeTab===tab.id?"scale(1.05)":"scale(1)",minWidth:0}}>
+      {[{id:"home",icon:"🏠",label:"Home"},{id:"itinerary",icon:"🗺️",label:"Route"},{id:"stays",icon:"🏡",label:"Stays"},{id:"packing",icon:"🎒",label:"Pack"},{id:"notes",icon:"📝",label:"Notes"},{id:"phrases",icon:"🗣️",label:"Talk"},{id:"partner",icon:"👀",label:"Partner"}].map(tab=><button key={tab.id} onClick={()=>{setActiveTab(tab.id);if(tab.id==="partner"){(async()=>{const o=profile==="A"?"B":"A";setPartnerDays(await loadData(o+"-days",DEFAULT_DAYS));setPartnerNotes(await loadData(o+"-notes",""))})()}if(tab.id==="itinerary"&&!selectedDayId)setSelectedDayId(days[0]?.id||null)}} style={{background:activeTab===tab.id?`linear-gradient(135deg,${pc.primary}18,#9B59FF12)`:"transparent",border:activeTab===tab.id?`2px solid ${pc.primary}20`:"2px solid transparent",borderRadius:16,padding:"5px 8px",display:"flex",flexDirection:"column",alignItems:"center",gap:1,cursor:"pointer",transition:"all .2s",transform:activeTab===tab.id?"scale(1.05)":"scale(1)",minWidth:0}}>
         <span style={{fontSize:18}}>{tab.icon}</span>
         <span style={{fontSize:8,fontWeight:900,color:activeTab===tab.id?pc.primary:"#CCC",fontFamily:"'M PLUS Rounded 1c',sans-serif"}}>{tab.label}</span>
         {activeTab===tab.id&&<div style={{width:4,height:4,borderRadius:"50%",background:`linear-gradient(135deg,${pc.primary},#9B59FF)`}}/>}
@@ -517,6 +508,6 @@ function App(){
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
-  </script>
+</script>
 </body>
 </html>
