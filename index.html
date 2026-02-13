@@ -20,7 +20,7 @@
     <li><a href="#music" onclick="cm()">Music</a></li>
     <li><a href="#studio" onclick="cm()">Studio</a></li>
     <li><a href="#gear" onclick="cm()">Gear</a></li>
-    <li><a href="#videos" onclick="cm()">Watch</a></li>
+    <!--<li><a href="#videos" onclick="cm()">Watch</a></li>-->
     <li><a href="#teaching" onclick="cm()">Teaching</a></li>
     <li><a href="#events" onclick="cm()">Events</a></li>
     <li><a href="#contact" onclick="cm()">Contact</a></li>
@@ -119,7 +119,6 @@
         <div class="stream-links rv">
   <a href="https://soundcloud.com/simonoto" target="_blank">soundcloud</a>
   <a href="https://simonoto.bandcamp.com" target="_blank">bandcamp</a>
-  <a href="#" target="_blank">spotify</a>
   <a href="https://youtube.com/@shr3dbeard" target="_blank">youtube</a>
 </div>
 
@@ -295,14 +294,14 @@
   </div>
 </div>
 <div class="test-card rv" data-d="1">
-  <div class="test-quote">&ldquo;“Simon met my son on his level  and helped develop his confidence to play live.”&rdquo;</div>
+  <div class="test-quote">&ldquo;Simon met my son on his level and helped develop his confidence to play live.&rdquo;</div>
   <div class="test-author">
     <div class="test-avatar"><img src="Images/Parent-Testimony.jpg" alt="Caroline Munck"></div>
     <div><strong>Caroline Munck</strong><span>Parent of Student</span></div>
   </div>
 </div>
 <div class="test-card rv" data-d="2">
-  <div class="test-quote">&ldquo;Placeholder testimonial — edit in content.json&rdquo;</div>
+  <div class="test-quote">&ldquo;The energy Simon brings to a live show is unmatched. Studio S is the real deal.&rdquo;</div>
   <div class="test-author">
     <div class="test-avatar"><img src="Images/Club-testimony.jpg" alt="Jason Mulvaney"></div>
     <div><strong>Jason Mulvaney</strong><span>Studio S client (live show)</span></div>
@@ -426,7 +425,7 @@ const tObs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.tar
 document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener("click",function(e){e.preventDefault();const t=document.querySelector(this.getAttribute("href"));if(t)t.scrollIntoView({behavior:"smooth",block:"start"})});});
 
 /* Deco parallax */
-window.addEventListener("scroll",()=>{const s=window.scrollY;document.querySelectorAll(".deco").forEach((d,i)=>{const speed=[.02,.015,.025,.018,.022][i%5];const dir=i%2===0?1:-1;d.style.transform=`translateY(${s*speed*dir}px)`})});
+window.addEventListener("scroll",()=>{const s=window.scrollY;document.querySelectorAll(".deco").forEach((d,i)=>{const speed=[.02,.015,.025,.018,.022][i%5];const dir=i%2===0?1:-1;const rot=d.dataset.rot||(d.dataset.rot=d.style.transform.match(/rotate\([^)]+\)/)?.[0]||"");d.style.transform=`translateY(${s*speed*dir}px) ${rot}`})});
 
 /* Gear toggle */
 function toggleGear(){const el=document.getElementById("gear-full");const btn=document.getElementById("gear-toggle");if(el.style.maxHeight==="0px"||el.style.maxHeight==="0"){el.style.maxHeight=el.scrollHeight+"px";btn.textContent="collapse ↑";setTimeout(()=>{el.querySelectorAll(".rv").forEach(r=>r.classList.add("vis"))},100)}else{el.style.maxHeight="0px";btn.textContent="see the full rig →"}}
@@ -448,7 +447,8 @@ document.addEventListener('mousemove',(e)=>{glow.style.left=e.clientX+'px';glow.
 
 /* Google Calendar */
 const GCAL_ID='0jd67j77f31mnfk5i0bfomaep0@group.calendar.google.com';const GCAL_KEY='AIzaSyBbEtkn6hgiJ6DJJg8st2QLwMEDUt8jL8o';
-async function loadShows(){const container=document.getElementById('live-events');if(!container)return;const now=new Date().toISOString();const url=`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(GCAL_ID)}/events?key=${GCAL_KEY}&timeMin=${now}&maxResults=8&singleEvents=true&orderBy=startTime`;try{const res=await fetch(url);if(!res.ok)throw new Error('Calendar fetch failed');const data=await res.json();const events=data.items||[];if(events.length===0){container.innerHTML=`<div class="ev-item rv vis"><span class="ev-date">TBA</span><div class="ev-info"><h4>New shows coming soon</h4><p>follow @simonoto for announcements</p></div></div>`;return}container.innerHTML=events.map(ev=>{const start=ev.start.dateTime||ev.start.date;const d=new Date(start);const month=d.toLocaleString('en-US',{month:'short'}).toUpperCase();const day=d.getDate();const time=ev.start.dateTime?d.toLocaleString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}).toLowerCase():'all day';const location=ev.location||'';return`<div class="ev-item rv vis"><span class="ev-date">${month} ${day}</span><div class="ev-info"><h4>${ev.summary||'Untitled Event'}</h4><p>${location?location+' · ':''}${time}</p></div></div>`}).join('')}catch(err){console.warn('Calendar load failed:',err)}}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+async function loadShows(){const container=document.getElementById('live-events');if(!container)return;const now=new Date().toISOString();const url=`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(GCAL_ID)}/events?key=${GCAL_KEY}&timeMin=${now}&maxResults=8&singleEvents=true&orderBy=startTime`;try{const res=await fetch(url);if(!res.ok)throw new Error('Calendar fetch failed');const data=await res.json();const events=data.items||[];if(events.length===0){container.innerHTML=`<div class="ev-item rv vis"><span class="ev-date">TBA</span><div class="ev-info"><h4>New shows coming soon</h4><p>follow @simonoto for announcements</p></div></div>`;return}container.innerHTML=events.map(ev=>{const start=ev.start.dateTime||ev.start.date;const d=new Date(start);const month=d.toLocaleString('en-US',{month:'short'}).toUpperCase();const day=d.getDate();const time=ev.start.dateTime?d.toLocaleString('en-US',{hour:'numeric',minute:'2-digit',hour12:true}).toLowerCase():'all day';const location=ev.location||'';return`<div class="ev-item rv vis"><span class="ev-date">${esc(month)} ${day}</span><div class="ev-info"><h4>${esc(ev.summary||'Untitled Event')}</h4><p>${location?esc(location)+' · ':''}${esc(time)}</p></div></div>`}).join('')}catch(err){console.warn('Calendar load failed:',err)}}
 document.addEventListener('DOMContentLoaded',loadShows);
 </script>
 </body>

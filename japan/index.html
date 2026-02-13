@@ -316,7 +316,6 @@ function App(){
   const selectedDay=days.find(d=>d.id===selectedDayId)||null;
 
   // Track whether we're currently saving to avoid listener feedback loops
-  const saving=useRef(false);
   const skipSync=useRef({days:false,stays:false,packing:false,notes:false});
 
   // Initial load

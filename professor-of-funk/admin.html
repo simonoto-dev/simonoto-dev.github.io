@@ -198,7 +198,7 @@ const MOCK = {
 
 /* ===== AUTH ===== */
 const AUTH_KEY = 'pof-admin-auth';
-const ADMIN_HASH = '7f6def7b'; // passphrase: profunk-admin
+const ADMIN_HASH = '7f6def7b';
 
 function simpleHash(s) { let h = 0; for (let i = 0; i < s.length; i++) { h = ((h << 5) - h) + s.charCodeAt(i); h |= 0; } return Math.abs(h).toString(16).slice(0, 8); }
 
@@ -247,7 +247,6 @@ function saveLocalData() {
 
 /* ===== STATE ===== */
 let currentTab = 0;
-let selectedStudent = null;
 let paymentStudent = null;
 
 /* ===== HELPERS ===== */
@@ -346,7 +345,7 @@ function renderStudents() {
       const s = students[key];
       const bal = getBalance(key);
       const attRate = getAttendanceRate(key);
-      return h('div', { class: 'student-card', onClick: () => { selectedStudent = key; render(); } },
+      return h('div', { class: 'student-card' },
         h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' } },
           h('div', {},
             h('div', { style: { display: 'flex', alignItems: 'center', gap: '8px' } },
@@ -760,7 +759,7 @@ function render() {
   app.appendChild(h('div', { class: 'bottom-nav' },
     ...tabs.map((t, i) => h('button', {
       class: 'nav-btn' + (currentTab === i ? ' active' : ''),
-      onClick: () => { currentTab = i; selectedStudent = null; paymentStudent = null; render(); }
+      onClick: () => { currentTab = i; paymentStudent = null; render(); }
     },
       h('span', { class: 'nav-icon' }, t.icon),
       t.label

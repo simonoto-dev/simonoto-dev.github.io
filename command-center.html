@@ -123,7 +123,7 @@ input,textarea,select,button{font-family:inherit;font-size:inherit;}
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
 const AUTH_KEY='simonoto-cc-auth';
-const PW_HASH='49c23c06'; // password: groove
+const PW_HASH='49c23c06';
 function simpleHash(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;}return Math.abs(h).toString(16).slice(0,12);}
 function checkAuth(){
   const pw=document.getElementById('auth-pw').value;
@@ -274,7 +274,7 @@ function setTab(t){data.tab=t;try{localStorage.setItem(STORAGE_KEY,JSON.stringif
 
 let _id=Date.now();
 function uid(){return(++_id).toString(36)+Math.random().toString(36).slice(2,6);}
-function fmtDate(d){if(!d)return"";return new Date(d).toLocaleDateString("en-US",{month:"short",day:"numeric"});}
+function fmtDate(d){if(!d)return"";return new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"});}
 function isToday(d){return new Date().toDateString()===d.toDateString();}
 function daysUntil(d){return Math.max(0,Math.ceil((new Date(d)-new Date())/86400000));}
 function getWeekDates(){const now=new Date(),day=now.getDay(),start=new Date(now);start.setDate(now.getDate()-day);return Array.from({length:7},(_,i)=>{const d=new Date(start);d.setDate(start.getDate()+i);return d;});}
@@ -523,34 +523,27 @@ function renderBridge(){
     ),
     h("button",{class:"btn-outline",style:{margin:"0 16px 8px",alignSelf:"flex-end",fontSize:"10px",padding:"3px 8px"},onClick:()=>{data.messages=[];saveData();render();}},"Clear"),
     h("div",{class:"chat-messages",id:"chat-msgs"},
-      messages.length===0?h("div",{style:{textAlign:"center",padding:"40px 20px"}},h("p",{style:{fontSize:"28px"}},"🎵"),h("p",{style:{color:"var(--muted)",fontSize:"13px"}},"Ask about strategy, get caption ideas, brainstorm...")):"",
+      messages.length===0?h("div",{style:{textAlign:"center",padding:"40px 20px"}},h("p",{style:{fontSize:"28px"}},"📝"),h("p",{style:{color:"var(--muted)",fontSize:"13px"}},"Quick notes, ideas, reminders...")):"",
       ...messages.map(m=>h("div",{class:"chat-msg "+(m.role==="user"?"chat-user":"chat-ai")},m.content))
     ),
     h("div",{class:"chat-input"},
-      h("textarea",{id:"chat-in",rows:"2",placeholder:"Ask Claude... (Enter to send)",
-        onKeydown:async e=>{
+      h("textarea",{id:"chat-in",rows:"2",placeholder:"Jot a note... (Enter to save)",
+        onKeydown:e=>{
           if(e.key==="Enter"&&!e.shiftKey){
             e.preventDefault();const val=e.target.value.trim();if(!val)return;
             data.messages.push({role:"user",content:val});e.target.value="";saveData();render();
             setTimeout(()=>{const el=document.getElementById("chat-msgs");if(el)el.scrollTop=el.scrollHeight;},50);
-            try{
-              const resp=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
-                body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,system:systems[chatMode],messages:data.messages.slice(-10).map(m=>({role:m.role,content:m.content}))})});
-              const result=await resp.json();const text=result.content?.map(c=>c.text||"").join("\n")||"Couldn't process that.";
-              data.messages.push({role:"assistant",content:text});
-            }catch(err){data.messages.push({role:"assistant",content:"Connection error. Try again."});}
-            saveData();render();setTimeout(()=>{const el=document.getElementById("chat-msgs");if(el)el.scrollTop=el.scrollHeight;},50);
           }
         }
       }),
-      h("button",{class:"btn",style:{alignSelf:"flex-end"}},"Send")
+      h("button",{class:"btn",style:{alignSelf:"flex-end"},onClick:()=>{const inp=document.getElementById("chat-in");if(inp&&inp.value.trim()){data.messages.push({role:"user",content:inp.value.trim()});inp.value="";saveData();render();setTimeout(()=>{const el=document.getElementById("chat-msgs");if(el)el.scrollTop=el.scrollHeight;},50);}}},"Save")
     )
   );
 }
 
 function render(){
   const app=document.getElementById("app");app.innerHTML="";const tab=data.tab||0;
-  const tabs=[{icon:"🏠",label:"Home"},{icon:"📁",label:"Projects"},{icon:"💡",label:"Ideas"},{icon:"📅",label:"Schedule"},{icon:"🤖",label:"Claude"}];
+  const tabs=[{icon:"🏠",label:"Home"},{icon:"📁",label:"Projects"},{icon:"💡",label:"Ideas"},{icon:"📅",label:"Schedule"},{icon:"📝",label:"Notes"}];
   app.appendChild(h("div",{class:"header"},
     h("div",{class:"logo"},h("span",{class:"logo-icon"},"🎛️"),h("span",{class:"logo-name"},"SIMONOTO"),h("span",{class:"logo-sub"},"COMMAND CENTER")),
     h("button",{class:"header-reset",onClick:()=>{if(confirm("Reset all data?")){localStorage.removeItem(STORAGE_KEY);loadData();render();}}},"Reset")
