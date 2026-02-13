@@ -44,6 +44,7 @@
 <body>
 <div id="root"></div>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
@@ -62,6 +63,7 @@ const firebaseConfig={
   appId:"1:578067799039:web:e43aede4916da472bd25ca"
 };
 const fbApp=firebase.initializeApp(firebaseConfig);
+firebase.auth().signInAnonymously().catch(e=>console.warn("Anon auth failed",e));
 const db=firebase.database();
 const DB_ROOT="bonito-japan";
 

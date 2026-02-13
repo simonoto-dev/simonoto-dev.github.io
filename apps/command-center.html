@@ -120,6 +120,7 @@ input,textarea,select,button{font-family:inherit;font-size:inherit;}
 </div>
 <div class="app" id="app" style="display:none;"></div>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
 const AUTH_KEY='simonoto-cc-auth';
@@ -145,6 +146,7 @@ const firebaseConfig={
   appId:"1:578067799039:web:e43aede4916da472bd25ca"
 };
 const fbApp=firebase.initializeApp(firebaseConfig);
+firebase.auth().signInAnonymously().catch(e=>console.warn("Anon auth failed",e));
 const fbDb=firebase.database();
 const DB_ROOT="command-center";
 function dbRef(path){return fbDb.ref(DB_ROOT+"/"+path)}
