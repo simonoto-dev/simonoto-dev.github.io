@@ -198,7 +198,7 @@ const MOCK = {
 
 /* ===== AUTH ===== */
 const AUTH_KEY = 'pof-admin-auth';
-const ADMIN_HASH = '5e1a8c0a'; // passphrase: profunk-admin
+const ADMIN_HASH = '7f6def7b'; // passphrase: profunk-admin
 
 function simpleHash(s) { let h = 0; for (let i = 0; i < s.length; i++) { h = ((h << 5) - h) + s.charCodeAt(i); h |= 0; } return Math.abs(h).toString(16).slice(0, 8); }
 
