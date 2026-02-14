@@ -49,19 +49,27 @@ header {
 .logo { display: flex; align-items: center; }
 .logo-text {
   font-family: 'Fredoka One', cursive; font-size: 1.4rem; letter-spacing: 2px;
-  background: linear-gradient(135deg, #ff6b35, #ffd700, #ff6b35, #ffd700);
+  background: linear-gradient(90deg, #ff6b35, #ffd700, #ff8c00, #ffd700, #ff6b35);
+  background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: shimmer 8s ease-in-out infinite;
 }
 .logo-text .jams {
-  background: linear-gradient(90deg, #ff6b35, #ffd700, #ff8c00);
+  background: linear-gradient(90deg, #ffd700, #ff6b35, #ff8c00, #ff6b35, #ffd700);
+  background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text; font-style: italic;
+  animation: shimmer 8s ease-in-out infinite reverse;
 }
 
 @keyframes shimmer {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
+}
+@keyframes glowPulse {
+  0%, 100% { filter: drop-shadow(0 0 30px rgba(255,107,53,0.4)) drop-shadow(0 0 60px rgba(255,215,0,0.15)); }
+  50% { filter: drop-shadow(0 0 50px rgba(255,107,53,0.6)) drop-shadow(0 0 100px rgba(255,215,0,0.3)) drop-shadow(0 0 12px rgba(255,107,53,0.5)); }
 }
 .nav-links { display: flex; gap: 8px; align-items: center; }
 .nav-btn {
@@ -88,17 +96,21 @@ header {
 .hero-wordmark {
   font-family: 'Fredoka One', cursive; font-size: clamp(3rem, 10vw, 4.5rem);
   letter-spacing: 4px; line-height: 1;
-  filter: drop-shadow(0 0 40px rgba(255, 107, 53, 0.3));
+  animation: glowPulse 4s ease-in-out infinite;
 }
 .hero-wordmark .glory {
-  background: linear-gradient(135deg, #ff6b35, #ffd700, #ff6b35, #ffd700);
+  background: linear-gradient(90deg, #ff6b35, #ffd700, #ff8c00, #ffd700, #ff6b35);
+  background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: shimmer 6s ease-in-out infinite;
 }
 .hero-wordmark .jams {
-  background: linear-gradient(90deg, #ff6b35, #ffd700, #ff8c00);
+  background: linear-gradient(90deg, #ffd700, #ff6b35, #ff8c00, #ff6b35, #ffd700);
+  background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text; font-style: italic;
+  animation: shimmer 6s ease-in-out infinite reverse;
 }
 .hero-swoosh {
   display: block; margin: -4px auto 0; width: clamp(200px, 55vw, 360px); height: 12px;
