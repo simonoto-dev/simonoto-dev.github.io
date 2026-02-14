@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glory Jams — Font Lab</title>
+
+<!-- ALL the candidate fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rock+Salt&family=Sedgwick+Ave+Display&family=Molle:ital@1&family=Danfo&family=Honk&family=Risque&family=Asset&family=Sixtyfour+Convergence&family=Fredoka+One&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #0a0a0a;
+  color: #e8e8e8;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =========================================== */
+/* EDIT PANEL (sticky sidebar on desktop,      */
+/* bottom drawer on mobile)                    */
+/* =========================================== */
+.edit-panel {
+  position: fixed; top: 0; right: 0; z-index: 1000;
+  width: 320px; height: 100vh; overflow-y: auto;
+  background: #111; border-left: 1px solid #222;
+  padding: 20px; display: flex; flex-direction: column; gap: 16px;
+  transform: translateX(100%); transition: transform 0.3s ease;
+}
+.edit-panel.open { transform: translateX(0); }
+.edit-panel h2 {
+  font-family: 'DM Sans', sans-serif; font-size: 1rem; color: #ff6b35;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.edit-panel .close-btn {
+  background: none; border: none; color: #666; font-size: 1.4rem; cursor: pointer;
+  padding: 4px 8px; border-radius: 6px;
+}
+.edit-panel .close-btn:hover { color: #fff; background: #222; }
+.edit-panel label {
+  display: block; font-size: 0.72rem; color: #888;
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+}
+.edit-panel select {
+  width: 100%; padding: 8px 10px; background: #1a1a1a; border: 1px solid #333;
+  border-radius: 8px; color: #fff; font-size: 0.85rem; font-family: inherit;
+}
+.edit-panel select:focus { outline: none; border-color: #ff6b35; }
+.font-preview-mini {
+  padding: 6px 10px; background: #0a0a0a; border-radius: 8px;
+  font-size: 1.1rem; color: #ff6b35; text-align: center; margin-top: 2px;
+}
+.edit-group { border-bottom: 1px solid #1a1a1a; padding-bottom: 14px; }
+
+/* Toggle glow */
+.toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 0;
+}
+.toggle-row span { font-size: 0.82rem; color: #ccc; }
+.toggle {
+  width: 42px; height: 24px; border-radius: 12px; background: #333;
+  position: relative; cursor: pointer; transition: background 0.2s;
+}
+.toggle.on { background: #ff6b35; }
+.toggle::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px; border-radius: 50%; background: #fff;
+  transition: transform 0.2s;
+}
+.toggle.on::after { transform: translateX(18px); }
+
+/* Glow intensity slider */
+.slider-row { display: flex; align-items: center; gap: 8px; }
+.slider-row input[type="range"] {
+  flex: 1; accent-color: #ff6b35; height: 4px;
+}
+.slider-val { font-size: 0.75rem; color: #888; min-width: 28px; text-align: right; }
+
+/* Export button */
+.export-btn {
+  padding: 10px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg, #ff6b35, #ffd700);
+  color: #000; font-weight: 700; font-size: 0.85rem; cursor: pointer;
+  transition: transform 0.15s;
+}
+.export-btn:hover { transform: scale(1.02); }
+
+/* Edit toggle button (floating) */
+.edit-toggle {
+  position: fixed; top: 12px; right: 12px; z-index: 999;
+  padding: 8px 16px; border-radius: 8px; border: 1px solid #ff6b35;
+  background: rgba(10,10,10,0.9); color: #ff6b35;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  backdrop-filter: blur(8px); transition: all 0.15s;
+}
+.edit-toggle:hover { background: #ff6b35; color: #000; }
+
+/* =========================================== */
+/* SCROLL VERSIONS                             */
+/* =========================================== */
+.version-section {
+  min-height: 100vh; padding: 40px 0 60px;
+  border-bottom: 2px solid #1a1a1a;
+  position: relative;
+}
+.version-section:last-child { border-bottom: none; }
+
+.version-label {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(10,10,10,0.95); backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222; padding: 10px 0;
+  text-align: center;
+}
+.version-label h2 {
+  font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;
+  color: #666; margin-bottom: 2px;
+}
+.version-label .font-name {
+  font-size: 1.1rem; color: #ff6b35; font-weight: 700;
+}
+
+.container { max-width: 680px; margin: 0 auto; padding: 0 16px; }
+
+/* =========================================== */
+/* GLORY JAMS UI COMPONENTS (from main site)   */
+/* =========================================== */
+.hero { padding: 40px 0 24px; text-align: center; }
+.hero-logo { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 16px; }
+.hero-wordmark {
+  font-size: clamp(3rem, 10vw, 4.5rem);
+  letter-spacing: 4px; line-height: 1;
+}
+.hero-wordmark .glory {
+  background: linear-gradient(135deg, #ff6b35, #ffd700, #ff6b35, #ffd700);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-wordmark .jams {
+  background: linear-gradient(90deg, #ff6b35, #ffd700, #ff8c00);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; font-style: italic;
+}
+/* Glow classes */
+.glow-soft { filter: drop-shadow(0 0 30px rgba(255, 107, 53, 0.25)); }
+.glow-medium { filter: drop-shadow(0 0 40px rgba(255, 107, 53, 0.4)) drop-shadow(0 0 80px rgba(255, 215, 0, 0.15)); }
+.glow-heavy { filter: drop-shadow(0 0 50px rgba(255, 107, 53, 0.5)) drop-shadow(0 0 100px rgba(255, 215, 0, 0.25)) drop-shadow(0 0 15px rgba(255, 107, 53, 0.6)); }
+.glow-neon { filter: drop-shadow(0 0 8px rgba(255, 107, 53, 0.8)) drop-shadow(0 0 40px rgba(255, 107, 53, 0.5)) drop-shadow(0 0 100px rgba(255, 215, 0, 0.3)); }
+
+.hero-swoosh { display: block; margin: -4px auto 0; width: clamp(200px, 55vw, 360px); height: 12px; }
+
+.hero-sub { font-size: 1rem; color: #888; max-width: 480px; margin: 0 auto; line-height: 1.5; }
+.hero-sub .tonight-count { color: #ff6b35; font-weight: 700; }
+.hero-sub .total-count { color: #ccc; font-weight: 600; }
+
+.live-bar {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px; margin-bottom: 24px;
+  background: rgba(255,107,53,0.08); border: 1px solid rgba(255,107,53,0.2);
+  border-radius: 12px; font-size: 0.85rem; color: #ff6b35; font-weight: 600;
+}
+.pulse-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #ff6b35;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+/* Jam cards */
+.jam-list { display: flex; flex-direction: column; gap: 10px; }
+.jam-card {
+  background: #111; border: 1px solid #222; border-radius: 14px;
+  padding: 16px; position: relative; overflow: hidden;
+}
+.jam-card.tonight-card {
+  border-color: rgba(255,107,53,0.3);
+  background: linear-gradient(135deg, rgba(255,107,53,0.05) 0%, #111 100%);
+}
+.tonight-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.7rem; font-weight: 700; color: #ff6b35;
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+.tonight-badge .pulse-dot { width: 6px; height: 6px; }
+.jam-name { font-size: 1.05rem; font-weight: 400; color: #fff; margin-bottom: 4px; }
+.jam-venue { font-size: 0.85rem; color: #888; margin-bottom: 10px; }
+.jam-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 0.8rem; color: #666; }
+.jam-time { color: #ccc; font-weight: 600; }
+.jam-meta .sep { color: #333; }
+.jam-genres { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+.genre-chip { padding: 4px 10px; border-radius: 12px; font-size: 0.72rem; font-weight: 600; text-transform: lowercase; }
+.genre-jazz { background: #1a2744; color: #5b9aff; }
+.genre-blues { background: #1a1a44; color: #7b7bff; }
+.genre-funk { background: #2a1a3a; color: #c77bff; }
+.genre-soul { background: #3a1a2a; color: #ff7bb5; }
+.genre-open { background: #1a2a1a; color: #5bff7b; }
+
+/* Section headers (for card names, section titles) */
+.section-title {
+  font-size: 1.1rem; color: #ffd700; margin-bottom: 6px;
+}
+.blast-section {
+  background: linear-gradient(135deg, rgba(255,215,0,0.06) 0%, rgba(255,107,53,0.06) 100%);
+  border: 1px solid rgba(255,215,0,0.15); border-radius: 14px;
+  padding: 20px; margin: 24px 0; text-align: center;
+}
+.blast-section h3 { font-size: 1.1rem; color: #ffd700; margin-bottom: 6px; }
+.blast-section p { font-size: 0.82rem; color: #888; }
+
+/* Nav chips (for scrolling between versions) */
+.version-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 900;
+  background: rgba(10,10,10,0.95); backdrop-filter: blur(10px);
+  border-top: 1px solid #222; padding: 8px 12px;
+  display: flex; gap: 6px; overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.version-nav::-webkit-scrollbar { display: none; }
+.version-chip {
+  flex-shrink: 0; padding: 6px 14px; border-radius: 20px;
+  font-size: 0.75rem; font-weight: 600;
+  background: #1a1a1a; color: #888; border: 1px solid #333;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.version-chip:hover { border-color: #555; color: #ccc; }
+.version-chip.active { background: #ff6b35; color: #000; border-color: #ff6b35; }
+
+/* SVG defs */
+svg.defs { display: none; }
+
+/* Footer */
+footer {
+  border-top: 1px solid #1a1a1a; padding: 24px 0 80px;
+  text-align: center; font-size: 0.8rem; color: #444;
+}
+footer a { color: #ff6b35; }
+
+@media (max-width: 768px) {
+  .edit-panel { width: 100%; height: 70vh; top: auto; bottom: 0; left: 0; right: 0;
+    border-left: none; border-top: 1px solid #222; border-radius: 16px 16px 0 0;
+    transform: translateY(100%);
+  }
+  .edit-panel.open { transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<!-- SVG Defs -->
+<svg class="defs" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gloryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff6b35"/><stop offset="40%" stop-color="#ffd700"/>
+      <stop offset="60%" stop-color="#ff6b35"/><stop offset="100%" stop-color="#ffd700"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- Edit toggle -->
+<button class="edit-toggle" onclick="togglePanel()">🎨 Edit Fonts</button>
+
+<!-- Edit Panel -->
+<div class="edit-panel" id="editPanel">
+  <h2>Font Lab <button class="close-btn" onclick="togglePanel()">×</button></h2>
+
+  <div class="edit-group">
+    <label>Hero / Logo Font</label>
+    <select id="heroFont" onchange="applyFonts()">
+      <option value="'Rock Salt', cursive">Rock Salt</option>
+      <option value="'Sedgwick Ave Display', cursive">Sedgwick Ave Display</option>
+      <option value="'Molle', cursive">Molle</option>
+      <option value="'Danfo', serif">Danfo</option>
+      <option value="'Honk', system-ui">Honk</option>
+      <option value="'Risque', cursive">Risque</option>
+      <option value="'Asset', serif">Asset</option>
+      <option value="'Sixtyfour Convergence', monospace">Sixtyfour Convergence</option>
+      <option value="'Fredoka One', cursive">Fredoka One (current)</option>
+    </select>
+    <div class="font-preview-mini" id="heroPreview">GLORY JAMS</div>
+  </div>
+
+  <div class="edit-group">
+    <label>Card Titles / Section Headers</label>
+    <select id="cardFont" onchange="applyFonts()">
+      <option value="'Rock Salt', cursive">Rock Salt</option>
+      <option value="'Sedgwick Ave Display', cursive">Sedgwick Ave Display</option>
+      <option value="'Molle', cursive">Molle</option>
+      <option value="'Danfo', serif">Danfo</option>
+      <option value="'Honk', system-ui">Honk</option>
+      <option value="'Risque', cursive">Risque</option>
+      <option value="'Asset', serif">Asset</option>
+      <option value="'Sixtyfour Convergence', monospace">Sixtyfour Convergence</option>
+      <option value="'Fredoka One', cursive">Fredoka One (current)</option>
+      <option value="'DM Sans', sans-serif">DM Sans (body)</option>
+    </select>
+    <div class="font-preview-mini" id="cardPreview">Funk Jam at Eli's</div>
+  </div>
+
+  <div class="edit-group">
+    <label>Body / UI Text</label>
+    <select id="bodyFont" onchange="applyFonts()">
+      <option value="'DM Sans', sans-serif" selected>DM Sans (current)</option>
+      <option value="'Rock Salt', cursive">Rock Salt</option>
+      <option value="'Sedgwick Ave Display', cursive">Sedgwick Ave Display</option>
+      <option value="'Risque', cursive">Risque</option>
+      <option value="'Danfo', serif">Danfo</option>
+    </select>
+    <div class="font-preview-mini" id="bodyPreview" style="font-size:0.85rem;color:#ccc;">Bird & Beckett Books · Glen Park</div>
+  </div>
+
+  <div class="edit-group">
+    <div class="toggle-row">
+      <span>Title glow</span>
+      <div class="toggle on" id="glowToggle" onclick="this.classList.toggle('on');applyFonts();"></div>
+    </div>
+    <label style="margin-top:8px;">Glow intensity</label>
+    <div class="slider-row">
+      <input type="range" id="glowSlider" min="0" max="3" value="2" oninput="applyFonts()">
+      <span class="slider-val" id="glowVal">heavy</span>
+    </div>
+  </div>
+
+  <button class="export-btn" onclick="exportConfig()">📋 Copy CSS Config</button>
+  <div id="exportMsg" style="font-size:0.75rem;color:#5bff7b;text-align:center;min-height:18px;"></div>
+</div>
+
+<!-- Version nav bar -->
+<div class="version-nav" id="versionNav"></div>
+
+<!-- Versions get injected here -->
+<div id="versions"></div>
+
+<footer>
+  <div class="container">
+    <p>Font Lab for <a href="/gloryjams/">Glory Jams</a> · Built by <a href="https://simonoto.com" target="_blank">Simonoto</a></p>
+    <p style="margin-top:4px;">Pick your fonts, copy the config, and let's roll.</p>
+  </div>
+</footer>
+
+<script>
+const FONTS = [
+  { name: 'Rock Salt', family: "'Rock Salt', cursive", vibe: 'Scratchy hand-lettered punk energy' },
+  { name: 'Sedgwick Ave Display', family: "'Sedgwick Ave Display', cursive", vibe: 'Loose graffiti tag, street art' },
+  { name: 'Molle', family: "'Molle', cursive", vibe: 'Elegant cursive, vintage cocktail bar' },
+  { name: 'Danfo', family: "'Danfo', serif", vibe: 'Bold African-inspired, rhythmic and warm' },
+  { name: 'Honk', family: "'Honk', system-ui", vibe: 'Chromatic color font, wild and playful' },
+  { name: 'Risque', family: "'Risque', cursive", vibe: 'Art nouveau curves, classy but edgy' },
+  { name: 'Asset', family: "'Asset', serif", vibe: 'Ultra-bold slab, vintage poster / letterpress' },
+  { name: 'Sixtyfour Convergence', family: "'Sixtyfour Convergence', monospace", vibe: 'Pixel / retro tech, arcade marquee' },
+  { name: 'Fredoka One', family: "'Fredoka One', cursive", vibe: 'Rounded friendly, current font' },
+];
+
+const GLOWS = ['', 'glow-soft', 'glow-medium', 'glow-heavy', 'glow-neon'];
+const GLOW_LABELS = ['off', 'soft', 'medium', 'heavy', 'neon'];
+
+const SAMPLE_JAMS = [
+  { name: "Funk Jam at Eli's Mile High Club", venue: "Eli's Mile High Club · Oakland", time: "Saturdays · 9:00 PM", freq: "Monthly", signup: "📋 sign-up list", genres: ['funk','soul'], vibe: 'High-energy & groovy', tonight: true },
+  { name: "Jazz Jam at Bird and Beckett", venue: "Bird & Beckett Books and Records · Glen Park", time: "Sundays · 5:30 PM–8:00 PM", freq: "Weekly", signup: "📋 sign-up list", genres: ['jazz'], vibe: 'Welcoming & intimate', tonight: false },
+  { name: "The Jam at Revolution Cafe", venue: "Revolution Cafe · Mission", time: "Mondays · 8:00 PM–10:00 PM", freq: "Weekly", signup: "🏃 first come first served", genres: ['jazz','open'], vibe: 'Low-key & casual', tonight: false },
+];
+
+function genreClass(g) {
+  const m = { jazz:'jazz', blues:'blues', funk:'funk', soul:'soul', open:'open' };
+  return 'genre-' + (m[g] || 'open');
+}
+
+function renderVersion(font, idx) {
+  const glowClass = 'glow-heavy';
+  const jamsHtml = SAMPLE_JAMS.map(j => `
+    <div class="jam-card ${j.tonight ? 'tonight-card' : ''}">
+      ${j.tonight ? '<div class="tonight-badge"><span class="pulse-dot"></span>TONIGHT</div>' : ''}
+      <div class="jam-name" style="font-family:${font.family};">${j.name}</div>
+      <div class="jam-venue">${j.venue}</div>
+      <div class="jam-meta">
+        <span class="jam-time">${j.time}</span><span class="sep">·</span>
+        <span>${j.freq}</span><span class="sep">·</span><span>${j.signup}</span>
+      </div>
+      <div class="jam-genres">${j.genres.map(g => `<span class="genre-chip ${genreClass(g)}">${g}</span>`).join('')}</div>
+      ${j.vibe ? `<div style="margin-top:8px;font-size:0.75rem;color:#555;font-style:italic;">Vibe: ${j.vibe}</div>` : ''}
+    </div>
+  `).join('');
+
+  return `
+    <div class="version-section" id="version-${idx}" data-font-idx="${idx}">
+      <div class="version-label">
+        <h2>Version ${idx + 1} of ${FONTS.length}</h2>
+        <div class="font-name">${font.name}</div>
+        <div style="font-size:0.75rem;color:#555;margin-top:2px;">${font.vibe}</div>
+      </div>
+      <div class="container">
+        <div class="hero">
+          <div class="hero-logo">
+            <div class="hero-wordmark ${glowClass}" style="font-family:${font.family};">
+              <span class="glory">GLORY </span><span class="jams">JAMS</span>
+            </div>
+            <svg class="hero-swoosh" viewBox="0 0 460 16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 10 Q80 16 160 8 Q230 0 310 8 Q380 16 454 6" stroke="url(#gloryGrad)" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.8"/>
+            </svg>
+          </div>
+          <p class="hero-sub">
+            <span class="tonight-count">1 jam tonight</span> ·
+            <span class="total-count">5 total</span> across the Bay
+          </p>
+        </div>
+        <div class="live-bar">
+          <span class="pulse-dot"></span>
+          <span>1 jam tonight — be the first to check in</span>
+        </div>
+        <div class="jam-list">${jamsHtml}</div>
+        <div class="blast-section">
+          <h3 style="font-family:${font.family};">Get the move</h3>
+          <p>Drop your number. We'll text you when the scene is popping.</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Build all versions
+function buildVersions() {
+  const container = document.getElementById('versions');
+  container.innerHTML = FONTS.map((f, i) => renderVersion(f, i)).join('');
+
+  const nav = document.getElementById('versionNav');
+  nav.innerHTML = FONTS.map((f, i) =>
+    `<button class="version-chip" data-idx="${i}" onclick="scrollToVersion(${i})">${f.name}</button>`
+  ).join('');
+}
+
+function scrollToVersion(idx) {
+  const el = document.getElementById('version-' + idx);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Intersection observer for nav highlighting
+function initNavHighlight() {
+  const sections = document.querySelectorAll('.version-section');
+  const chips = document.querySelectorAll('.version-chip');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = entry.target.dataset.fontIdx;
+        chips.forEach(c => c.classList.remove('active'));
+        const active = document.querySelector(`.version-chip[data-idx="${idx}"]`);
+        if (active) {
+          active.classList.add('active');
+          active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => observer.observe(s));
+}
+
+// Edit panel
+function togglePanel() {
+  document.getElementById('editPanel').classList.toggle('open');
+}
+
+function applyFonts() {
+  const heroFont = document.getElementById('heroFont').value;
+  const cardFont = document.getElementById('cardFont').value;
+  const bodyFont = document.getElementById('bodyFont').value;
+  const glowOn = document.getElementById('glowToggle').classList.contains('on');
+  const glowLevel = parseInt(document.getElementById('glowSlider').value);
+
+  // Update previews
+  document.getElementById('heroPreview').style.fontFamily = heroFont;
+  document.getElementById('cardPreview').style.fontFamily = cardFont;
+  document.getElementById('bodyPreview').style.fontFamily = bodyFont;
+  document.getElementById('glowVal').textContent = GLOW_LABELS[glowOn ? glowLevel + 1 : 0] || 'off';
+
+  // Apply to ALL versions simultaneously
+  document.querySelectorAll('.hero-wordmark').forEach(el => {
+    el.style.fontFamily = heroFont;
+    el.className = 'hero-wordmark ' + (glowOn ? GLOWS[glowLevel + 1] || '' : '');
+  });
+  document.querySelectorAll('.jam-name').forEach(el => el.style.fontFamily = cardFont);
+  document.querySelectorAll('.blast-section h3').forEach(el => el.style.fontFamily = heroFont);
+  document.querySelectorAll('.section-title').forEach(el => el.style.fontFamily = cardFont);
+  document.querySelectorAll('.jam-venue, .jam-meta, .hero-sub, .live-bar, .blast-section p').forEach(el => {
+    el.style.fontFamily = bodyFont;
+  });
+
+  // Update version labels to show "Custom mix"
+  document.querySelectorAll('.version-label .font-name').forEach(el => {
+    el.textContent = 'Custom Mix';
+    el.style.color = '#ffd700';
+  });
+}
+
+function exportConfig() {
+  const heroFont = document.getElementById('heroFont').value;
+  const cardFont = document.getElementById('cardFont').value;
+  const bodyFont = document.getElementById('bodyFont').value;
+  const glowOn = document.getElementById('glowToggle').classList.contains('on');
+  const glowLevel = parseInt(document.getElementById('glowSlider').value);
+  const glowName = GLOW_LABELS[glowOn ? glowLevel + 1 : 0];
+
+  const config = `/* Glory Jams Font Config */
+/* Hero: ${heroFont} */
+/* Cards: ${cardFont} */
+/* Body: ${bodyFont} */
+/* Glow: ${glowName} */
+
+.hero-wordmark, .logo-text { font-family: ${heroFont}; }
+.jam-name, .detail-name, .section-title, .blast-section h3,
+.register-title, .submit-title, .about-title, .admin-title { font-family: ${cardFont}; }
+body { font-family: ${bodyFont}; }
+${glowOn ? `.hero-wordmark { filter: ${getComputedGlow(glowLevel)}; }` : '/* No glow */'}`;
+
+  navigator.clipboard.writeText(config).then(() => {
+    document.getElementById('exportMsg').textContent = 'Copied! Paste this into your CSS.';
+    setTimeout(() => document.getElementById('exportMsg').textContent = '', 2500);
+  });
+}
+
+function getComputedGlow(level) {
+  const glows = [
+    'drop-shadow(0 0 30px rgba(255, 107, 53, 0.25))',
+    'drop-shadow(0 0 40px rgba(255, 107, 53, 0.4)) drop-shadow(0 0 80px rgba(255, 215, 0, 0.15))',
+    'drop-shadow(0 0 50px rgba(255, 107, 53, 0.5)) drop-shadow(0 0 100px rgba(255, 215, 0, 0.25)) drop-shadow(0 0 15px rgba(255, 107, 53, 0.6))',
+    'drop-shadow(0 0 8px rgba(255, 107, 53, 0.8)) drop-shadow(0 0 40px rgba(255, 107, 53, 0.5)) drop-shadow(0 0 100px rgba(255, 215, 0, 0.3))'
+  ];
+  return glows[level] || glows[0];
+}
+
+// Init
+buildVersions();
+initNavHighlight();
+</script>
+</body>
+</html>
