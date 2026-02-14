@@ -47,7 +47,17 @@ header {
 }
 .header-inner { display: flex; align-items: center; justify-content: space-between; }
 .logo { display: flex; align-items: center; }
-.logo svg { height: 28px; width: auto; }
+.logo-text {
+  font-family: 'Fredoka One', cursive; font-size: 1.4rem; letter-spacing: 2px;
+  background: linear-gradient(135deg, #ff6b35, #ffd700, #ff6b35, #ffd700);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.logo-text .jams {
+  background: linear-gradient(90deg, #ff6b35, #ffd700, #ff8c00);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; font-style: italic;
+}
 
 @keyframes shimmer {
   0%, 100% { background-position: 0% 50%; }
@@ -75,9 +85,23 @@ header {
 /* HERO */
 .hero { padding: 40px 0 24px; text-align: center; }
 .hero-logo { display: flex; justify-content: center; margin-bottom: 16px; }
-.hero-logo svg {
-  width: clamp(260px, 70vw, 440px); height: auto;
+.hero-wordmark {
+  font-family: 'Fredoka One', cursive; font-size: clamp(3rem, 10vw, 4.5rem);
+  letter-spacing: 4px; line-height: 1;
   filter: drop-shadow(0 0 40px rgba(255, 107, 53, 0.3));
+}
+.hero-wordmark .glory {
+  background: linear-gradient(135deg, #ff6b35, #ffd700, #ff6b35, #ffd700);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-wordmark .jams {
+  background: linear-gradient(90deg, #ff6b35, #ffd700, #ff8c00);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; font-style: italic;
+}
+.hero-swoosh {
+  display: block; margin: -4px auto 0; width: clamp(200px, 55vw, 360px); height: 12px;
 }
 .hero-sub { font-size: 1rem; color: #888; max-width: 480px; margin: 0 auto; line-height: 1.5; }
 .hero-sub .tonight-count { color: #ff6b35; font-weight: 700; }
@@ -340,11 +364,7 @@ footer a:hover { text-decoration: underline; }
 <header>
   <div class="container header-inner">
     <a href="#" class="logo" onclick="showScreen('home'); return false;">
-      <svg viewBox="0 0 240 40" xmlns="http://www.w3.org/2000/svg">
-        <text x="0" y="32" font-family="'Fredoka One', cursive" font-size="34" fill="url(#gloryGrad)" letter-spacing="2">GLORY</text>
-        <text x="132" y="32" font-family="'Fredoka One', cursive" font-size="34" fill="url(#gloryGradHot)" letter-spacing="2" font-style="italic">JAMS</text>
-        <path d="M2 38 Q60 42 120 36 Q180 30 238 38" stroke="url(#gloryGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      </svg>
+      <span class="logo-text">GLORY <span class="jams">JAMS</span></span>
     </a>
     <div class="nav-links">
       <button class="nav-btn" onclick="showScreen('about')">About</button>
@@ -359,13 +379,11 @@ footer a:hover { text-decoration: underline; }
   <div class="container">
     <div class="hero">
       <div class="hero-logo">
-        <svg viewBox="0 0 460 90" xmlns="http://www.w3.org/2000/svg" filter="url(#gloryGlow)">
-          <text x="8" y="62" font-family="'Fredoka One', cursive" font-size="66" fill="url(#gloryGrad)" letter-spacing="4">GLORY</text>
-          <text x="272" y="62" font-family="'Fredoka One', cursive" font-size="66" fill="url(#gloryGradHot)" letter-spacing="4" font-style="italic">JAMS</text>
-          <path d="M6 76 Q80 88 160 74 Q230 62 310 74 Q380 86 454 72" stroke="url(#gloryGrad)" stroke-width="3.5" fill="none" stroke-linecap="round" opacity="0.8"/>
-          <circle cx="14" cy="18" r="3" fill="#ffd700" opacity="0.6"/>
-          <circle cx="448" cy="22" r="2.5" fill="#ff6b35" opacity="0.5"/>
-          <circle cx="230" cy="10" r="2" fill="#ffd700" opacity="0.4"/>
+        <div class="hero-wordmark">
+          <span class="glory">GLORY </span><span class="jams">JAMS</span>
+        </div>
+        <svg class="hero-swoosh" viewBox="0 0 460 16" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 10 Q80 16 160 8 Q230 0 310 8 Q380 16 454 6" stroke="url(#gloryGrad)" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.8"/>
         </svg>
       </div>
       <p class="hero-sub" id="heroSub">Loading...</p>
