@@ -14,10 +14,10 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
-<!-- Typography: Asset (hero), Rock Salt (header), Sixtyfour Convergence (titles), DM Sans (body) -->
+<!-- Typography: Asset (hero), Rock Salt (header + titles), DM Sans (body) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Asset&family=Rock+Salt&family=Sixtyfour+Convergence:BLED,SCAN,XELA,YELA@0..100,-53..100,0..100,-100..100&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Asset&family=Rock+Salt&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
 
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -215,11 +215,10 @@ header {
   display: inline-flex; align-items: center; gap: 5px;
   font-size: 0.7rem; font-weight: 700; color: #ff6b35;
   text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
-  animation: floatX 4s ease-in-out infinite;
 }
 .tonight-badge .pulse-dot { width: 6px; height: 6px; }
 
-.jam-name { font-family: 'Sixtyfour Convergence', monospace; font-size: 0.82rem; font-weight: 400; color: #fff; margin-bottom: 4px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
+.jam-name { font-family: 'Rock Salt', cursive; font-size: 0.72rem; font-weight: 400; color: #fff; margin-bottom: 4px; line-height: 1.4; }
 .jam-venue { font-size: 0.85rem; color: #888; margin-bottom: 10px; }
 .jam-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 0.8rem; color: #666; }
 .jam-time { color: #ccc; font-weight: 600; }
@@ -275,22 +274,22 @@ header {
 .detail-back { display: inline-flex; align-items: center; gap: 4px; font-size: 0.85rem; color: #666; margin-bottom: 20px; padding: 6px 0; }
 .detail-back:hover { color: #aaa; }
 .detail-header { margin-bottom: 24px; }
-.detail-name { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.3rem; color: #fff; margin-bottom: 6px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
+.detail-name { font-family: 'Rock Salt', cursive; font-size: 1.1rem; color: #fff; margin-bottom: 6px; line-height: 1.4; }
 .detail-venue { font-size: 1rem; color: #888; }
 .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
 .detail-card { background: #1a1a1a; border-radius: 10px; padding: 12px; }
 .detail-card-label { font-size: 0.7rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
 .detail-card-value { font-size: 0.9rem; font-weight: 600; color: #ccc; }
 .detail-section { margin-bottom: 20px; }
-.detail-section h3 { font-family: 'Sixtyfour Convergence', monospace; font-size: 0.95rem; font-weight: 400; color: #fff; margin-bottom: 8px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
+.detail-section h3 { font-family: 'Rock Salt', cursive; font-size: 0.95rem; font-weight: 400; color: #fff; margin-bottom: 8px; }
 .detail-section p { font-size: 0.88rem; color: #999; line-height: 1.6; }
 .vibe-badge { display: inline-block; padding: 8px 16px; background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.2); border-radius: 10px; font-size: 0.85rem; color: #ff6b35; font-weight: 600; margin-bottom: 20px; animation: orbitFloat 8s ease-in-out infinite; }
 .first-timer-box { background: #111; border: 1px solid #222; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
-.first-timer-box h3 { color: #ffd700; display: flex; align-items: center; gap: 6px; font-family: 'Sixtyfour Convergence', monospace; font-weight: 400; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
+.first-timer-box h3 { color: #ffd700; display: flex; align-items: center; gap: 6px; font-family: 'Rock Salt', cursive; font-weight: 400; }
 
 /* CHECK-IN SECTION */
 .checkin-section { background: #111; border: 1px solid #222; border-radius: 14px; padding: 20px; margin-bottom: 24px; }
-.checkin-section h3 { font-family: 'Sixtyfour Convergence', monospace; font-size: 1rem; font-weight: 400; color: #fff; margin-bottom: 12px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
+.checkin-section h3 { font-family: 'Rock Salt', cursive; font-size: 1rem; font-weight: 400; color: #fff; margin-bottom: 12px; }
 .checkin-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 1rem; font-weight: 700; transition: all 0.15s; margin-bottom: 16px; }
 .checkin-btn.can-checkin { background: linear-gradient(135deg, #ff6b35, #ffd700); color: #000; }
 .checkin-btn.can-checkin:hover { transform: scale(1.01); }
@@ -304,7 +303,7 @@ header {
 
 /* PROFILE / REGISTER */
 .register-screen { padding-top: 32px; padding-bottom: 60px; }
-.register-title { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.6rem; color: #fff; margin-bottom: 8px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
+.register-title { font-family: 'Rock Salt', cursive; font-size: 1.3rem; color: #fff; margin-bottom: 8px; line-height: 1.4; }
 .register-sub { color: #888; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
 .form-group { margin-bottom: 16px; }
 .form-label { display: block; font-size: 0.8rem; font-weight: 600; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -317,23 +316,23 @@ select.form-input { appearance: none; }
 .form-submit:disabled { opacity: 0.5; transform: none; }
 .form-error { color: #ff5b5b; font-size: 0.82rem; margin-top: 6px; font-weight: 500; }
 .form-success { text-align: center; padding: 40px 0; }
-.form-success h2 { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.5rem; color: #ffd700; margin: 12px 0; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
+.form-success h2 { font-family: 'Rock Salt', cursive; font-size: 1.5rem; color: #ffd700; margin: 12px 0; }
 .form-success p { color: #888; }
 
 .profile-card { background: #111; border: 1px solid #222; border-radius: 14px; padding: 24px; text-align: center; margin-bottom: 20px; }
 .profile-avatar-big { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #ff6b35, #ffd700); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 700; color: #000; margin: 0 auto 12px; animation: orbitFloat 6s ease-in-out infinite; }
-.profile-name { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.2rem; font-weight: 400; color: #fff; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
+.profile-name { font-family: 'Rock Salt', cursive; font-size: 1.2rem; font-weight: 400; color: #fff; }
 .profile-instrument { font-size: 0.9rem; color: #888; margin-top: 4px; }
 .profile-actions { display: flex; gap: 10px; justify-content: center; margin-top: 16px; }
 .profile-action-btn { padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; background: #1a1a1a; color: #888; border: 1px solid #333; transition: all 0.15s; }
 .profile-action-btn:hover { color: #ccc; border-color: #555; }
 .profile-action-btn.danger:hover { color: #ff5b5b; border-color: #ff5b5b; }
 .your-checkins { margin-top: 20px; }
-.your-checkins h3 { font-family: 'Sixtyfour Convergence', monospace; font-size: 0.9rem; font-weight: 400; color: #fff; margin-bottom: 10px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
+.your-checkins h3 { font-family: 'Rock Salt', cursive; font-size: 0.9rem; font-weight: 400; color: #fff; margin-bottom: 10px; }
 
 /* SUBMIT JAM */
 .submit-screen { padding-top: 32px; padding-bottom: 60px; }
-.submit-title { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.6rem; color: #fff; margin-bottom: 8px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
+.submit-title { font-family: 'Rock Salt', cursive; font-size: 1.3rem; color: #fff; margin-bottom: 8px; line-height: 1.4; }
 .submit-sub { color: #888; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
 .genre-select { display: flex; flex-wrap: wrap; gap: 6px; }
 .genre-select-chip { padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; background: #1a1a1a; color: #888; border: 1px solid #333; transition: all 0.15s; }
@@ -341,7 +340,7 @@ select.form-input { appearance: none; }
 
 /* TEXT BLAST */
 .blast-section { background: linear-gradient(135deg, rgba(255,215,0,0.06) 0%, rgba(255,107,53,0.06) 100%); border: 1px solid rgba(255,215,0,0.15); border-radius: 14px; padding: 20px; margin: 24px 0; text-align: center; animation: floatY 9s ease-in-out infinite; }
-.blast-section h3 { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.1rem; color: #ffd700; margin-bottom: 6px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
+.blast-section h3 { font-family: 'Rock Salt', cursive; font-size: 0.95rem; color: #ffd700; margin-bottom: 6px; line-height: 1.4; }
 .blast-section p { font-size: 0.82rem; color: #888; margin-bottom: 12px; }
 .blast-input-row { display: flex; gap: 8px; max-width: 360px; margin: 0 auto; }
 .blast-input-row input { flex: 1; padding: 10px 14px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 0.9rem; }
@@ -353,7 +352,7 @@ select.form-input { appearance: none; }
 
 /* ADMIN */
 .admin-screen { padding-top: 32px; padding-bottom: 60px; }
-.admin-title { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.6rem; color: #ffd700; margin-bottom: 8px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
+.admin-title { font-family: 'Rock Salt', cursive; font-size: 1.3rem; color: #ffd700; margin-bottom: 8px; line-height: 1.4; }
 .admin-sub { color: #888; font-size: 0.9rem; margin-bottom: 24px; }
 .subscriber-count { font-size: 0.85rem; color: #888; margin-bottom: 16px; }
 .subscriber-count strong { color: #ffd700; }
@@ -364,7 +363,7 @@ select.form-input { appearance: none; }
 
 /* ABOUT */
 .about-screen { padding-top: 32px; padding-bottom: 60px; }
-.about-title { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.6rem; color: #fff; margin-bottom: 16px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
+.about-title { font-family: 'Rock Salt', cursive; font-size: 1.3rem; color: #fff; margin-bottom: 16px; line-height: 1.4; }
 .about-text { color: #999; font-size: 0.9rem; line-height: 1.7; margin-bottom: 16px; }
 
 /* FOOTER */
@@ -564,7 +563,7 @@ const JAMS=[
 {id:'2',name:'Tuesday Blues Jam at Biscuits and Blues',venue_name:'Biscuits and Blues',venue_address:'401 Mason St, San Francisco, CA 94102',city:'Union Square',region:'sf',day_of_week:'Tuesday',time_start:'8:00 PM',time_end:'11:00 PM',frequency:'Weekly',genre:['blues'],signup_process:'sign-up list',description:"Classic blues jam in one of SF's legendary blues clubs. Full stage, real sound system, and a crowd that loves the blues.",vibe:'Classic blues club energy',what_to_expect:"Sign up when you arrive. The house band is solid — just tell them the key and go. Blues standards are the move here."},
 {id:'3',name:"Yo Mama's Jazz Jam",venue_name:"Yo Mama's",venue_address:'3629 Lakeshore Ave, Oakland, CA 94610',city:'Oakland',region:'east_bay',day_of_week:'Thursday',time_start:'8:00 PM',time_end:'11:00 PM',frequency:'Weekly',genre:['jazz'],signup_process:'hosted/called up',description:'Vibey Oakland jazz jam. The host calls people up and puts together combos on the fly. Great hang, good food, strong drinks.',vibe:'Vibey & social',what_to_expect:"The host knows the regulars and will work you in. Introduce yourself, let them know what you play. Real Book tunes are your friend."},
 {id:'4',name:'The Jam at Revolution Cafe',venue_name:'Revolution Cafe',venue_address:'3248 22nd St, San Francisco, CA 94110',city:'Mission',region:'sf',day_of_week:'Monday',time_start:'8:00 PM',time_end:'10:00 PM',frequency:'Weekly',genre:['jazz','open'],signup_process:'first come first served',description:"Low-key jam in the Mission. No-frills neighborhood spot. Show up, grab a drink, and play.",vibe:'Low-key & casual',what_to_expect:"First come, first served — just show up with your instrument and jump in. Casual and open to any style."},
-{id:'5',name:"Funk Jam at Eli's Mile High Club",venue_name:"Eli's Mile High Club",venue_address:'3629 Martin Luther King Jr Way, Oakland, CA 94609',city:'Oakland',region:'east_bay',day_of_week:'Saturday',time_start:'9:00 PM',time_end:null,frequency:'Monthly',genre:['funk','soul'],signup_process:'sign-up list',description:"Funk and soul jam at one of Oakland's most historic venues. When it's on, it's ON.",vibe:'High-energy & groovy',what_to_expect:"This one goes late and goes hard. Bring your funk chops. The crowd dances. Check social media for specific dates."}
+{id:'5',name:"Funk Jam at Eli's Mile High Club",venue_name:"Eli's Mile High Club",venue_address:'3629 Martin Luther King Jr Way, Oakland, CA 94609',city:'Oakland',region:'east_bay',day_of_week:'Saturday',time_start:'9:00 PM',time_end:null,frequency:'Monthly',genre:['funk','soul'],signup_process:'first come first served',description:"Funk and soul jam at one of Oakland's most historic venues. When it's on, it's ON.",vibe:'High-energy & groovy',what_to_expect:"This one goes late and goes hard. Bring your funk chops. The crowd dances. Check social media for specific dates."}
 ];
 
 const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
