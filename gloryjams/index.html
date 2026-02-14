@@ -11,6 +11,7 @@
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
 <!-- Google Font for the funky title -->
@@ -782,6 +783,7 @@ let firebaseReady = false;
 try {
   firebase.initializeApp(firebaseConfig);
   db = firebase.database();
+  firebase.auth().signInAnonymously().catch(e => console.warn("Anon auth failed", e));
   // Test if actually configured
   if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
     firebaseReady = true;
@@ -986,10 +988,18 @@ function initFirebase() {
     return;
   }
 
-  // Listen to checkins (realtime)
-  db.ref('checkins').on('value', snap => {
-    checkins = snap.val() || {};
-    renderAll();
+  // Wait for auth before listening to data
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+      // Listen to checkins (realtime)
+      db.ref('checkins').on('value', snap => {
+        checkins = snap.val() || {};
+        renderAll();
+      });
+    } else {
+      checkins = {};
+      renderAll();
+    }
   });
 }
 

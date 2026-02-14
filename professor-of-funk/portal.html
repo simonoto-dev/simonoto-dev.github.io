@@ -102,6 +102,9 @@ input,textarea,select,button{font-family:inherit;font-size:inherit;}
 ::-webkit-scrollbar-track{background:var(--bg);}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 </style>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
 <div id="auth-gate" style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0f;">
@@ -218,10 +221,13 @@ function checkAuth() {
   }
 }
 
-function showApp() {
+async function showApp() {
   document.getElementById('auth-gate').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
+  await waitForAuth();
+  await loadStudentData();
   loadPracticeData();
+  setupRealtimeSync();
   render();
 }
 
@@ -235,15 +241,85 @@ function logout() {
 }
 
 // Check session on load
-(function() {
+(async function() {
   const saved = sessionStorage.getItem(AUTH_KEY);
   if (saved && ACCESS_CODES[saved]) {
     currentStudent = ACCESS_CODES[saved];
-    showApp();
+    await showApp();
   }
 })();
 
-/* ===== PRACTICE DATA (localStorage) ===== */
+/* ===== FIREBASE SETUP ===== */
+const firebaseConfig = {
+  apiKey: "AIzaSyBAVSC2g5xfnUXqkBoBX8TspITgDg_4FMo",
+  authDomain: "professor-of-funk.firebaseapp.com",
+  databaseURL: "https://professor-of-funk-default-rtdb.firebaseio.com",
+  projectId: "professor-of-funk",
+  storageBucket: "professor-of-funk.firebasestorage.app",
+  messagingSenderId: "409198973109",
+  appId: "1:409198973109:web:1c2aa4fd4611130b236efc"
+};
+const fbApp = firebase.initializeApp(firebaseConfig);
+firebase.auth().signInAnonymously().catch(e => console.warn("Anon auth failed", e));
+const fbDb = firebase.database();
+const DB_ROOT = "professorOfFunk";
+function dbRef(path) { return fbDb.ref(DB_ROOT + "/" + path); }
+let skipSync = false;
+
+function waitForAuth() {
+  return new Promise(resolve => {
+    const unsub = firebase.auth().onAuthStateChanged(user => {
+      if (user) { unsub(); resolve(user); }
+    });
+    setTimeout(() => { unsub(); resolve(null); }, 5000);
+  });
+}
+
+async function fbLoad(key, fallback) {
+  try {
+    const snap = await dbRef(key).once("value");
+    const val = snap.val();
+    return val !== null ? val : fallback;
+  } catch(e) {
+    console.warn("Firebase read failed for " + key, e);
+    return fallback;
+  }
+}
+
+async function fbSave(key, val) {
+  try { await dbRef(key).set(val); } catch(e) { console.warn("Firebase write failed for " + key, e); }
+}
+
+function onDataChange(key, callback) {
+  const ref = dbRef(key);
+  ref.on("value", snap => { const val = snap.val(); if (val !== null && !skipSync) callback(val); });
+  return () => ref.off("value");
+}
+
+/* ===== STUDENT DATA (Firebase) ===== */
+let studentData = null;
+
+async function loadStudentData() {
+  if (!currentStudent) return;
+  studentData = await fbLoad("students/" + currentStudent, MOCK_DATA.students[currentStudent]);
+}
+
+function getStudentData() {
+  return studentData || MOCK_DATA.students[currentStudent];
+}
+
+function setupRealtimeSync() {
+  if (!currentStudent) return;
+  onDataChange("students/" + currentStudent, val => {
+    studentData = val;
+    if (!skipSync) {
+      practiceData = (val && val.practice) ? JSON.parse(JSON.stringify(val.practice)) : practiceData;
+    }
+    render();
+  });
+}
+
+/* ===== PRACTICE DATA (Firebase) ===== */
 let practiceData = {};
 
 function getWeekId(date) {
@@ -256,19 +332,14 @@ function getWeekId(date) {
 
 function loadPracticeData() {
   if (!currentStudent) return;
-  const key = 'pof-practice-' + currentStudent;
-  try {
-    const saved = localStorage.getItem(key);
-    practiceData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(MOCK_DATA.students[currentStudent].practice || {}));
-  } catch (e) {
-    practiceData = JSON.parse(JSON.stringify(MOCK_DATA.students[currentStudent].practice || {}));
-  }
+  practiceData = (studentData && studentData.practice) ? JSON.parse(JSON.stringify(studentData.practice)) : {};
 }
 
 function savePracticeData() {
   if (!currentStudent) return;
-  const key = 'pof-practice-' + currentStudent;
-  try { localStorage.setItem(key, JSON.stringify(practiceData)); } catch (e) {}
+  skipSync = true;
+  fbSave("students/" + currentStudent + "/practice", practiceData);
+  setTimeout(() => { skipSync = false; }, 500);
 }
 
 /* ===== HELPERS ===== */
@@ -290,9 +361,6 @@ function fmtDate(d) {
   return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-function getStudentData() {
-  return MOCK_DATA.students[currentStudent];
-}
 
 function getDayNames() { return ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']; }
 function getDayLabels() { return ['M', 'T', 'W', 'T', 'F', 'S', 'S']; }

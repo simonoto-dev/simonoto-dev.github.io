@@ -105,6 +105,9 @@ select.input{appearance:auto;}
 ::-webkit-scrollbar-track{background:var(--bg);}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 </style>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
 <div id="auth-gate" style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0f;">
@@ -212,10 +215,12 @@ function checkAuth() {
   }
 }
 
-function showApp() {
+async function showApp() {
   document.getElementById('auth-gate').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
-  loadLocalData();
+  await waitForAuth();
+  await loadLocalData();
+  setupRealtimeSync();
   render();
 }
 
@@ -227,22 +232,112 @@ function logout() {
   document.getElementById('auth-err').style.display = 'none';
 }
 
-if (sessionStorage.getItem(AUTH_KEY) === '1') showApp();
+(async function() { if (sessionStorage.getItem(AUTH_KEY) === '1') await showApp(); })();
 
-/* ===== LOCAL DATA ===== */
-let localData = null;
+/* ===== FIREBASE SETUP ===== */
+const firebaseConfig = {
+  apiKey: "AIzaSyBAVSC2g5xfnUXqkBoBX8TspITgDg_4FMo",
+  authDomain: "professor-of-funk.firebaseapp.com",
+  databaseURL: "https://professor-of-funk-default-rtdb.firebaseio.com",
+  projectId: "professor-of-funk",
+  storageBucket: "professor-of-funk.firebasestorage.app",
+  messagingSenderId: "409198973109",
+  appId: "1:409198973109:web:1c2aa4fd4611130b236efc"
+};
+const fbApp = firebase.initializeApp(firebaseConfig);
+firebase.auth().signInAnonymously().catch(e => console.warn("Anon auth failed", e));
+const fbDb = firebase.database();
+const DB_ROOT = "professorOfFunk";
+function dbRef(path) { return fbDb.ref(DB_ROOT + "/" + path); }
+let skipSync = false;
+const LOCAL_KEY = "pof-admin-data";
 
-function loadLocalData() {
+function waitForAuth() {
+  return new Promise(resolve => {
+    const unsub = firebase.auth().onAuthStateChanged(user => {
+      if (user) { unsub(); resolve(user); }
+    });
+    setTimeout(() => { unsub(); resolve(null); }, 5000);
+  });
+}
+
+function toArray(val) {
+  if (Array.isArray(val)) return val;
+  if (val && typeof val === 'object') return Object.values(val);
+  return [];
+}
+
+async function fbLoad(key, fallback) {
   try {
-    const saved = localStorage.getItem('pof-admin-data');
-    localData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(MOCK));
-  } catch (e) {
-    localData = JSON.parse(JSON.stringify(MOCK));
+    const snap = await dbRef(key).once("value");
+    const val = snap.val();
+    if (val !== null) return val;
+    const local = localStorage.getItem(LOCAL_KEY);
+    if (local) {
+      const parsed = JSON.parse(local);
+      if (parsed[key] !== undefined) { await dbRef(key).set(parsed[key]); return parsed[key]; }
+    }
+    return fallback;
+  } catch(e) {
+    console.warn("Firebase read failed for " + key, e);
+    try { const r = localStorage.getItem(LOCAL_KEY); if (r) { const p = JSON.parse(r); if (p[key] !== undefined) return p[key]; } return fallback; } catch(e2) { return fallback; }
   }
 }
 
+async function fbSave(key, val) {
+  try { await dbRef(key).set(val); } catch(e) { console.warn("Firebase write failed for " + key, e); }
+  try { const r = localStorage.getItem(LOCAL_KEY); const d = r ? JSON.parse(r) : {}; d[key] = val; localStorage.setItem(LOCAL_KEY, JSON.stringify(d)); } catch(e) {}
+}
+
+function onDataChange(key, callback) {
+  const ref = dbRef(key);
+  ref.on("value", snap => { const val = snap.val(); if (val !== null && !skipSync) callback(val); });
+  return () => ref.off("value");
+}
+
+/* ===== DATA LAYER ===== */
+let localData = null;
+
+async function loadLocalData() {
+  const [students, ensembles, lessonTranscripts] = await Promise.all([
+    fbLoad("students", JSON.parse(JSON.stringify(MOCK.students))),
+    fbLoad("ensembles", JSON.parse(JSON.stringify(MOCK.ensembles))),
+    fbLoad("lessonTranscripts", [])
+  ]);
+  // Normalize arrays that Firebase may have converted to objects
+  Object.keys(students).forEach(k => {
+    if (students[k].billing) students[k].billing = toArray(students[k].billing);
+  });
+  Object.keys(ensembles).forEach(k => {
+    if (ensembles[k].repertoire) ensembles[k].repertoire = toArray(ensembles[k].repertoire);
+  });
+  localData = { students, ensembles, lessonTranscripts: toArray(lessonTranscripts) };
+}
+
 function saveLocalData() {
-  try { localStorage.setItem('pof-admin-data', JSON.stringify(localData)); } catch (e) {}
+  if (!localData) return;
+  skipSync = true;
+  fbSave("students", localData.students);
+  fbSave("ensembles", localData.ensembles);
+  fbSave("lessonTranscripts", localData.lessonTranscripts || []);
+  setTimeout(() => { skipSync = false; }, 500);
+}
+
+function setupRealtimeSync() {
+  onDataChange("students", val => {
+    Object.keys(val).forEach(k => { if (val[k].billing) val[k].billing = toArray(val[k].billing); });
+    localData.students = val;
+    render();
+  });
+  onDataChange("ensembles", val => {
+    Object.keys(val).forEach(k => { if (val[k].repertoire) val[k].repertoire = toArray(val[k].repertoire); });
+    localData.ensembles = val;
+    render();
+  });
+  onDataChange("lessonTranscripts", val => {
+    localData.lessonTranscripts = toArray(val);
+    render();
+  });
 }
 
 /* ===== STATE ===== */
