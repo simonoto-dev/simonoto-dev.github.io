@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glory Jams — Bay Area Jam Sessions</title>
+<meta name="description" content="Find live jam sessions across the San Francisco Bay Area. See who's pulling up tonight.">
+<meta property="og:title" content="Glory Jams — Bay Area Jam Sessions">
+<meta property="og:description" content="Find live jam sessions in the Bay. Check in. Pull up.">
+<meta property="og:type" content="website">
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+<!-- Google Font for the funky title -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Righteous&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================ */
+/* RESET & BASE                                 */
+/* ============================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: #0a0a0a;
+  color: #e8e8e8;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; border: none; background: none; }
+input, select, textarea { font-family: inherit; }
+
+/* ============================================ */
+/* LAYOUT                                       */
+/* ============================================ */
+.container { max-width: 680px; margin: 0 auto; padding: 0 16px; }
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ============================================ */
+/* HEADER                                       */
+/* ============================================ */
+header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,10,10,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #222;
+  padding: 12px 0;
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo {
+  font-family: 'Righteous', cursive;
+  font-size: 1.6rem;
+  background: linear-gradient(135deg, #ff6b35, #ffd700, #ff6b35);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s ease-in-out infinite;
+  letter-spacing: 1px;
+}
+@keyframes shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.nav-links { display: flex; gap: 8px; align-items: center; }
+.nav-btn {
+  padding: 6px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+  transition: all 0.15s;
+}
+.nav-btn:hover { background: #222; }
+.nav-btn.primary {
+  background: #ff6b35; color: #000;
+}
+.nav-btn.primary:hover { background: #ff8555; }
+
+/* Profile indicator */
+.profile-indicator {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #222; border: 2px solid #444;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700; color: #ffd700;
+  transition: all 0.15s;
+}
+.profile-indicator:hover { border-color: #ffd700; }
+.profile-indicator.active { border-color: #ff6b35; background: #1a1a1a; }
+
+/* ============================================ */
+/* HERO                                         */
+/* ============================================ */
+.hero {
+  padding: 40px 0 24px;
+  text-align: center;
+}
+.hero-title {
+  font-family: 'Righteous', cursive;
+  font-size: clamp(2.2rem, 8vw, 3.8rem);
+  line-height: 1.1;
+  background: linear-gradient(135deg, #ff6b35 0%, #ffd700 40%, #ff6b35 60%, #ffd700 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s ease-in-out infinite;
+  margin-bottom: 12px;
+  text-shadow: 0 0 80px rgba(255, 107, 53, 0.3);
+}
+.hero-sub {
+  font-size: 1rem; color: #888; max-width: 480px; margin: 0 auto;
+  line-height: 1.5;
+}
+.hero-sub .tonight-count {
+  color: #ff6b35; font-weight: 700;
+}
+.hero-sub .total-count {
+  color: #ccc; font-weight: 600;
+}
+
+/* ============================================ */
+/* LIVE PULSE BAR                               */
+/* ============================================ */
+.live-bar {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px; margin-bottom: 24px;
+  background: rgba(255,107,53,0.08);
+  border: 1px solid rgba(255,107,53,0.2);
+  border-radius: 12px;
+  font-size: 0.85rem; color: #ff6b35; font-weight: 600;
+}
+.pulse-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #ff6b35;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+/* ============================================ */
+/* FILTERS                                      */
+/* ============================================ */
+.filters { margin-bottom: 20px; }
+.filter-row {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;
+}
+.filter-chip {
+  padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+  background: #1a1a1a; color: #888; border: 1px solid #333;
+  transition: all 0.15s;
+}
+.filter-chip:hover { border-color: #555; color: #ccc; }
+.filter-chip.active { background: #ff6b35; color: #000; border-color: #ff6b35; }
+.filter-chip.tonight-chip {
+  border-color: rgba(255,107,53,0.4);
+  color: #ff6b35;
+  position: relative;
+}
+.filter-chip.tonight-chip.active {
+  background: #ff6b35; color: #000;
+}
+.filter-chip.tonight-chip::before {
+  content: '';
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #ff6b35; display: inline-block;
+  margin-right: 6px; animation: pulse 1.5s ease-in-out infinite;
+}
+.filter-chip.tonight-chip.active::before { background: #000; }
+
+/* Genre chips */
+.genre-chip {
+  padding: 4px 10px; border-radius: 12px; font-size: 0.72rem; font-weight: 600;
+  text-transform: lowercase;
+}
+.genre-jazz { background: #1a2744; color: #5b9aff; }
+.genre-blues { background: #1a1a44; color: #7b7bff; }
+.genre-funk { background: #2a1a3a; color: #c77bff; }
+.genre-soul { background: #3a1a2a; color: #ff7bb5; }
+.genre-latin { background: #2a2a1a; color: #ffaa5b; }
+.genre-open { background: #1a2a1a; color: #5bff7b; }
+.genre-rock { background: #2a1a1a; color: #ff5b5b; }
+.genre-rb { background: #2a1a2a; color: #ff5baa; }
+
+/* ============================================ */
+/* JAM CARDS                                    */
+/* ============================================ */
+.jam-list { display: flex; flex-direction: column; gap: 10px; padding-bottom: 40px; }
+.jam-card {
+  background: #111; border: 1px solid #222; border-radius: 14px;
+  padding: 16px; cursor: pointer; transition: all 0.15s;
+  position: relative; overflow: hidden;
+}
+.jam-card:hover { border-color: #444; transform: translateY(-1px); }
+.jam-card.tonight-card {
+  border-color: rgba(255,107,53,0.3);
+  background: linear-gradient(135deg, rgba(255,107,53,0.05) 0%, #111 100%);
+}
+.jam-card.tonight-card:hover { border-color: rgba(255,107,53,0.5); }
+
+.tonight-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.7rem; font-weight: 700; color: #ff6b35;
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+}
+.tonight-badge .pulse-dot { width: 6px; height: 6px; }
+
+.jam-name {
+  font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 4px;
+}
+.jam-venue { font-size: 0.85rem; color: #888; margin-bottom: 10px; }
+.jam-meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  font-size: 0.8rem; color: #666;
+}
+.jam-time { color: #ccc; font-weight: 600; }
+.jam-meta .sep { color: #333; }
+.jam-genres { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+
+/* Check-in count on card */
+.jam-checkins {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 10px; padding-top: 10px; border-top: 1px solid #1a1a1a;
+}
+.checkin-count {
+  font-size: 0.8rem; font-weight: 700; color: #ffd700;
+}
+.checkin-faces {
+  display: flex; gap: -4px;
+}
+.checkin-face {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: #222; border: 2px solid #111;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem; font-weight: 700; color: #ffd700;
+  margin-left: -6px;
+}
+.checkin-face:first-child { margin-left: 0; }
+.checkin-more {
+  font-size: 0.72rem; color: #666; margin-left: 4px;
+}
+
+/* ============================================ */
+/* JAM DETAIL SCREEN                            */
+/* ============================================ */
+.detail-back {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.85rem; color: #666; margin-bottom: 20px;
+  padding: 6px 0;
+}
+.detail-back:hover { color: #aaa; }
+.detail-header { margin-bottom: 24px; }
+.detail-name {
+  font-family: 'Righteous', cursive;
+  font-size: 1.8rem; color: #fff; margin-bottom: 6px;
+}
+.detail-venue { font-size: 1rem; color: #888; }
+
+.detail-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px;
+}
+.detail-card {
+  background: #1a1a1a; border-radius: 10px; padding: 12px;
+}
+.detail-card-label {
+  font-size: 0.7rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.detail-card-value { font-size: 0.9rem; font-weight: 600; color: #ccc; }
+
+.detail-section { margin-bottom: 20px; }
+.detail-section h3 {
+  font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 8px;
+}
+.detail-section p {
+  font-size: 0.88rem; color: #999; line-height: 1.6;
+}
+
+.vibe-badge {
+  display: inline-block; padding: 8px 16px;
+  background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.2);
+  border-radius: 10px; font-size: 0.85rem; color: #ff6b35; font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.first-timer-box {
+  background: #111; border: 1px solid #222; border-radius: 12px; padding: 16px;
+  margin-bottom: 20px;
+}
+.first-timer-box h3 { color: #ffd700; display: flex; align-items: center; gap: 6px; }
+
+/* ============================================ */
+/* CHECK-IN SECTION ON DETAIL                   */
+/* ============================================ */
+.checkin-section {
+  background: #111; border: 1px solid #222; border-radius: 14px;
+  padding: 20px; margin-bottom: 24px;
+}
+.checkin-section h3 {
+  font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 12px;
+}
+.checkin-btn {
+  width: 100%; padding: 14px; border-radius: 12px;
+  font-size: 1rem; font-weight: 700; transition: all 0.15s;
+  margin-bottom: 16px;
+}
+.checkin-btn.can-checkin {
+  background: linear-gradient(135deg, #ff6b35, #ffd700);
+  color: #000;
+}
+.checkin-btn.can-checkin:hover { transform: scale(1.01); }
+.checkin-btn.checked-in {
+  background: #1a2a1a; color: #5bff7b; border: 1px solid #2a3a2a;
+}
+.checkin-btn.needs-profile {
+  background: #1a1a1a; color: #888; border: 1px solid #333;
+}
+
+.checkin-people { display: flex; flex-direction: column; gap: 8px; }
+.checkin-person {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; background: #1a1a1a; border-radius: 10px;
+}
+.person-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #222; display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; color: #ffd700;
+  flex-shrink: 0;
+}
+.person-name { font-size: 0.85rem; font-weight: 600; color: #ccc; }
+.person-instrument { font-size: 0.75rem; color: #666; }
+
+/* ============================================ */
+/* PROFILE / REGISTER SCREEN                    */
+/* ============================================ */
+.register-screen { padding-top: 32px; padding-bottom: 60px; }
+.register-title {
+  font-family: 'Righteous', cursive; font-size: 1.6rem; color: #fff;
+  margin-bottom: 8px;
+}
+.register-sub { color: #888; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+
+.form-group { margin-bottom: 16px; }
+.form-label {
+  display: block; font-size: 0.8rem; font-weight: 600; color: #888;
+  margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.form-input {
+  width: 100%; padding: 12px 14px; background: #1a1a1a; border: 1px solid #333;
+  border-radius: 10px; color: #fff; font-size: 0.95rem;
+  transition: border-color 0.15s;
+}
+.form-input:focus { outline: none; border-color: #ff6b35; }
+.form-input::placeholder { color: #444; }
+select.form-input { appearance: none; }
+
+.form-submit {
+  width: 100%; padding: 14px; border-radius: 12px;
+  background: linear-gradient(135deg, #ff6b35, #ffd700);
+  color: #000; font-size: 1rem; font-weight: 700;
+  transition: all 0.15s; margin-top: 8px;
+}
+.form-submit:hover { transform: scale(1.01); }
+.form-submit:disabled { opacity: 0.5; transform: none; }
+
+.form-error {
+  color: #ff5b5b; font-size: 0.82rem; margin-top: 6px; font-weight: 500;
+}
+.form-success {
+  text-align: center; padding: 40px 0;
+}
+.form-success h2 { font-family: 'Righteous', cursive; font-size: 1.5rem; color: #ffd700; margin: 12px 0; }
+.form-success p { color: #888; }
+
+/* Profile view (already registered) */
+.profile-card {
+  background: #111; border: 1px solid #222; border-radius: 14px;
+  padding: 24px; text-align: center; margin-bottom: 20px;
+}
+.profile-avatar-big {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b35, #ffd700);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; font-weight: 700; color: #000;
+  margin: 0 auto 12px;
+}
+.profile-name { font-size: 1.2rem; font-weight: 700; color: #fff; }
+.profile-instrument { font-size: 0.9rem; color: #888; margin-top: 4px; }
+.profile-actions { display: flex; gap: 10px; justify-content: center; margin-top: 16px; }
+.profile-action-btn {
+  padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+  background: #1a1a1a; color: #888; border: 1px solid #333; transition: all 0.15s;
+}
+.profile-action-btn:hover { color: #ccc; border-color: #555; }
+.profile-action-btn.danger:hover { color: #ff5b5b; border-color: #ff5b5b; }
+
+/* Your check-ins */
+.your-checkins { margin-top: 20px; }
+.your-checkins h3 {
+  font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 10px;
+}
+
+/* ============================================ */
+/* SUBMIT JAM SCREEN                            */
+/* ============================================ */
+.submit-screen { padding-top: 32px; padding-bottom: 60px; }
+.submit-title {
+  font-family: 'Righteous', cursive; font-size: 1.6rem; color: #fff;
+  margin-bottom: 8px;
+}
+.submit-sub { color: #888; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+
+.genre-select { display: flex; flex-wrap: wrap; gap: 6px; }
+.genre-select-chip {
+  padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+  background: #1a1a1a; color: #888; border: 1px solid #333;
+  transition: all 0.15s;
+}
+.genre-select-chip.selected { background: #ff6b35; color: #000; border-color: #ff6b35; }
+
+/* ============================================ */
+/* TEXT BLAST SIGNUP                             */
+/* ============================================ */
+.blast-section {
+  background: linear-gradient(135deg, rgba(255,215,0,0.06) 0%, rgba(255,107,53,0.06) 100%);
+  border: 1px solid rgba(255,215,0,0.15);
+  border-radius: 14px; padding: 20px; margin: 24px 0; text-align: center;
+}
+.blast-section h3 {
+  font-family: 'Righteous', cursive; font-size: 1.1rem; color: #ffd700;
+  margin-bottom: 6px;
+}
+.blast-section p { font-size: 0.82rem; color: #888; margin-bottom: 12px; }
+.blast-input-row {
+  display: flex; gap: 8px; max-width: 360px; margin: 0 auto;
+}
+.blast-input-row input {
+  flex: 1; padding: 10px 14px; background: #1a1a1a; border: 1px solid #333;
+  border-radius: 10px; color: #fff; font-size: 0.9rem;
+}
+.blast-input-row input:focus { outline: none; border-color: #ffd700; }
+.blast-input-row input::placeholder { color: #444; }
+.blast-input-row button {
+  padding: 10px 18px; background: #ffd700; color: #000; border-radius: 10px;
+  font-weight: 700; font-size: 0.85rem; white-space: nowrap; transition: all 0.15s;
+}
+.blast-input-row button:hover { background: #ffe44d; }
+.blast-success { color: #5bff7b; font-size: 0.82rem; margin-top: 8px; font-weight: 500; }
+
+/* ============================================ */
+/* ADMIN TEXT BLAST SCREEN                      */
+/* ============================================ */
+.admin-screen { padding-top: 32px; padding-bottom: 60px; }
+.admin-title {
+  font-family: 'Righteous', cursive; font-size: 1.6rem; color: #ffd700;
+  margin-bottom: 8px;
+}
+.admin-sub { color: #888; font-size: 0.9rem; margin-bottom: 24px; }
+.subscriber-count {
+  font-size: 0.85rem; color: #888; margin-bottom: 16px;
+}
+.subscriber-count strong { color: #ffd700; }
+.blast-compose textarea {
+  width: 100%; padding: 14px; background: #1a1a1a; border: 1px solid #333;
+  border-radius: 10px; color: #fff; font-size: 0.9rem; min-height: 100px;
+  resize: vertical;
+}
+.blast-compose textarea:focus { outline: none; border-color: #ffd700; }
+.blast-preview {
+  background: #111; border: 1px solid #222; border-radius: 10px;
+  padding: 14px; margin: 12px 0; font-size: 0.85rem; color: #ccc;
+}
+.blast-send-btn {
+  width: 100%; padding: 14px; border-radius: 12px;
+  background: #ffd700; color: #000; font-size: 1rem; font-weight: 700;
+  margin-top: 12px;
+}
+
+/* ============================================ */
+/* ABOUT SCREEN                                 */
+/* ============================================ */
+.about-screen { padding-top: 32px; padding-bottom: 60px; }
+.about-title {
+  font-family: 'Righteous', cursive; font-size: 1.6rem; color: #fff;
+  margin-bottom: 16px;
+}
+.about-text { color: #999; font-size: 0.9rem; line-height: 1.7; margin-bottom: 16px; }
+
+/* ============================================ */
+/* FOOTER                                       */
+/* ============================================ */
+footer {
+  border-top: 1px solid #1a1a1a; padding: 24px 0;
+  text-align: center; font-size: 0.8rem; color: #444;
+}
+footer a { color: #ff6b35; }
+footer a:hover { text-decoration: underline; }
+
+/* ============================================ */
+/* UTILITIES & RESPONSIVE                       */
+/* ============================================ */
+.empty-state {
+  text-align: center; padding: 48px 0; color: #444;
+}
+.empty-state .emoji { font-size: 2rem; margin-bottom: 8px; }
+.empty-state p { font-size: 0.9rem; }
+
+.surprise-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+  background: #1a1a1a; color: #888; border: 1px solid #333;
+  transition: all 0.15s;
+}
+.surprise-btn:hover { border-color: #ff6b35; color: #ff6b35; }
+.surprise-btn.spinning .dice { animation: spin 0.5s ease-in-out; }
+@keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+
+.results-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px; font-size: 0.82rem; color: #555;
+}
+
+.hidden { display: none !important; }
+
+@media (max-width: 480px) {
+  .detail-grid { grid-template-columns: 1fr; }
+  .blast-input-row { flex-direction: column; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ========== HEADER ========== -->
+<header>
+  <div class="container header-inner">
+    <a href="#" class="logo" onclick="showScreen('home'); return false;">GLORY JAMS</a>
+    <div class="nav-links">
+      <button class="nav-btn" onclick="showScreen('about')">About</button>
+      <button class="nav-btn primary" onclick="showScreen('submit')">Submit a Jam</button>
+      <button class="profile-indicator" id="profileBtn" onclick="showScreen('profile')" title="Your profile">?</button>
+    </div>
+  </div>
+</header>
+
+<!-- ========== HOME SCREEN ========== -->
+<div id="screen-home" class="screen active">
+  <div class="container">
+    <div class="hero">
+      <h1 class="hero-title">GLORY JAMS</h1>
+      <p class="hero-sub" id="heroSub">Loading...</p>
+    </div>
+
+    <!-- Live bar -->
+    <div class="live-bar" id="liveBar">
+      <span class="pulse-dot"></span>
+      <span id="liveBarText">Checking who's pulling up...</span>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <div class="filter-row" id="regionFilters"></div>
+      <div class="filter-row" id="dayFilters"></div>
+      <div class="filter-row" id="genreFilters"></div>
+    </div>
+
+    <!-- Results bar -->
+    <div class="results-bar">
+      <span id="resultsCount"></span>
+      <button class="surprise-btn" onclick="surpriseMe()">
+        <span class="dice">🎲</span> Surprise me
+      </button>
+    </div>
+
+    <!-- Jam list -->
+    <div class="jam-list" id="jamList"></div>
+
+    <!-- Text blast signup -->
+    <div class="blast-section">
+      <h3>Get the move</h3>
+      <p>Drop your number. We'll text you when the scene is popping.</p>
+      <div class="blast-input-row">
+        <input type="tel" id="blastPhone" placeholder="(555) 555-5555">
+        <button onclick="subscribeBlast()">I'm in</button>
+      </div>
+      <div id="blastSignupMsg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== JAM DETAIL SCREEN ========== -->
+<div id="screen-detail" class="screen">
+  <div class="container" style="padding-top: 24px; padding-bottom: 60px;">
+    <button class="detail-back" onclick="showScreen('home')">← All jams</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<!-- ========== PROFILE / REGISTER SCREEN ========== -->
+<div id="screen-profile" class="screen">
+  <div class="container register-screen" id="profileContent"></div>
+</div>
+
+<!-- ========== SUBMIT JAM SCREEN ========== -->
+<div id="screen-submit" class="screen">
+  <div class="container submit-screen">
+    <h1 class="submit-title">Submit a Jam</h1>
+    <p class="submit-sub">Know a recurring jam in the Bay? Add it to the directory. No account needed.</p>
+    <form id="submitJamForm" onsubmit="submitJam(event)">
+      <div class="form-group">
+        <label class="form-label">Jam Name *</label>
+        <input class="form-input" name="name" required placeholder='e.g. "Tuesday Night Jazz Jam"'>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Venue Name *</label>
+        <input class="form-input" name="venue_name" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Venue Address *</label>
+        <input class="form-input" name="venue_address" required placeholder="Full street address">
+      </div>
+      <div class="form-group">
+        <label class="form-label">City *</label>
+        <input class="form-input" name="city" required placeholder="e.g. Oakland, SF, Berkeley">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Region *</label>
+        <select class="form-input" name="region" required>
+          <option value="sf">SF</option>
+          <option value="east_bay">East Bay</option>
+          <option value="south_bay">South Bay</option>
+          <option value="north_bay_marin">North Bay & Marin</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Day of Week *</label>
+        <select class="form-input" name="day_of_week" required>
+          <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+          <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-group">
+          <label class="form-label">Start Time *</label>
+          <input class="form-input" name="time_start" required placeholder="8:00 PM">
+        </div>
+        <div class="form-group">
+          <label class="form-label">End Time</label>
+          <input class="form-input" name="time_end" placeholder="11:00 PM">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Frequency</label>
+        <select class="form-input" name="frequency">
+          <option>Weekly</option><option>Bi-weekly</option><option>Monthly</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Genres *</label>
+        <div class="genre-select" id="submitGenres"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sign-up Process</label>
+        <select class="form-input" name="signup_process">
+          <option>sign-up list</option><option>first come first served</option>
+          <option>hosted/called up</option><option>open stage</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Vibe / Atmosphere</label>
+        <input class="form-input" name="vibe" placeholder='e.g. "Chill & beginner-friendly"'>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-input" name="description" rows="3" placeholder="What should people know?"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your Name</label>
+        <input class="form-input" name="submitter_name" placeholder="So we can credit you">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your Email</label>
+        <input class="form-input" name="submitter_email" type="email" placeholder="In case we need to verify">
+      </div>
+      <button type="submit" class="form-submit">Submit Jam</button>
+      <div id="submitMsg"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ========== ABOUT SCREEN ========== -->
+<div id="screen-about" class="screen">
+  <div class="container about-screen">
+    <h1 class="about-title">About Glory Jams</h1>
+    <p class="about-text">
+      Glory Jams is a community resource for musicians in the San Francisco Bay Area to find
+      live jam sessions. Jazz, blues, funk, soul, latin, rock — if there's a recurring jam
+      happening somewhere in the Bay, we want it listed here.
+    </p>
+    <p class="about-text">
+      The idea is simple: there are amazing jam sessions happening every night of the week across
+      the Bay Area, but finding them usually means knowing someone who knows someone. This site
+      exists to change that.
+    </p>
+    <p class="about-text">
+      This isn't social media. There are no feeds, no likes, no DMs. This is a <strong style="color:#fff;">social app</strong> —
+      it exists to get you off your phone and into a room full of musicians. Check in, see who's pulling up,
+      and go play.
+    </p>
+    <p class="about-text" style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #222;">
+      Created by <a href="https://simonoto.com" target="_blank" style="color:#ff6b35;">Simonoto</a>. Built with love for the Bay Area music scene.
+    </p>
+  </div>
+</div>
+
+<!-- ========== ADMIN SCREEN (hidden, accessible via ?admin) ========== -->
+<div id="screen-admin" class="screen">
+  <div class="container admin-screen">
+    <h1 class="admin-title">Text Blast HQ</h1>
+    <p class="admin-sub">Send a text blast to everyone who signed up.</p>
+    <div class="subscriber-count" id="subscriberCount">Loading subscribers...</div>
+    <div class="form-group">
+      <label class="form-label">Tonight's Hottest Jam</label>
+      <div id="hottestJamPreview" class="blast-preview">Calculating...</div>
+    </div>
+    <div class="blast-compose">
+      <label class="form-label">Compose your blast</label>
+      <textarea id="blastMessage" placeholder="Type your message..."></textarea>
+      <button class="blast-send-btn" onclick="sendBlast()">Send Blast</button>
+      <p style="color:#666;font-size:0.75rem;margin-top:8px;text-align:center;">
+        Note: Actual SMS sending requires a backend service (Twilio, etc). This saves the blast to Firebase for processing.
+      </p>
+    </div>
+    <div id="blastSendMsg" style="margin-top:12px;text-align:center;"></div>
+  </div>
+</div>
+
+
+<footer>
+  <div class="container">
+    <p>Built by <a href="https://simonoto.com" target="_blank">Simonoto</a></p>
+    <p style="margin-top:4px;">Know a jam that's not listed? <a href="#" onclick="showScreen('submit');return false;">Submit it</a></p>
+  </div>
+</footer>
+
+<script>
+// ============================================
+// FIREBASE CONFIG
+// ============================================
+// REPLACE with your Firebase project config
+const firebaseConfig = {
+  apiKey: "AIzaSyAV5EYZAJ0IFy9qQ4ljWBqvk_pk6vhuxZg",
+  authDomain: "glory-jams.firebaseapp.com",
+  databaseURL: "https://glory-jams-default-rtdb.firebaseio.com",
+  projectId: "glory-jams",
+  storageBucket: "glory-jams.firebasestorage.app",
+  messagingSenderId: "949960497662",
+  appId: "1:949960497662:web:51efaa36e307204ab108af"
+};
+
+let db;
+let firebaseReady = false;
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.database();
+  // Test if actually configured
+  if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
+    firebaseReady = true;
+  }
+} catch(e) {
+  console.log('Firebase not configured — running in demo mode');
+}
+
+// ============================================
+// JAM DATA (Static seed — same as Next.js version)
+// ============================================
+const JAMS = [
+  {
+    id: '1',
+    name: 'Jazz Jam at Bird and Beckett',
+    venue_name: 'Bird & Beckett Books and Records',
+    venue_address: '653 Chenery St, San Francisco, CA 94131',
+    city: 'Glen Park',
+    region: 'sf',
+    day_of_week: 'Sunday',
+    time_start: '5:30 PM',
+    time_end: '8:00 PM',
+    frequency: 'Weekly',
+    genre: ['jazz'],
+    signup_process: 'sign-up list',
+    description: 'Long-running jazz jam in a beloved bookstore. Intimate setting with a dedicated community of players. House band kicks it off, then the list opens up.',
+    vibe: 'Welcoming & intimate',
+    what_to_expect: "Arrive a bit early to put your name on the list. The space is small and cozy — a bookstore with a performance area. Expect mostly jazz standards. All levels welcome but know a few tunes."
+  },
+  {
+    id: '2',
+    name: 'Tuesday Blues Jam at Biscuits and Blues',
+    venue_name: 'Biscuits and Blues',
+    venue_address: '401 Mason St, San Francisco, CA 94102',
+    city: 'Union Square',
+    region: 'sf',
+    day_of_week: 'Tuesday',
+    time_start: '8:00 PM',
+    time_end: '11:00 PM',
+    frequency: 'Weekly',
+    genre: ['blues'],
+    signup_process: 'sign-up list',
+    description: "Classic blues jam in one of SF's legendary blues clubs. Full stage, real sound system, and a crowd that loves the blues.",
+    vibe: 'Classic blues club energy',
+    what_to_expect: "Sign up when you arrive. The house band is solid — just tell them the key and go. Blues standards are the move here."
+  },
+  {
+    id: '3',
+    name: "Yo Mama's Jazz Jam",
+    venue_name: "Yo Mama's",
+    venue_address: '3629 Lakeshore Ave, Oakland, CA 94610',
+    city: 'Oakland',
+    region: 'east_bay',
+    day_of_week: 'Thursday',
+    time_start: '8:00 PM',
+    time_end: '11:00 PM',
+    frequency: 'Weekly',
+    genre: ['jazz'],
+    signup_process: 'hosted/called up',
+    description: 'Vibey Oakland jazz jam. The host calls people up and puts together combos on the fly. Great hang, good food, strong drinks.',
+    vibe: 'Vibey & social',
+    what_to_expect: "The host knows the regulars and will work you in. Introduce yourself, let them know what you play. Real Book tunes are your friend."
+  },
+  {
+    id: '4',
+    name: 'The Jam at Revolution Cafe',
+    venue_name: 'Revolution Cafe',
+    venue_address: '3248 22nd St, San Francisco, CA 94110',
+    city: 'Mission',
+    region: 'sf',
+    day_of_week: 'Monday',
+    time_start: '8:00 PM',
+    time_end: '10:00 PM',
+    frequency: 'Weekly',
+    genre: ['jazz', 'open'],
+    signup_process: 'first come first served',
+    description: "Low-key jam in the Mission. No-frills neighborhood spot. Show up, grab a drink, and play.",
+    vibe: 'Low-key & casual',
+    what_to_expect: "First come, first served — just show up with your instrument and jump in. Casual and open to any style."
+  },
+  {
+    id: '5',
+    name: "Funk Jam at Eli's Mile High Club",
+    venue_name: "Eli's Mile High Club",
+    venue_address: '3629 Martin Luther King Jr Way, Oakland, CA 94609',
+    city: 'Oakland',
+    region: 'east_bay',
+    day_of_week: 'Saturday',
+    time_start: '9:00 PM',
+    time_end: null,
+    frequency: 'Monthly',
+    genre: ['funk', 'soul'],
+    signup_process: 'sign-up list',
+    description: "Funk and soul jam at one of Oakland's most historic venues. When it's on, it's ON.",
+    vibe: 'High-energy & groovy',
+    what_to_expect: "This one goes late and goes hard. Bring your funk chops. The crowd dances. Check social media for specific dates."
+  }
+];
+
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const REGIONS = [
+  { value: 'all', label: 'All Areas' },
+  { value: 'sf', label: 'SF' },
+  { value: 'east_bay', label: 'East Bay' },
+  { value: 'south_bay', label: 'South Bay' },
+  { value: 'north_bay_marin', label: 'North Bay & Marin' }
+];
+const GENRES = ['jazz','blues','funk','soul','latin','r&b','rock','open'];
+const INSTRUMENTS = ['Guitar','Bass','Drums','Keys/Piano','Saxophone','Trumpet','Trombone','Vocals','Violin/Fiddle','Flute','Harmonica','Percussion','Other'];
+
+const SIGNUP_ICONS = {
+  'sign-up list': '📋',
+  'first come first served': '🏃',
+  'hosted/called up': '🎤',
+  'open stage': '🎸'
+};
+
+// ============================================
+// STATE
+// ============================================
+let filters = { region: 'all', day: 'any', genres: [] };
+let checkins = {}; // { jamId: { odename: { name, instrument, timestamp } } }
+let profile = JSON.parse(localStorage.getItem('gloryjams_profile') || 'null');
+// profile shape: { name: string, instrument: string }
+
+// ============================================
+// UTILITIES
+// ============================================
+function getTodayName() {
+  const d = new Date().getDay();
+  return DAYS[d === 0 ? 6 : d - 1];
+}
+
+function getDayIndex(day) {
+  return DAYS.indexOf(day);
+}
+
+function sortJamsFromToday(jams) {
+  const todayIdx = getDayIndex(getTodayName());
+  return [...jams].sort((a, b) => {
+    const ai = (getDayIndex(a.day_of_week) - todayIdx + 7) % 7;
+    const bi = (getDayIndex(b.day_of_week) - todayIdx + 7) % 7;
+    return ai - bi;
+  });
+}
+
+function getInitials(name) {
+  return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+}
+
+function genreClass(g) {
+  const map = { jazz: 'jazz', blues: 'blues', funk: 'funk', soul: 'soul', latin: 'latin', open: 'open', rock: 'rock', 'r&b': 'rb' };
+  return 'genre-' + (map[g.toLowerCase()] || 'open');
+}
+
+function todayCheckins(jamId) {
+  const today = new Date().toISOString().slice(0, 10);
+  const jc = checkins[jamId] || {};
+  return Object.values(jc).filter(c => c.date === today);
+}
+
+function totalCheckinsTonight() {
+  let count = 0;
+  const today = getTodayName();
+  JAMS.forEach(j => {
+    if (j.day_of_week === today) count += todayCheckins(j.id).length;
+  });
+  return count;
+}
+
+// ============================================
+// FIREBASE LISTENERS
+// ============================================
+function initFirebase() {
+  if (!firebaseReady) {
+    // Demo mode — use some fake checkins
+    checkins = {};
+    renderAll();
+    return;
+  }
+
+  // Listen to checkins (realtime)
+  db.ref('checkins').on('value', snap => {
+    checkins = snap.val() || {};
+    renderAll();
+  });
+}
+
+function firebaseCheckin(jamId) {
+  if (!profile) return;
+  const today = new Date().toISOString().slice(0, 10);
+  const key = profile.name.toLowerCase().replace(/\s+/g, '_');
+  if (firebaseReady) {
+    db.ref(`checkins/${jamId}/${key}`).set({
+      name: profile.name,
+      instrument: profile.instrument,
+      date: today,
+      timestamp: Date.now()
+    });
+  } else {
+    // Demo mode
+    if (!checkins[jamId]) checkins[jamId] = {};
+    checkins[jamId][key] = { name: profile.name, instrument: profile.instrument, date: today, timestamp: Date.now() };
+    renderAll();
+  }
+}
+
+function firebaseUncheckin(jamId) {
+  if (!profile) return;
+  const key = profile.name.toLowerCase().replace(/\s+/g, '_');
+  if (firebaseReady) {
+    db.ref(`checkins/${jamId}/${key}`).remove();
+  } else {
+    if (checkins[jamId]) delete checkins[jamId][key];
+    renderAll();
+  }
+}
+
+function isCheckedIn(jamId) {
+  if (!profile) return false;
+  const key = profile.name.toLowerCase().replace(/\s+/g, '_');
+  const jc = checkins[jamId] || {};
+  const entry = jc[key];
+  if (!entry) return false;
+  return entry.date === new Date().toISOString().slice(0, 10);
+}
+
+async function registerProfile(name, instrument) {
+  const key = name.toLowerCase().replace(/\s+/g, '_');
+  if (firebaseReady) {
+    // Check if name is taken
+    const snap = await db.ref(`profiles/${key}`).once('value');
+    if (snap.exists()) {
+      return { error: 'That name is already taken. Try a variation or add your last initial.' };
+    }
+    await db.ref(`profiles/${key}`).set({ name, instrument, created: Date.now() });
+  }
+  profile = { name, instrument };
+  localStorage.setItem('gloryjams_profile', JSON.stringify(profile));
+  return { success: true };
+}
+
+function deleteProfile() {
+  if (!profile) return;
+  const key = profile.name.toLowerCase().replace(/\s+/g, '_');
+  if (firebaseReady) {
+    db.ref(`profiles/${key}`).remove();
+    // Remove all their checkins
+    Object.keys(checkins).forEach(jamId => {
+      if (checkins[jamId] && checkins[jamId][key]) {
+        db.ref(`checkins/${jamId}/${key}`).remove();
+      }
+    });
+  }
+  profile = null;
+  localStorage.removeItem('gloryjams_profile');
+  renderAll();
+  showScreen('profile');
+}
+
+async function subscribeBlast() {
+  const phone = document.getElementById('blastPhone').value.trim();
+  if (!phone || phone.length < 7) {
+    document.getElementById('blastSignupMsg').innerHTML = '<span class="form-error">Enter a valid phone number</span>';
+    return;
+  }
+  const key = phone.replace(/\D/g, '');
+  if (firebaseReady) {
+    await db.ref(`subscribers/${key}`).set({ phone, created: Date.now() });
+  }
+  document.getElementById('blastSignupMsg').innerHTML = '<span class="blast-success">You\'re in! We\'ll text you when it\'s go time.</span>';
+  document.getElementById('blastPhone').value = '';
+}
+
+async function submitJam(e) {
+  e.preventDefault();
+  const form = e.target;
+  const data = Object.fromEntries(new FormData(form));
+  // Get selected genres
+  const selectedGenres = [];
+  document.querySelectorAll('#submitGenres .genre-select-chip.selected').forEach(el => {
+    selectedGenres.push(el.dataset.genre);
+  });
+  data.genre = selectedGenres;
+
+  if (selectedGenres.length === 0) {
+    document.getElementById('submitMsg').innerHTML = '<p class="form-error" style="margin-top:12px;">Select at least one genre</p>';
+    return;
+  }
+
+  if (firebaseReady) {
+    await db.ref('submissions').push({ ...data, status: 'pending', created: Date.now() });
+  }
+  document.getElementById('submitMsg').innerHTML = `
+    <div class="form-success">
+      <div style="font-size:2rem;">🎉</div>
+      <h2>Thanks!</h2>
+      <p>Your jam will be reviewed and added shortly.</p>
+    </div>
+  `;
+  form.style.display = 'none';
+}
+
+// ============================================
+// RENDERING
+// ============================================
+function renderAll() {
+  renderProfileBtn();
+  renderHero();
+  renderLiveBar();
+  renderFilters();
+  renderJamList();
+}
+
+function renderProfileBtn() {
+  const btn = document.getElementById('profileBtn');
+  if (profile) {
+    btn.textContent = getInitials(profile.name);
+    btn.classList.add('active');
+    btn.title = profile.name;
+  } else {
+    btn.textContent = '?';
+    btn.classList.remove('active');
+    btn.title = 'Register';
+  }
+}
+
+function renderHero() {
+  const today = getTodayName();
+  const tonightJams = JAMS.filter(j => j.day_of_week === today);
+  const tonightCount = tonightJams.length;
+  const totalPeople = totalCheckinsTonight();
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Afternoon' : "It's jam o'clock";
+
+  let sub = `${greeting}. `;
+  if (tonightCount > 0) {
+    sub += `<span class="tonight-count">${tonightCount} jam${tonightCount !== 1 ? 's' : ''}</span> tonight`;
+    if (totalPeople > 0) {
+      sub += ` · <span class="tonight-count">${totalPeople} musician${totalPeople !== 1 ? 's' : ''}</span> pulling up`;
+    }
+    sub += '. ';
+  } else {
+    sub += 'No jams tonight, but ';
+  }
+  sub += `<span class="total-count">${JAMS.length} jams</span> across the Bay this week. Go play.`;
+  document.getElementById('heroSub').innerHTML = sub;
+}
+
+function renderLiveBar() {
+  const today = getTodayName();
+  const tonightJams = JAMS.filter(j => j.day_of_week === today);
+  let people = [];
+  tonightJams.forEach(j => {
+    todayCheckins(j.id).forEach(c => {
+      people.push({ ...c, jamName: j.name });
+    });
+  });
+
+  const bar = document.getElementById('liveBar');
+  const text = document.getElementById('liveBarText');
+
+  if (people.length === 0) {
+    text.textContent = tonightJams.length > 0
+      ? `${tonightJams.length} jam${tonightJams.length !== 1 ? 's' : ''} tonight — be the first to check in`
+      : 'Check back later for tonight\'s jams';
+  } else if (people.length <= 3) {
+    const names = people.map(p => `${p.name} (${p.instrument})`).join(', ');
+    text.textContent = `${names} pulling up tonight`;
+  } else {
+    text.textContent = `${people.length} musicians checked in tonight — the scene is live`;
+  }
+}
+
+function renderFilters() {
+  // Regions
+  const rf = document.getElementById('regionFilters');
+  rf.innerHTML = REGIONS.map(r =>
+    `<button class="filter-chip ${filters.region === r.value ? 'active' : ''}" onclick="setFilter('region','${r.value}')">${r.label}</button>`
+  ).join('');
+
+  // Days
+  const today = getTodayName();
+  const df = document.getElementById('dayFilters');
+  let dayHtml = `<button class="filter-chip tonight-chip ${filters.day === today ? 'active' : ''}" onclick="setFilter('day','${today}')">Tonight</button>`;
+  dayHtml += `<button class="filter-chip ${filters.day === 'any' ? 'active' : ''}" onclick="setFilter('day','any')">Any Day</button>`;
+  DAYS.forEach(d => {
+    dayHtml += `<button class="filter-chip ${filters.day === d && d !== today ? 'active' : ''}" onclick="setFilter('day','${d}')">${d.slice(0,3)}</button>`;
+  });
+  df.innerHTML = dayHtml;
+
+  // Genres
+  const gf = document.getElementById('genreFilters');
+  gf.innerHTML = GENRES.map(g =>
+    `<button class="filter-chip ${filters.genres.includes(g) ? 'active' : ''}" onclick="toggleGenreFilter('${g}')">${g}</button>`
+  ).join('') + (filters.genres.length > 0 ? `<button class="filter-chip" style="color:#666;" onclick="filters.genres=[];renderAll();">clear</button>` : '');
+}
+
+function setFilter(key, value) {
+  filters[key] = value;
+  renderAll();
+}
+
+function toggleGenreFilter(g) {
+  if (filters.genres.includes(g)) {
+    filters.genres = filters.genres.filter(x => x !== g);
+  } else {
+    filters.genres.push(g);
+  }
+  renderAll();
+}
+
+function getFilteredJams() {
+  let jams = [...JAMS];
+  if (filters.region !== 'all') jams = jams.filter(j => j.region === filters.region);
+  if (filters.day !== 'any') jams = jams.filter(j => j.day_of_week === filters.day);
+  if (filters.genres.length > 0) jams = jams.filter(j => j.genre.some(g => filters.genres.includes(g)));
+  return sortJamsFromToday(jams);
+}
+
+function renderJamList() {
+  const jams = getFilteredJams();
+  const today = getTodayName();
+  document.getElementById('resultsCount').textContent = `${jams.length} jam${jams.length !== 1 ? 's' : ''}`;
+
+  if (jams.length === 0) {
+    document.getElementById('jamList').innerHTML = `
+      <div class="empty-state">
+        <div class="emoji">🎷</div>
+        <p>No jams match those filters.</p>
+        <p style="margin-top:4px;"><a href="#" onclick="showScreen('submit');return false;" style="color:#ff6b35;">Submit a jam</a> you know about.</p>
+      </div>
+    `;
+    return;
+  }
+
+  document.getElementById('jamList').innerHTML = jams.map(jam => {
+    const isTonight = jam.day_of_week === today;
+    const people = todayCheckins(jam.id);
+
+    let checkinsHtml = '';
+    if (people.length > 0) {
+      const faces = people.slice(0, 4).map(p =>
+        `<div class="checkin-face" title="${p.name} — ${p.instrument}">${getInitials(p.name)}</div>`
+      ).join('');
+      const more = people.length > 4 ? `<span class="checkin-more">+${people.length - 4}</span>` : '';
+      checkinsHtml = `
+        <div class="jam-checkins">
+          <span class="checkin-count">${people.length} pulling up</span>
+          <div class="checkin-faces">${faces}${more}</div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="jam-card ${isTonight ? 'tonight-card' : ''}" onclick="showDetail('${jam.id}')">
+        ${isTonight ? '<div class="tonight-badge"><span class="pulse-dot"></span>TONIGHT</div>' : ''}
+        <div class="jam-name">${jam.name}</div>
+        <div class="jam-venue">${jam.venue_name} · ${jam.city}</div>
+        <div class="jam-meta">
+          <span class="jam-time">${jam.day_of_week}s · ${jam.time_start}${jam.time_end ? '–' + jam.time_end : ''}</span>
+          <span class="sep">·</span>
+          <span>${jam.frequency}</span>
+          <span class="sep">·</span>
+          <span>${SIGNUP_ICONS[jam.signup_process] || '📋'} ${jam.signup_process}</span>
+        </div>
+        <div class="jam-genres">${jam.genre.map(g => `<span class="genre-chip ${genreClass(g)}">${g}</span>`).join('')}</div>
+        ${jam.vibe ? `<div style="margin-top:8px;font-size:0.75rem;color:#555;font-style:italic;">Vibe: ${jam.vibe}</div>` : ''}
+        ${checkinsHtml}
+      </div>
+    `;
+  }).join('');
+}
+
+// ============================================
+// JAM DETAIL
+// ============================================
+function showDetail(id) {
+  const jam = JAMS.find(j => j.id === id);
+  if (!jam) return;
+  const people = todayCheckins(id);
+  const amCheckedIn = isCheckedIn(id);
+  const today = getTodayName();
+  const isTonight = jam.day_of_week === today;
+
+  let checkinBtnHtml;
+  if (!profile) {
+    checkinBtnHtml = `<button class="checkin-btn needs-profile" onclick="showScreen('profile')">Register to check in</button>`;
+  } else if (amCheckedIn) {
+    checkinBtnHtml = `<button class="checkin-btn checked-in" onclick="firebaseUncheckin('${id}');renderDetail('${id}');">✓ You're checked in — tap to undo</button>`;
+  } else {
+    checkinBtnHtml = `<button class="checkin-btn can-checkin" onclick="firebaseCheckin('${id}');renderDetail('${id}');">I'm pulling up${isTonight ? ' tonight' : ''}</button>`;
+  }
+
+  const peopleHtml = people.length > 0 ? people.map(p => `
+    <div class="checkin-person">
+      <div class="person-avatar">${getInitials(p.name)}</div>
+      <div>
+        <div class="person-name">${p.name}</div>
+        <div class="person-instrument">${p.instrument}</div>
+      </div>
+    </div>
+  `).join('') : '<p style="color:#555;font-size:0.85rem;">No one checked in yet. Be the first.</p>';
+
+  document.getElementById('detailContent').innerHTML = `
+    <div class="detail-header">
+      <div class="jam-genres" style="margin-bottom:10px;">${jam.genre.map(g => `<span class="genre-chip ${genreClass(g)}">${g}</span>`).join('')}</div>
+      <h1 class="detail-name">${jam.name}</h1>
+      <p class="detail-venue">${jam.venue_name} · ${jam.city}</p>
+    </div>
+
+    ${jam.vibe ? `<div class="vibe-badge">${jam.vibe}</div>` : ''}
+
+    <div class="detail-grid">
+      <div class="detail-card">
+        <div class="detail-card-label">📅 When</div>
+        <div class="detail-card-value">${jam.day_of_week}s · ${jam.time_start}${jam.time_end ? '–' + jam.time_end : ''}</div>
+      </div>
+      <div class="detail-card">
+        <div class="detail-card-label">🔄 Frequency</div>
+        <div class="detail-card-value">${jam.frequency}</div>
+      </div>
+      <div class="detail-card">
+        <div class="detail-card-label">📋 Sign-up</div>
+        <div class="detail-card-value">${jam.signup_process || 'Not specified'}</div>
+      </div>
+      <div class="detail-card">
+        <div class="detail-card-label">📍 Address</div>
+        <div class="detail-card-value">${jam.venue_address}</div>
+      </div>
+    </div>
+
+    <!-- CHECK-IN SECTION -->
+    <div class="checkin-section">
+      <h3>Who's pulling up${isTonight ? ' tonight' : ''}? ${people.length > 0 ? `<span style="color:#ffd700;margin-left:4px;">(${people.length})</span>` : ''}</h3>
+      ${checkinBtnHtml}
+      <div class="checkin-people">${peopleHtml}</div>
+    </div>
+
+    ${jam.description ? `
+      <div class="detail-section">
+        <h3>About this jam</h3>
+        <p>${jam.description}</p>
+      </div>
+    ` : ''}
+
+    ${jam.what_to_expect ? `
+      <div class="first-timer-box">
+        <h3>👋 First-timer tips</h3>
+        <p style="color:#999;font-size:0.88rem;line-height:1.6;margin-top:8px;">${jam.what_to_expect}</p>
+      </div>
+    ` : ''}
+
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button onclick="navigator.clipboard.writeText(window.location.href);this.textContent='Copied!';setTimeout(()=>this.textContent='Copy link',1500);" class="profile-action-btn" style="flex:1;">Copy link</button>
+      <button onclick="showScreen('submit')" class="profile-action-btn" style="flex:1;">Suggest an edit</button>
+    </div>
+  `;
+
+  showScreen('detail');
+}
+
+function renderDetail(id) {
+  // Re-render without switching screens
+  showDetail(id);
+}
+
+// ============================================
+// PROFILE SCREEN
+// ============================================
+function renderProfile() {
+  const container = document.getElementById('profileContent');
+
+  if (profile) {
+    // Show profile
+    const myCheckins = [];
+    Object.keys(checkins).forEach(jamId => {
+      if (isCheckedIn(jamId)) {
+        const jam = JAMS.find(j => j.id === jamId);
+        if (jam) myCheckins.push(jam);
+      }
+    });
+
+    container.innerHTML = `
+      <div class="profile-card">
+        <div class="profile-avatar-big">${getInitials(profile.name)}</div>
+        <div class="profile-name">${profile.name}</div>
+        <div class="profile-instrument">${profile.instrument}</div>
+        <div class="profile-actions">
+          <button class="profile-action-btn danger" onclick="if(confirm('Delete your profile?'))deleteProfile();">Delete profile</button>
+        </div>
+      </div>
+      ${myCheckins.length > 0 ? `
+        <div class="your-checkins">
+          <h3>Your check-ins today</h3>
+          ${myCheckins.map(j => `
+            <div class="jam-card" onclick="showDetail('${j.id}')" style="margin-bottom:8px;">
+              <div class="jam-name">${j.name}</div>
+              <div class="jam-venue">${j.venue_name} · ${j.day_of_week} ${j.time_start}</div>
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+    `;
+  } else {
+    // Registration form
+    container.innerHTML = `
+      <h1 class="register-title">Join the scene</h1>
+      <p class="register-sub">
+        Register your name to check in at jams. That's it — no password, no email, no social media stuff.
+        Just your name and what you play.
+      </p>
+      <form onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label class="form-label">Your Name *</label>
+          <input class="form-input" id="regName" required placeholder="How people know you" autocomplete="off">
+          <div id="regNameError"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your Instrument *</label>
+          <select class="form-input" id="regInstrument" required>
+            <option value="">Pick one</option>
+            ${INSTRUMENTS.map(i => `<option value="${i}">${i}</option>`).join('')}
+          </select>
+        </div>
+        <button type="submit" class="form-submit" id="regSubmitBtn">Lock it in</button>
+        <p style="color:#555;font-size:0.75rem;margin-top:10px;text-align:center;">
+          Names are first-come, first-served. Pick something the scene knows you by.
+        </p>
+      </form>
+    `;
+  }
+}
+
+async function handleRegister(e) {
+  e.preventDefault();
+  const name = document.getElementById('regName').value.trim();
+  const instrument = document.getElementById('regInstrument').value;
+  if (!name || !instrument) return;
+
+  document.getElementById('regSubmitBtn').disabled = true;
+  document.getElementById('regSubmitBtn').textContent = 'Checking...';
+  document.getElementById('regNameError').innerHTML = '';
+
+  const result = await registerProfile(name, instrument);
+  if (result.error) {
+    document.getElementById('regNameError').innerHTML = `<p class="form-error">${result.error}</p>`;
+    document.getElementById('regSubmitBtn').disabled = false;
+    document.getElementById('regSubmitBtn').textContent = 'Lock it in';
+    return;
+  }
+
+  renderAll();
+  showScreen('home');
+}
+
+// ============================================
+// ADMIN SCREEN
+// ============================================
+function renderAdmin() {
+  if (firebaseReady) {
+    db.ref('subscribers').once('value', snap => {
+      const subs = snap.val() || {};
+      const count = Object.keys(subs).length;
+      document.getElementById('subscriberCount').innerHTML = `<strong>${count}</strong> subscriber${count !== 1 ? 's' : ''}`;
+    });
+  } else {
+    document.getElementById('subscriberCount').innerHTML = '<strong>0</strong> subscribers (demo mode)';
+  }
+
+  // Find hottest jam
+  const today = getTodayName();
+  const tonightJams = JAMS.filter(j => j.day_of_week === today);
+  let hottest = null;
+  let maxCheckins = 0;
+  tonightJams.forEach(j => {
+    const c = todayCheckins(j.id).length;
+    if (c > maxCheckins) { maxCheckins = c; hottest = j; }
+  });
+
+  const preview = document.getElementById('hottestJamPreview');
+  if (hottest) {
+    preview.innerHTML = `<strong>${hottest.name}</strong> at ${hottest.venue_name} — ${maxCheckins} checked in`;
+    document.getElementById('blastMessage').value = `Tonight's move: ${hottest.name} at ${hottest.venue_name}, ${hottest.time_start}. ${maxCheckins} musicians already checked in. Pull up! — Glory Jams`;
+  } else if (tonightJams.length > 0) {
+    preview.textContent = `${tonightJams.length} jams tonight, no check-ins yet`;
+    document.getElementById('blastMessage').value = `${tonightJams.length} jams happening tonight in the Bay. Check gloryjams to see what's popping. — Glory Jams`;
+  } else {
+    preview.textContent = 'No jams tonight';
+  }
+}
+
+async function sendBlast() {
+  const msg = document.getElementById('blastMessage').value.trim();
+  if (!msg) return;
+  if (firebaseReady) {
+    await db.ref('blasts').push({ message: msg, created: Date.now(), status: 'pending' });
+  }
+  document.getElementById('blastSendMsg').innerHTML = '<span style="color:#5bff7b;">Blast saved! Hook up Twilio to auto-send.</span>';
+}
+
+// ============================================
+// NAVIGATION
+// ============================================
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`screen-${name}`).classList.add('active');
+  window.scrollTo(0, 0);
+
+  if (name === 'profile') renderProfile();
+  if (name === 'admin') renderAdmin();
+  if (name === 'submit') renderSubmitGenres();
+}
+
+function renderSubmitGenres() {
+  const container = document.getElementById('submitGenres');
+  if (!container) return;
+  container.innerHTML = GENRES.map(g =>
+    `<button type="button" class="genre-select-chip" data-genre="${g}" onclick="this.classList.toggle('selected')">${g}</button>`
+  ).join('');
+}
+
+function surpriseMe() {
+  const jams = getFilteredJams();
+  if (jams.length === 0) return;
+  const btn = document.querySelector('.surprise-btn');
+  btn.classList.add('spinning');
+  setTimeout(() => {
+    btn.classList.remove('spinning');
+    const jam = jams[Math.floor(Math.random() * jams.length)];
+    showDetail(jam.id);
+  }, 500);
+}
+
+// ============================================
+// INIT
+// ============================================
+function init() {
+  // Check for admin mode
+  if (window.location.search.includes('admin')) {
+    initFirebase();
+    setTimeout(() => showScreen('admin'), 100);
+    return;
+  }
+
+  initFirebase();
+  renderAll();
+  renderSubmitGenres();
+}
+
+init();
+</script>
+
+</body>
+</html>
