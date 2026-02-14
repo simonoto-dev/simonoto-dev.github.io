@@ -718,7 +718,21 @@ footer a:hover { text-decoration: underline; }
   </div>
 </div>
 
-<!-- ========== ADMIN SCREEN (hidden, accessible via ?admin) ========== -->
+<!-- ========== ADMIN AUTH GATE ========== -->
+<div id="screen-admin-auth" class="screen">
+  <div class="container admin-screen" style="display:flex;align-items:center;justify-content:center;min-height:60vh;">
+    <div style="text-align:center;padding:40px;">
+      <div style="font-size:40px;margin-bottom:12px;">🔐</div>
+      <h2 class="admin-title" style="font-size:1.4rem;">Admin Access</h2>
+      <p style="color:#888;font-size:0.85rem;margin-bottom:20px;">Enter the admin password</p>
+      <input id="admin-pw" type="password" placeholder="Password" style="width:240px;padding:10px 16px;border-radius:10px;border:1px solid #333;background:#1a1a1a;color:#e8e8e8;font-size:14px;text-align:center;outline:none;" onkeydown="if(event.key==='Enter')checkAdminAuth()">
+      <br><button onclick="checkAdminAuth()" style="margin-top:12px;padding:8px 32px;border-radius:10px;border:none;background:#ff6b35;color:#000;font-weight:600;font-size:14px;cursor:pointer;">Enter</button>
+      <div id="admin-auth-err" style="color:#f87171;font-size:12px;margin-top:10px;display:none;">Incorrect password</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== ADMIN SCREEN (requires auth) ========== -->
 <div id="screen-admin" class="screen">
   <div class="container admin-screen">
     <h1 class="admin-title">Text Blast HQ</h1>
@@ -896,6 +910,29 @@ let profile = JSON.parse(localStorage.getItem('gloryjams_profile') || 'null');
 // ============================================
 // UTILITIES
 // ============================================
+function esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// Admin auth
+const ADMIN_AUTH_KEY = 'gloryjams-admin-auth';
+const ADMIN_HASH = '4dd07950';
+function simpleHash(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;}return Math.abs(h).toString(16).slice(0,8);}
+let adminAuthed = sessionStorage.getItem(ADMIN_AUTH_KEY) === '1';
+function checkAdminAuth() {
+  const pw = document.getElementById('admin-pw').value;
+  if (simpleHash(pw) === ADMIN_HASH) {
+    adminAuthed = true;
+    sessionStorage.setItem(ADMIN_AUTH_KEY, '1');
+    showScreen('admin');
+  } else {
+    document.getElementById('admin-auth-err').style.display = 'block';
+  }
+}
+
 function getTodayName() {
   const d = new Date().getDay();
   return DAYS[d === 0 ? 6 : d - 1];
@@ -1211,7 +1248,7 @@ function renderJamList() {
     let checkinsHtml = '';
     if (people.length > 0) {
       const faces = people.slice(0, 4).map(p =>
-        `<div class="checkin-face" title="${p.name} — ${p.instrument}">${getInitials(p.name)}</div>`
+        `<div class="checkin-face" title="${esc(p.name)} — ${esc(p.instrument)}">${esc(getInitials(p.name))}</div>`
       ).join('');
       const more = people.length > 4 ? `<span class="checkin-more">+${people.length - 4}</span>` : '';
       checkinsHtml = `
@@ -1264,10 +1301,10 @@ function showDetail(id) {
 
   const peopleHtml = people.length > 0 ? people.map(p => `
     <div class="checkin-person">
-      <div class="person-avatar">${getInitials(p.name)}</div>
+      <div class="person-avatar">${esc(getInitials(p.name))}</div>
       <div>
-        <div class="person-name">${p.name}</div>
-        <div class="person-instrument">${p.instrument}</div>
+        <div class="person-name">${esc(p.name)}</div>
+        <div class="person-instrument">${esc(p.instrument)}</div>
       </div>
     </div>
   `).join('') : '<p style="color:#555;font-size:0.85rem;">No one checked in yet. Be the first.</p>';
@@ -1353,9 +1390,9 @@ function renderProfile() {
 
     container.innerHTML = `
       <div class="profile-card">
-        <div class="profile-avatar-big">${getInitials(profile.name)}</div>
-        <div class="profile-name">${profile.name}</div>
-        <div class="profile-instrument">${profile.instrument}</div>
+        <div class="profile-avatar-big">${esc(getInitials(profile.name))}</div>
+        <div class="profile-name">${esc(profile.name)}</div>
+        <div class="profile-instrument">${esc(profile.instrument)}</div>
         <div class="profile-actions">
           <button class="profile-action-btn danger" onclick="if(confirm('Delete your profile?'))deleteProfile();">Delete profile</button>
         </div>
@@ -1414,7 +1451,7 @@ async function handleRegister(e) {
 
   const result = await registerProfile(name, instrument);
   if (result.error) {
-    document.getElementById('regNameError').innerHTML = `<p class="form-error">${result.error}</p>`;
+    document.getElementById('regNameError').innerHTML = `<p class="form-error">${esc(result.error)}</p>`;
     document.getElementById('regSubmitBtn').disabled = false;
     document.getElementById('regSubmitBtn').textContent = 'Lock it in';
     return;
@@ -1450,7 +1487,7 @@ function renderAdmin() {
 
   const preview = document.getElementById('hottestJamPreview');
   if (hottest) {
-    preview.innerHTML = `<strong>${hottest.name}</strong> at ${hottest.venue_name} — ${maxCheckins} checked in`;
+    preview.innerHTML = `<strong>${esc(hottest.name)}</strong> at ${esc(hottest.venue_name)} — ${maxCheckins} checked in`;
     document.getElementById('blastMessage').value = `Tonight's move: ${hottest.name} at ${hottest.venue_name}, ${hottest.time_start}. ${maxCheckins} musicians already checked in. Pull up! — Glory Jams`;
   } else if (tonightJams.length > 0) {
     preview.textContent = `${tonightJams.length} jams tonight, no check-ins yet`;
@@ -1473,6 +1510,14 @@ async function sendBlast() {
 // NAVIGATION
 // ============================================
 function showScreen(name) {
+  // Gate admin behind auth
+  if (name === 'admin' && !adminAuthed) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-admin-auth').classList.add('active');
+    window.scrollTo(0, 0);
+    return;
+  }
+
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(`screen-${name}`).classList.add('active');
   window.scrollTo(0, 0);
