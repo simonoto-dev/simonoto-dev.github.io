@@ -14,10 +14,10 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
-<!-- Typography: Asset (hero), Sixtyfour Convergence (titles), DM Sans (body) -->
+<!-- Typography: Asset (hero), Rock Salt (header), Sixtyfour Convergence (titles), DM Sans (body) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Asset&family=Sixtyfour+Convergence&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Asset&family=Rock+Salt&family=Sixtyfour+Convergence:BLED,SCAN,XELA,YELA@0..100,-53..100,0..100,-100..100&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
 
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -48,7 +48,7 @@ header {
 .header-inner { display: flex; align-items: center; justify-content: space-between; }
 .logo { display: flex; align-items: center; }
 .logo-text {
-  font-family: 'Asset', serif; font-size: 1.4rem; letter-spacing: 2px;
+  font-family: 'Rock Salt', cursive; font-size: 1.1rem; letter-spacing: 1px;
   background: linear-gradient(90deg, #ff6b35, #ffd700, #ff8c00, #ffd700, #ff6b35);
   background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -59,7 +59,7 @@ header {
   background: linear-gradient(90deg, #ffd700, #ff6b35, #ff8c00, #ff6b35, #ffd700);
   background-size: 300% 100%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text; font-style: italic;
+  background-clip: text; margin-left: 4px;
   animation: shimmer 8s ease-in-out infinite reverse;
 }
 
@@ -70,6 +70,20 @@ header {
 @keyframes glowPulse {
   0%, 100% { filter: drop-shadow(0 0 30px rgba(255,107,53,0.4)) drop-shadow(0 0 60px rgba(255,215,0,0.15)); }
   50% { filter: drop-shadow(0 0 50px rgba(255,107,53,0.6)) drop-shadow(0 0 100px rgba(255,215,0,0.3)) drop-shadow(0 0 12px rgba(255,107,53,0.5)); }
+}
+
+/* Partiful-style ambient motion */
+@keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes floatX { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
+@keyframes gentleSway { 0%, 100% { transform: rotate(-1deg); } 50% { transform: rotate(1deg); } }
+@keyframes driftIn { 0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; } 50% { transform: translateY(-4px) scale(1.02); opacity: 1; } }
+@keyframes swooshDraw { 0% { stroke-dashoffset: 600; } 100% { stroke-dashoffset: 0; } }
+@keyframes orbitFloat {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(6px, -4px) rotate(2deg); }
+  50% { transform: translate(0, -8px) rotate(0deg); }
+  75% { transform: translate(-6px, -4px) rotate(-2deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
 }
 .nav-links { display: flex; gap: 8px; align-items: center; }
 .nav-btn {
@@ -91,8 +105,20 @@ header {
 .profile-indicator.active { border-color: #ff6b35; background: #1a1a1a; }
 
 /* HERO */
-.hero { padding: 40px 0 24px; text-align: center; }
-.hero-logo { display: flex; justify-content: center; margin-bottom: 16px; }
+.hero { padding: 40px 0 24px; text-align: center; position: relative; overflow: hidden; }
+
+/* Partiful-style floating ambient shapes */
+.hero-particles { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.hero-particles span {
+  position: absolute; border-radius: 50%; opacity: 0.12;
+}
+.hero-particles .p1 { width: 80px; height: 80px; background: radial-gradient(circle, #ff6b35, transparent 70%); top: 10%; left: 8%; animation: orbitFloat 12s ease-in-out infinite; }
+.hero-particles .p2 { width: 50px; height: 50px; background: radial-gradient(circle, #ffd700, transparent 70%); top: 20%; right: 12%; animation: orbitFloat 10s ease-in-out infinite reverse; }
+.hero-particles .p3 { width: 35px; height: 35px; background: radial-gradient(circle, #ff8c00, transparent 70%); bottom: 25%; left: 20%; animation: floatY 8s ease-in-out infinite; animation-delay: -3s; }
+.hero-particles .p4 { width: 60px; height: 60px; background: radial-gradient(circle, #ff6b35, transparent 70%); bottom: 10%; right: 5%; animation: orbitFloat 14s ease-in-out infinite; animation-delay: -5s; }
+.hero-particles .p5 { width: 25px; height: 25px; background: radial-gradient(circle, #ffd700, transparent 70%); top: 50%; left: 50%; animation: floatY 6s ease-in-out infinite; animation-delay: -1s; }
+.hero-logo { position: relative; z-index: 1; }
+.hero-logo { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 16px; }
 .hero-wordmark {
   font-family: 'Asset', serif; font-size: clamp(3rem, 10vw, 4.5rem);
   letter-spacing: 4px; line-height: 1;
@@ -114,8 +140,11 @@ header {
 }
 .hero-swoosh {
   display: block; margin: -4px auto 0; width: clamp(200px, 55vw, 360px); height: 12px;
+  animation: gentleSway 6s ease-in-out infinite;
+  stroke-dasharray: 600; stroke-dashoffset: 600;
+  animation: swooshDraw 2s ease-out forwards, gentleSway 6s ease-in-out 2s infinite;
 }
-.hero-sub { font-size: 1rem; color: #888; max-width: 480px; margin: 0 auto; line-height: 1.5; }
+.hero-sub { font-size: 1rem; color: #888; max-width: 480px; margin: 0 auto; line-height: 1.5; position: relative; z-index: 1; }
 .hero-sub .tonight-count { color: #ff6b35; font-weight: 700; }
 .hero-sub .total-count { color: #ccc; font-weight: 600; }
 
@@ -125,6 +154,7 @@ header {
   padding: 10px; margin-bottom: 24px;
   background: rgba(255,107,53,0.08); border: 1px solid rgba(255,107,53,0.2);
   border-radius: 12px; font-size: 0.85rem; color: #ff6b35; font-weight: 600;
+  animation: floatY 7s ease-in-out infinite;
 }
 .pulse-dot {
   width: 8px; height: 8px; border-radius: 50%; background: #ff6b35;
@@ -154,7 +184,10 @@ header {
 .filter-chip.tonight-chip.active::before { background: #000; }
 
 /* Genre chips */
-.genre-chip { padding: 4px 10px; border-radius: 12px; font-size: 0.72rem; font-weight: 600; text-transform: lowercase; }
+.genre-chip { padding: 4px 10px; border-radius: 12px; font-size: 0.72rem; font-weight: 600; text-transform: lowercase; animation: driftIn 5s ease-in-out infinite; }
+.genre-chip:nth-child(2n) { animation-delay: -1.2s; }
+.genre-chip:nth-child(3n) { animation-delay: -2.8s; }
+.genre-chip:nth-child(4n) { animation-delay: -0.6s; }
 .genre-jazz { background: #1a2744; color: #5b9aff; }
 .genre-blues { background: #1a1a44; color: #7b7bff; }
 .genre-funk { background: #2a1a3a; color: #c77bff; }
@@ -171,7 +204,7 @@ header {
   padding: 16px; cursor: pointer; transition: all 0.15s;
   position: relative; overflow: hidden;
 }
-.jam-card:hover { border-color: #444; transform: translateY(-1px); }
+.jam-card:hover { border-color: #444; transform: translateY(-3px) rotate(0.3deg); }
 .jam-card.tonight-card {
   border-color: rgba(255,107,53,0.3);
   background: linear-gradient(135deg, rgba(255,107,53,0.05) 0%, #111 100%);
@@ -182,10 +215,11 @@ header {
   display: inline-flex; align-items: center; gap: 5px;
   font-size: 0.7rem; font-weight: 700; color: #ff6b35;
   text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+  animation: floatX 4s ease-in-out infinite;
 }
 .tonight-badge .pulse-dot { width: 6px; height: 6px; }
 
-.jam-name { font-family: 'Sixtyfour Convergence', monospace; font-size: 0.82rem; font-weight: 400; color: #fff; margin-bottom: 4px; }
+.jam-name { font-family: 'Sixtyfour Convergence', monospace; font-size: 0.82rem; font-weight: 400; color: #fff; margin-bottom: 4px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
 .jam-venue { font-size: 0.85rem; color: #888; margin-bottom: 10px; }
 .jam-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 0.8rem; color: #666; }
 .jam-time { color: #ccc; font-weight: 600; }
@@ -241,22 +275,22 @@ header {
 .detail-back { display: inline-flex; align-items: center; gap: 4px; font-size: 0.85rem; color: #666; margin-bottom: 20px; padding: 6px 0; }
 .detail-back:hover { color: #aaa; }
 .detail-header { margin-bottom: 24px; }
-.detail-name { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.3rem; color: #fff; margin-bottom: 6px; }
+.detail-name { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.3rem; color: #fff; margin-bottom: 6px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
 .detail-venue { font-size: 1rem; color: #888; }
 .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
 .detail-card { background: #1a1a1a; border-radius: 10px; padding: 12px; }
 .detail-card-label { font-size: 0.7rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
 .detail-card-value { font-size: 0.9rem; font-weight: 600; color: #ccc; }
 .detail-section { margin-bottom: 20px; }
-.detail-section h3 { font-family: 'Sixtyfour Convergence', monospace; font-size: 0.95rem; font-weight: 400; color: #fff; margin-bottom: 8px; }
+.detail-section h3 { font-family: 'Sixtyfour Convergence', monospace; font-size: 0.95rem; font-weight: 400; color: #fff; margin-bottom: 8px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
 .detail-section p { font-size: 0.88rem; color: #999; line-height: 1.6; }
-.vibe-badge { display: inline-block; padding: 8px 16px; background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.2); border-radius: 10px; font-size: 0.85rem; color: #ff6b35; font-weight: 600; margin-bottom: 20px; }
+.vibe-badge { display: inline-block; padding: 8px 16px; background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.2); border-radius: 10px; font-size: 0.85rem; color: #ff6b35; font-weight: 600; margin-bottom: 20px; animation: orbitFloat 8s ease-in-out infinite; }
 .first-timer-box { background: #111; border: 1px solid #222; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
-.first-timer-box h3 { color: #ffd700; display: flex; align-items: center; gap: 6px; font-family: 'Sixtyfour Convergence', monospace; font-weight: 400; }
+.first-timer-box h3 { color: #ffd700; display: flex; align-items: center; gap: 6px; font-family: 'Sixtyfour Convergence', monospace; font-weight: 400; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
 
 /* CHECK-IN SECTION */
 .checkin-section { background: #111; border: 1px solid #222; border-radius: 14px; padding: 20px; margin-bottom: 24px; }
-.checkin-section h3 { font-family: 'Sixtyfour Convergence', monospace; font-size: 1rem; font-weight: 400; color: #fff; margin-bottom: 12px; }
+.checkin-section h3 { font-family: 'Sixtyfour Convergence', monospace; font-size: 1rem; font-weight: 400; color: #fff; margin-bottom: 12px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
 .checkin-btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 1rem; font-weight: 700; transition: all 0.15s; margin-bottom: 16px; }
 .checkin-btn.can-checkin { background: linear-gradient(135deg, #ff6b35, #ffd700); color: #000; }
 .checkin-btn.can-checkin:hover { transform: scale(1.01); }
@@ -270,7 +304,7 @@ header {
 
 /* PROFILE / REGISTER */
 .register-screen { padding-top: 32px; padding-bottom: 60px; }
-.register-title { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.6rem; color: #fff; margin-bottom: 8px; }
+.register-title { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.6rem; color: #fff; margin-bottom: 8px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
 .register-sub { color: #888; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
 .form-group { margin-bottom: 16px; }
 .form-label { display: block; font-size: 0.8rem; font-weight: 600; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -283,31 +317,31 @@ select.form-input { appearance: none; }
 .form-submit:disabled { opacity: 0.5; transform: none; }
 .form-error { color: #ff5b5b; font-size: 0.82rem; margin-top: 6px; font-weight: 500; }
 .form-success { text-align: center; padding: 40px 0; }
-.form-success h2 { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.5rem; color: #ffd700; margin: 12px 0; }
+.form-success h2 { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.5rem; color: #ffd700; margin: 12px 0; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
 .form-success p { color: #888; }
 
 .profile-card { background: #111; border: 1px solid #222; border-radius: 14px; padding: 24px; text-align: center; margin-bottom: 20px; }
-.profile-avatar-big { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #ff6b35, #ffd700); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 700; color: #000; margin: 0 auto 12px; }
-.profile-name { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.2rem; font-weight: 400; color: #fff; }
+.profile-avatar-big { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #ff6b35, #ffd700); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 700; color: #000; margin: 0 auto 12px; animation: orbitFloat 6s ease-in-out infinite; }
+.profile-name { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.2rem; font-weight: 400; color: #fff; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
 .profile-instrument { font-size: 0.9rem; color: #888; margin-top: 4px; }
 .profile-actions { display: flex; gap: 10px; justify-content: center; margin-top: 16px; }
 .profile-action-btn { padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; background: #1a1a1a; color: #888; border: 1px solid #333; transition: all 0.15s; }
 .profile-action-btn:hover { color: #ccc; border-color: #555; }
 .profile-action-btn.danger:hover { color: #ff5b5b; border-color: #ff5b5b; }
 .your-checkins { margin-top: 20px; }
-.your-checkins h3 { font-family: 'Sixtyfour Convergence', monospace; font-size: 0.9rem; font-weight: 400; color: #fff; margin-bottom: 10px; }
+.your-checkins h3 { font-family: 'Sixtyfour Convergence', monospace; font-size: 0.9rem; font-weight: 400; color: #fff; margin-bottom: 10px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
 
 /* SUBMIT JAM */
 .submit-screen { padding-top: 32px; padding-bottom: 60px; }
-.submit-title { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.6rem; color: #fff; margin-bottom: 8px; }
+.submit-title { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.6rem; color: #fff; margin-bottom: 8px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
 .submit-sub { color: #888; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
 .genre-select { display: flex; flex-wrap: wrap; gap: 6px; }
 .genre-select-chip { padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; background: #1a1a1a; color: #888; border: 1px solid #333; transition: all 0.15s; }
 .genre-select-chip.selected { background: #ff6b35; color: #000; border-color: #ff6b35; }
 
 /* TEXT BLAST */
-.blast-section { background: linear-gradient(135deg, rgba(255,215,0,0.06) 0%, rgba(255,107,53,0.06) 100%); border: 1px solid rgba(255,215,0,0.15); border-radius: 14px; padding: 20px; margin: 24px 0; text-align: center; }
-.blast-section h3 { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.1rem; color: #ffd700; margin-bottom: 6px; }
+.blast-section { background: linear-gradient(135deg, rgba(255,215,0,0.06) 0%, rgba(255,107,53,0.06) 100%); border: 1px solid rgba(255,215,0,0.15); border-radius: 14px; padding: 20px; margin: 24px 0; text-align: center; animation: floatY 9s ease-in-out infinite; }
+.blast-section h3 { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.1rem; color: #ffd700; margin-bottom: 6px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
 .blast-section p { font-size: 0.82rem; color: #888; margin-bottom: 12px; }
 .blast-input-row { display: flex; gap: 8px; max-width: 360px; margin: 0 auto; }
 .blast-input-row input { flex: 1; padding: 10px 14px; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 0.9rem; }
@@ -319,7 +353,7 @@ select.form-input { appearance: none; }
 
 /* ADMIN */
 .admin-screen { padding-top: 32px; padding-bottom: 60px; }
-.admin-title { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.6rem; color: #ffd700; margin-bottom: 8px; }
+.admin-title { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.6rem; color: #ffd700; margin-bottom: 8px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
 .admin-sub { color: #888; font-size: 0.9rem; margin-bottom: 24px; }
 .subscriber-count { font-size: 0.85rem; color: #888; margin-bottom: 16px; }
 .subscriber-count strong { color: #ffd700; }
@@ -330,7 +364,7 @@ select.form-input { appearance: none; }
 
 /* ABOUT */
 .about-screen { padding-top: 32px; padding-bottom: 60px; }
-.about-title { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.6rem; color: #fff; margin-bottom: 16px; }
+.about-title { font-family: 'Sixtyfour Convergence', monospace; font-size: 1.6rem; color: #fff; margin-bottom: 16px; font-variation-settings: "BLED" 24, "SCAN" -10, "XELA" 100, "YELA" -100; }
 .about-text { color: #999; font-size: 0.9rem; line-height: 1.7; margin-bottom: 16px; }
 
 /* FOOTER */
@@ -390,6 +424,9 @@ footer a:hover { text-decoration: underline; }
 <div id="screen-home" class="screen active">
   <div class="container">
     <div class="hero">
+      <div class="hero-particles">
+        <span class="p1"></span><span class="p2"></span><span class="p3"></span><span class="p4"></span><span class="p5"></span>
+      </div>
       <div class="hero-logo">
         <div class="hero-wordmark">
           <span class="glory">GLORY </span><span class="jams">JAMS</span>
