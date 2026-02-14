@@ -343,6 +343,8 @@ function setupRealtimeSync() {
 /* ===== STATE ===== */
 let currentTab = 0;
 let paymentStudent = null;
+let showAddStudent = false;
+let showAddEnsemble = false;
 
 /* ===== HELPERS ===== */
 function h(tag, attrs, ...children) {
@@ -410,6 +412,103 @@ function getStatusBadge(status) {
 
 /* ===== VIEWS ===== */
 
+function renderAddStudentForm() {
+  return h('div', { class: 'card card-accent', style: { marginBottom: '16px' } },
+    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' } },
+      h('div', { style: { fontWeight: '600', fontSize: '15px' } }, 'Add New Student'),
+      h('button', { class: 'btn-outline', onClick: () => { showAddStudent = false; render(); } }, '✕ Cancel')
+    ),
+    h('div', { class: 'form-row' },
+      h('div', { class: 'form-group' },
+        h('label', {}, 'Student Name'),
+        h('input', { class: 'input', id: 'new-student-name', placeholder: 'e.g. Alex' })
+      ),
+      h('div', { class: 'form-group' },
+        h('label', {}, 'Instrument'),
+        h('select', { class: 'input', id: 'new-student-instrument' },
+          h('option', { value: 'Guitar' }, 'Guitar'),
+          h('option', { value: 'Bass' }, 'Bass'),
+          h('option', { value: 'Drums' }, 'Drums'),
+          h('option', { value: 'Keys' }, 'Keys'),
+          h('option', { value: 'Vocals' }, 'Vocals'),
+          h('option', { value: 'Other' }, 'Other')
+        )
+      )
+    ),
+    h('div', { class: 'form-row' },
+      h('div', { class: 'form-group' },
+        h('label', {}, 'Program'),
+        h('select', { class: 'input', id: 'new-student-program' },
+          h('option', { value: 'Private Lessons' }, 'Private Lessons'),
+          h('option', { value: 'Ensemble Only' }, 'Ensemble Only'),
+          h('option', { value: 'Private + Ensemble' }, 'Private + Ensemble')
+        )
+      ),
+      h('div', { class: 'form-group' },
+        h('label', {}, 'Monthly Rate ($)'),
+        h('input', { class: 'input', id: 'new-student-rate', type: 'number', placeholder: '200', value: '200' })
+      )
+    ),
+    h('div', { class: 'form-row' },
+      h('div', { class: 'form-group' },
+        h('label', {}, 'Lesson Day'),
+        h('select', { class: 'input', id: 'new-student-day' },
+          ...['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].map(d =>
+            h('option', { value: d, ...(d === 'Wednesday' ? { selected: 'selected' } : {}) }, d)
+          )
+        )
+      ),
+      h('div', { class: 'form-group' },
+        h('label', {}, 'Lesson Time'),
+        h('input', { class: 'input', id: 'new-student-time', placeholder: 'e.g. 3:00 PM' })
+      )
+    ),
+    h('div', { class: 'form-row' },
+      h('div', { class: 'form-group' },
+        h('label', {}, 'Parent/Guardian Name'),
+        h('input', { class: 'input', id: 'new-student-parent', placeholder: 'e.g. David & Sarah' })
+      ),
+      h('div', { class: 'form-group' },
+        h('label', {}, 'Parent Email'),
+        h('input', { class: 'input', id: 'new-student-email', type: 'email', placeholder: 'parent@email.com' })
+      )
+    ),
+    h('div', { class: 'form-group' },
+      h('label', {}, 'Access Code (for student portal login)'),
+      h('input', { class: 'input', id: 'new-student-code', placeholder: 'e.g. alex1 — keep it simple' })
+    ),
+    h('button', { class: 'btn', style: { marginTop: '4px' }, onClick: () => {
+      const name = document.getElementById('new-student-name').value.trim();
+      const instrument = document.getElementById('new-student-instrument').value;
+      const program = document.getElementById('new-student-program').value;
+      const rate = parseInt(document.getElementById('new-student-rate').value) || 200;
+      const lessonDay = document.getElementById('new-student-day').value;
+      const lessonTime = document.getElementById('new-student-time').value.trim();
+      const parentName = document.getElementById('new-student-parent').value.trim();
+      const parentEmail = document.getElementById('new-student-email').value.trim();
+      const accessCode = document.getElementById('new-student-code').value.trim().toLowerCase();
+      if (!name) { alert('Please enter a student name.'); return; }
+      if (!accessCode) { alert('Please enter an access code for the student portal.'); return; }
+      // Check for duplicate access code
+      const existingCodes = Object.values(localData.students).map(s => s.profile.accessCode);
+      if (existingCodes.includes(accessCode)) { alert('That access code is already in use. Pick a different one.'); return; }
+      const key = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (localData.students[key]) { alert('A student with that key already exists. Try a different name or modify the existing student.'); return; }
+      localData.students[key] = {
+        profile: { name, instrument, program, startDate: new Date().toISOString().slice(0, 10), accessCode, parentName, parentEmail, lessonDay, lessonTime, rate },
+        lastLesson: null,
+        nextLesson: null,
+        paymentStatus: 'current',
+        attendance: {},
+        billing: []
+      };
+      saveLocalData();
+      showAddStudent = false;
+      render();
+    }}, 'Add Student')
+  );
+}
+
 function renderStudents() {
   const students = localData.students;
   const keys = Object.keys(students);
@@ -426,8 +525,13 @@ function renderStudents() {
   const outstanding = keys.reduce((sum, k) => sum + Math.max(0, getBalance(k)), 0);
 
   return h('div', { class: 'pad' },
-    h('h2', { class: 'section-title' }, 'Students'),
+    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' } },
+      h('h2', { class: 'section-title' }, 'Students'),
+      !showAddStudent ? h('button', { class: 'btn btn-sm', onClick: () => { showAddStudent = true; render(); } }, '+ Add Student') : ''
+    ),
     h('p', { class: 'section-sub' }, totalStudents + ' active students'),
+
+    showAddStudent ? renderAddStudentForm() : '',
 
     h('div', { class: 'stats' },
       h('div', { class: 'stat' }, h('div', { class: 'stat-label' }, 'Students'), h('div', { class: 'stat-value' }, '' + totalStudents)),
@@ -759,6 +863,53 @@ function renderLessonInput() {
   );
 }
 
+function renderAddEnsembleForm() {
+  const students = localData.students;
+  const studentNames = Object.values(students).map(s => s.profile.name);
+  return h('div', { class: 'card card-accent', style: { marginBottom: '16px' } },
+    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' } },
+      h('div', { style: { fontWeight: '600', fontSize: '15px' } }, 'Add New Ensemble'),
+      h('button', { class: 'btn-outline', onClick: () => { showAddEnsemble = false; render(); } }, '✕ Cancel')
+    ),
+    h('div', { class: 'form-group' },
+      h('label', {}, 'Ensemble Name'),
+      h('input', { class: 'input', id: 'new-ens-name', placeholder: 'e.g. Funk Cadets' })
+    ),
+    h('div', { class: 'form-row' },
+      h('div', { class: 'form-group' },
+        h('label', {}, 'Schedule'),
+        h('input', { class: 'input', id: 'new-ens-schedule', placeholder: 'e.g. Sundays 2:00-4:30 PM' })
+      ),
+      h('div', { class: 'form-group' },
+        h('label', {}, 'Location'),
+        h('input', { class: 'input', id: 'new-ens-location', placeholder: 'e.g. Studio S, Oakland', value: 'Studio S, Oakland' })
+      )
+    ),
+    h('div', { class: 'form-group' },
+      h('label', {}, 'Members (comma-separated names)'),
+      h('input', { class: 'input', id: 'new-ens-members', placeholder: 'e.g. Mason, Kai, Diego' }),
+      studentNames.length > 0 ? h('div', { style: { fontSize: '10px', color: 'var(--muted)', marginTop: '4px' } }, 'Current students: ' + studentNames.join(', ')) : ''
+    ),
+    h('button', { class: 'btn', style: { marginTop: '4px' }, onClick: () => {
+      const name = document.getElementById('new-ens-name').value.trim();
+      const schedule = document.getElementById('new-ens-schedule').value.trim();
+      const location = document.getElementById('new-ens-location').value.trim();
+      const membersRaw = document.getElementById('new-ens-members').value.trim();
+      if (!name) { alert('Please enter an ensemble name.'); return; }
+      const members = membersRaw ? membersRaw.split(',').map(m => m.trim()).filter(Boolean) : [];
+      const key = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      if (localData.ensembles[key]) { alert('An ensemble with a similar name already exists.'); return; }
+      localData.ensembles[key] = {
+        info: { name, schedule, location, members },
+        repertoire: []
+      };
+      saveLocalData();
+      showAddEnsemble = false;
+      render();
+    }}, 'Add Ensemble')
+  );
+}
+
 function renderEnsembles() {
   const ensembles = localData.ensembles;
   const statusColors = {
@@ -768,8 +919,13 @@ function renderEnsembles() {
   };
 
   return h('div', { class: 'pad' },
-    h('h2', { class: 'section-title' }, 'Ensembles'),
+    h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' } },
+      h('h2', { class: 'section-title' }, 'Ensembles'),
+      !showAddEnsemble ? h('button', { class: 'btn btn-sm', onClick: () => { showAddEnsemble = true; render(); } }, '+ Add Ensemble') : ''
+    ),
     h('p', { class: 'section-sub' }, Object.keys(ensembles).length + ' active ensembles'),
+
+    showAddEnsemble ? renderAddEnsembleForm() : '',
 
     ...Object.entries(ensembles).map(([key, ens]) => {
       const rep = ens.repertoire || [];

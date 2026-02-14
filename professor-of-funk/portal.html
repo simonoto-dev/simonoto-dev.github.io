@@ -206,12 +206,31 @@ const MOCK_DATA = {
 
 /* ===== AUTH ===== */
 const AUTH_KEY = 'pof-portal-auth';
-const ACCESS_CODES = { mason1: 'mason', micah1: 'micah', sienna1: 'sienna' };
+// Fallback codes — will be overridden by Firebase data once loaded
+let ACCESS_CODES = { mason1: 'mason', micah1: 'micah', sienna1: 'sienna' };
+let accessCodesLoaded = false;
 let currentStudent = null;
 let currentTab = 0;
 
-function checkAuth() {
+async function loadAccessCodes() {
+  try {
+    const snap = await dbRef("students").once("value");
+    const students = snap.val();
+    if (students) {
+      const codes = {};
+      Object.keys(students).forEach(key => {
+        const code = students[key].profile && students[key].profile.accessCode;
+        if (code) codes[code] = key;
+      });
+      ACCESS_CODES = codes;
+    }
+  } catch(e) { console.warn("Could not load access codes from Firebase, using fallback", e); }
+  accessCodesLoaded = true;
+}
+
+async function checkAuth() {
   const code = document.getElementById('auth-pw').value.trim().toLowerCase();
+  if (!accessCodesLoaded) await loadAccessCodes();
   if (ACCESS_CODES[code]) {
     currentStudent = ACCESS_CODES[code];
     sessionStorage.setItem(AUTH_KEY, code);
@@ -240,8 +259,10 @@ function logout() {
   document.getElementById('auth-err').style.display = 'none';
 }
 
-// Check session on load
+// Check session on load — also preload access codes from Firebase
 (async function() {
+  await waitForAuth();
+  await loadAccessCodes();
   const saved = sessionStorage.getItem(AUTH_KEY);
   if (saved && ACCESS_CODES[saved]) {
     currentStudent = ACCESS_CODES[saved];
@@ -305,7 +326,7 @@ async function loadStudentData() {
 }
 
 function getStudentData() {
-  return studentData || MOCK_DATA.students[currentStudent];
+  return studentData || MOCK_DATA.students[currentStudent] || { profile: { name: currentStudent, instrument: '', program: '' }, lessons: {}, practice: {}, milestones: {}, resources: [] };
 }
 
 function setupRealtimeSync() {
@@ -418,9 +439,16 @@ function calcMonthlyDays() {
 
 function renderAssignments() {
   const s = getStudentData();
-  const lessons = Object.values(s.lessons).sort((a, b) => new Date(b.date) - new Date(a.date));
+  const lessons = Object.values(s.lessons || {}).sort((a, b) => new Date(b.date) - new Date(a.date));
   const latest = lessons[0];
-  if (!latest) return h('div', { class: 'pad' }, h('p', { style: { color: 'var(--muted)' } }, 'No assignments yet.'));
+  if (!latest) {
+    const hour = new Date().getHours();
+    const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+    return h('div', { class: 'pad' },
+      h('h1', { class: 'section-title' }, greeting + ', ' + s.profile.name),
+      h('p', { class: 'section-sub' }, 'No assignments yet — your teacher will post your first practice plan after your next lesson!')
+    );
+  }
   const plan = latest.practicePlan;
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
@@ -542,7 +570,7 @@ function renderPractice() {
 
 function renderLessons() {
   const s = getStudentData();
-  const lessons = Object.entries(s.lessons)
+  const lessons = Object.entries(s.lessons || {})
     .map(([id, l]) => ({ id, ...l }))
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -573,7 +601,7 @@ function renderLessons() {
 
 function renderProgress() {
   const s = getStudentData();
-  const milestones = Object.entries(s.milestones)
+  const milestones = Object.entries(s.milestones || {})
     .map(([id, m]) => ({ id, ...m }))
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
