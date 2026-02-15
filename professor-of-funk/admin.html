@@ -347,6 +347,8 @@ let showAddStudent = false;
 let showAddEnsemble = false;
 let editingStudent = null;   // key of student being edited, or null
 let editingEnsemble = null;  // key of ensemble being edited, or null
+let editingSong = null;      // { ensKey, songId } or null
+let addingSongTo = null;     // ensemble key, or null
 
 /* ===== HELPERS ===== */
 function h(tag, attrs, ...children) {
@@ -1120,15 +1122,107 @@ function renderEnsembles() {
 
         h('div', {},
           h('div', { class: 'label' }, 'Repertoire'),
-          ...rep.map(song =>
-            h('div', { class: 'repertoire-item' },
+          ...rep.map(song => {
+            // Editing this song?
+            if (editingSong && editingSong.ensKey === key && editingSong.songId === song.id) {
+              return h('div', { style: { background: 'var(--surface2)', border: '1px solid var(--accent)', borderRadius: '8px', padding: '10px', marginBottom: '6px' } },
+                h('div', { class: 'form-row' },
+                  h('div', { class: 'form-group' },
+                    h('label', {}, 'Title'),
+                    h('input', { class: 'input', id: 'edit-song-title', value: song.title })
+                  ),
+                  h('div', { class: 'form-group' },
+                    h('label', {}, 'Artist'),
+                    h('input', { class: 'input', id: 'edit-song-artist', value: song.artist })
+                  )
+                ),
+                h('div', { class: 'form-row' },
+                  h('div', { class: 'form-group' },
+                    h('label', {}, 'Status'),
+                    h('select', { class: 'input', id: 'edit-song-status' },
+                      ...['learning','performance-ready','retired'].map(st => h('option', { value: st, ...(st === song.status ? { selected: 'selected' } : {}) }, st === 'learning' ? 'Learning' : st === 'performance-ready' ? 'Performance Ready' : 'Retired'))
+                    )
+                  ),
+                  h('div', { class: 'form-group' },
+                    h('label', {}, 'Notes'),
+                    h('input', { class: 'input', id: 'edit-song-notes', value: song.notes || '' })
+                  )
+                ),
+                h('div', { style: { display: 'flex', gap: '6px', marginTop: '4px' } },
+                  h('button', { class: 'btn btn-sm', onClick: () => {
+                    song.title = document.getElementById('edit-song-title').value.trim() || song.title;
+                    song.artist = document.getElementById('edit-song-artist').value.trim() || song.artist;
+                    song.status = document.getElementById('edit-song-status').value;
+                    song.notes = document.getElementById('edit-song-notes').value.trim();
+                    saveLocalData();
+                    editingSong = null;
+                    render();
+                  }}, 'Save'),
+                  h('button', { class: 'btn-outline', onClick: () => { editingSong = null; render(); } }, 'Cancel'),
+                  h('button', { class: 'btn-outline', style: { color: 'var(--red)', borderColor: 'var(--red)', marginLeft: 'auto' }, onClick: () => {
+                    if (!confirm('Remove "' + song.title + '" from repertoire?')) return;
+                    const idx = ens.repertoire.findIndex(r => r.id === song.id);
+                    if (idx !== -1) ens.repertoire.splice(idx, 1);
+                    saveLocalData();
+                    editingSong = null;
+                    render();
+                  }}, 'Remove')
+                )
+              );
+            }
+            // Normal display — tap to edit
+            return h('div', { class: 'repertoire-item', style: { cursor: 'pointer' }, onClick: () => { editingSong = { ensKey: key, songId: song.id }; render(); } },
               h('div', { style: { minWidth: '0' } },
                 h('div', { style: { fontSize: '13px', fontWeight: '600' } }, song.title),
                 h('div', { style: { fontSize: '11px', color: 'var(--muted)' } }, song.artist + (song.notes ? ' — ' + song.notes : ''))
               ),
               h('span', { class: 'badge ' + statusColors[song.status].badge }, statusColors[song.status].label)
-            )
-          )
+            );
+          }),
+          // Add song form or button
+          addingSongTo === key
+            ? h('div', { style: { background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: '8px', padding: '10px', marginTop: '8px' } },
+                h('div', { class: 'form-row' },
+                  h('div', { class: 'form-group' },
+                    h('label', {}, 'Title'),
+                    h('input', { class: 'input', id: 'add-song-title', placeholder: 'e.g. Superstition' })
+                  ),
+                  h('div', { class: 'form-group' },
+                    h('label', {}, 'Artist'),
+                    h('input', { class: 'input', id: 'add-song-artist', placeholder: 'e.g. Stevie Wonder' })
+                  )
+                ),
+                h('div', { class: 'form-row' },
+                  h('div', { class: 'form-group' },
+                    h('label', {}, 'Status'),
+                    h('select', { class: 'input', id: 'add-song-status' },
+                      h('option', { value: 'learning' }, 'Learning'),
+                      h('option', { value: 'performance-ready' }, 'Performance Ready'),
+                      h('option', { value: 'retired' }, 'Retired')
+                    )
+                  ),
+                  h('div', { class: 'form-group' },
+                    h('label', {}, 'Notes'),
+                    h('input', { class: 'input', id: 'add-song-notes', placeholder: 'Optional notes' })
+                  )
+                ),
+                h('div', { style: { display: 'flex', gap: '6px', marginTop: '4px' } },
+                  h('button', { class: 'btn btn-sm', onClick: () => {
+                    const title = document.getElementById('add-song-title').value.trim();
+                    const artist = document.getElementById('add-song-artist').value.trim();
+                    const status = document.getElementById('add-song-status').value;
+                    const notes = document.getElementById('add-song-notes').value.trim();
+                    if (!title) { alert('Song title is required.'); return; }
+                    if (!ens.repertoire) ens.repertoire = [];
+                    ens.repertoire.push({ id: uid(), title, artist: artist || 'Unknown', status, notes });
+                    saveLocalData();
+                    addingSongTo = null;
+                    render();
+                  }}, 'Add Song'),
+                  h('button', { class: 'btn-outline', onClick: () => { addingSongTo = null; render(); } }, 'Cancel')
+                )
+              )
+            : h('button', { class: 'btn-outline', style: { marginTop: '8px', fontSize: '11px' }, onClick: () => { addingSongTo = key; render(); } }, '+ Add Song')
         )
       );
     })
@@ -1172,7 +1266,7 @@ function render() {
   app.appendChild(h('div', { class: 'bottom-nav' },
     ...tabs.map((t, i) => h('button', {
       class: 'nav-btn' + (currentTab === i ? ' active' : ''),
-      onClick: () => { currentTab = i; paymentStudent = null; editingStudent = null; editingEnsemble = null; showAddStudent = false; showAddEnsemble = false; render(); }
+      onClick: () => { currentTab = i; paymentStudent = null; editingStudent = null; editingEnsemble = null; editingSong = null; addingSongTo = null; showAddStudent = false; showAddEnsemble = false; render(); }
     },
       h('span', { class: 'nav-icon' }, t.icon),
       t.label
