@@ -126,7 +126,7 @@ select.input{appearance:auto;}
 const MOCK = {
   students: {
     mason: {
-      profile: { name: "Mason", instrument: "Guitar", program: "Private Lessons", startDate: "2024-09-10", accessCode: "mason1", parentName: "David & Sarah", parentEmail: "mason.parents@email.com", lessonDay: "Wednesday", lessonTime: "3:00 PM", rate: 200 },
+      profile: { name: "Mason", instrument: "Guitar", program: "Private Lessons", startDate: "2024-09-10", accessCode: "mason1", parentName: "David & Sarah", parentEmail: "mason.parents@email.com", lessonDay: "Wednesday", lessonTime: "3:00 PM", privateRate: 75, groupRate: 50 },
       lastLesson: "2026-02-05",
       nextLesson: "2026-02-12",
       paymentStatus: "current",
@@ -135,16 +135,16 @@ const MOCK = {
         "2026-01-15": { present: false, cancelled: true, note: "Family vacation" }, "2026-01-08": { present: true }
       },
       billing: [
-        { id: "b-m1", date: "2026-02-01", type: "charge", amount: 200, method: null, note: "February lessons" },
-        { id: "b-m2", date: "2026-02-03", type: "payment", amount: 200, method: "Venmo", note: "@David-P" },
-        { id: "b-m3", date: "2026-01-01", type: "charge", amount: 200, method: null, note: "January lessons" },
-        { id: "b-m4", date: "2026-01-05", type: "payment", amount: 200, method: "Venmo", note: "@David-P" },
-        { id: "b-m5", date: "2025-12-01", type: "charge", amount: 200, method: null, note: "December lessons" },
-        { id: "b-m6", date: "2025-12-02", type: "payment", amount: 200, method: "Zelle", note: "sarah@email.com" }
+        { id: "b-m1", date: "2026-02-01", type: "charge", amount: 75, method: null, category: "private", note: "Private lesson — Feb 5" },
+        { id: "b-m2", date: "2026-02-03", type: "payment", amount: 75, method: "Venmo", category: "private", note: "@David-P" },
+        { id: "b-m3", date: "2026-01-01", type: "charge", amount: 75, method: null, category: "private", note: "Private lesson — Jan 8" },
+        { id: "b-m4", date: "2026-01-05", type: "payment", amount: 75, method: "Venmo", category: "private", note: "@David-P" },
+        { id: "b-m5", date: "2025-12-01", type: "charge", amount: 50, method: null, category: "group", note: "Ensemble — Dec 1" },
+        { id: "b-m6", date: "2025-12-02", type: "payment", amount: 50, method: "Zelle", category: "group", note: "sarah@email.com" }
       ]
     },
     micah: {
-      profile: { name: "Micah", instrument: "Guitar", program: "Private Lessons", startDate: "2025-01-15", accessCode: "micah1", parentName: "Jennifer", parentEmail: "micah.parent@email.com", lessonDay: "Wednesday", lessonTime: "4:00 PM", rate: 200 },
+      profile: { name: "Micah", instrument: "Guitar", program: "Private Lessons", startDate: "2025-01-15", accessCode: "micah1", parentName: "Jennifer", parentEmail: "micah.parent@email.com", lessonDay: "Wednesday", lessonTime: "4:00 PM", privateRate: 75, groupRate: 50 },
       lastLesson: "2026-02-07",
       nextLesson: "2026-02-14",
       paymentStatus: "current",
@@ -153,14 +153,14 @@ const MOCK = {
         "2026-01-17": { present: true }, "2026-01-10": { present: false, cancelled: true, note: "Sick" }
       },
       billing: [
-        { id: "b-mi1", date: "2026-02-01", type: "charge", amount: 200, method: null, note: "February lessons" },
-        { id: "b-mi2", date: "2026-02-02", type: "payment", amount: 200, method: "Zelle", note: "jennifer@email.com" },
-        { id: "b-mi3", date: "2026-01-01", type: "charge", amount: 200, method: null, note: "January lessons" },
-        { id: "b-mi4", date: "2026-01-03", type: "payment", amount: 200, method: "Venmo", note: "@Jen-M" }
+        { id: "b-mi1", date: "2026-02-01", type: "charge", amount: 75, method: null, category: "private", note: "Private lesson — Feb 7" },
+        { id: "b-mi2", date: "2026-02-02", type: "payment", amount: 75, method: "Zelle", category: "private", note: "jennifer@email.com" },
+        { id: "b-mi3", date: "2026-01-01", type: "charge", amount: 75, method: null, category: "private", note: "Private lesson — Jan 17" },
+        { id: "b-mi4", date: "2026-01-03", type: "payment", amount: 75, method: "Venmo", category: "private", note: "@Jen-M" }
       ]
     },
     sienna: {
-      profile: { name: "Sienna", instrument: "Guitar", program: "Private Lessons", startDate: "2025-06-01", accessCode: "sienna1", parentName: "Mark & Lisa", parentEmail: "sienna.parents@email.com", lessonDay: "Wednesday", lessonTime: "5:00 PM", rate: 200 },
+      profile: { name: "Sienna", instrument: "Guitar", program: "Private Lessons", startDate: "2025-06-01", accessCode: "sienna1", parentName: "Mark & Lisa", parentEmail: "sienna.parents@email.com", lessonDay: "Wednesday", lessonTime: "5:00 PM", privateRate: 75, groupRate: 50 },
       lastLesson: "2026-02-06",
       nextLesson: "2026-02-13",
       paymentStatus: "overdue",
@@ -169,9 +169,9 @@ const MOCK = {
         "2026-01-16": { present: true }, "2026-01-09": { present: true }
       },
       billing: [
-        { id: "b-s1", date: "2026-02-01", type: "charge", amount: 200, method: null, note: "February lessons" },
-        { id: "b-s2", date: "2026-01-01", type: "charge", amount: 200, method: null, note: "January lessons" },
-        { id: "b-s3", date: "2026-01-15", type: "payment", amount: 200, method: "Venmo", note: "@Mark-L" }
+        { id: "b-s1", date: "2026-02-01", type: "charge", amount: 75, method: null, category: "private", note: "Private lesson — Feb 6" },
+        { id: "b-s2", date: "2026-01-01", type: "charge", amount: 75, method: null, category: "private", note: "Private lesson — Jan 9" },
+        { id: "b-s3", date: "2026-01-15", type: "payment", amount: 75, method: "Venmo", category: "private", note: "@Mark-L" }
       ]
     }
   },
@@ -439,18 +439,22 @@ function renderAddStudentForm() {
         )
       )
     ),
+    h('div', { class: 'form-group' },
+      h('label', {}, 'Program'),
+      h('select', { class: 'input', id: 'new-student-program' },
+        h('option', { value: 'Private Lessons' }, 'Private Lessons'),
+        h('option', { value: 'Ensemble Only' }, 'Ensemble Only'),
+        h('option', { value: 'Private + Ensemble' }, 'Private + Ensemble')
+      )
+    ),
     h('div', { class: 'form-row' },
       h('div', { class: 'form-group' },
-        h('label', {}, 'Program'),
-        h('select', { class: 'input', id: 'new-student-program' },
-          h('option', { value: 'Private Lessons' }, 'Private Lessons'),
-          h('option', { value: 'Ensemble Only' }, 'Ensemble Only'),
-          h('option', { value: 'Private + Ensemble' }, 'Private + Ensemble')
-        )
+        h('label', {}, 'Private Lesson Rate ($/lesson)'),
+        h('input', { class: 'input', id: 'new-student-private-rate', type: 'number', placeholder: '75', value: '75' })
       ),
       h('div', { class: 'form-group' },
-        h('label', {}, 'Monthly Rate ($)'),
-        h('input', { class: 'input', id: 'new-student-rate', type: 'number', placeholder: '200', value: '200' })
+        h('label', {}, 'Group Lesson Rate ($/lesson)'),
+        h('input', { class: 'input', id: 'new-student-group-rate', type: 'number', placeholder: '50', value: '50' })
       )
     ),
     h('div', { class: 'form-row' },
@@ -485,7 +489,8 @@ function renderAddStudentForm() {
       const name = document.getElementById('new-student-name').value.trim();
       const instrument = document.getElementById('new-student-instrument').value;
       const program = document.getElementById('new-student-program').value;
-      const rate = parseInt(document.getElementById('new-student-rate').value) || 200;
+      const privateRate = parseInt(document.getElementById('new-student-private-rate').value) || 75;
+      const groupRate = parseInt(document.getElementById('new-student-group-rate').value) || 50;
       const lessonDay = document.getElementById('new-student-day').value;
       const lessonTime = document.getElementById('new-student-time').value.trim();
       const parentName = document.getElementById('new-student-parent').value.trim();
@@ -499,7 +504,7 @@ function renderAddStudentForm() {
       const key = name.toLowerCase().replace(/[^a-z0-9]/g, '');
       if (localData.students[key]) { alert('A student with that key already exists. Try a different name or modify the existing student.'); return; }
       localData.students[key] = {
-        profile: { name, instrument, program, startDate: new Date().toISOString().slice(0, 10), accessCode, parentName, parentEmail, lessonDay, lessonTime, rate },
+        profile: { name, instrument, program, startDate: new Date().toISOString().slice(0, 10), accessCode, parentName, parentEmail, lessonDay, lessonTime, privateRate, groupRate },
         lastLesson: null,
         nextLesson: null,
         paymentStatus: 'current',
@@ -536,16 +541,20 @@ function renderEditStudentForm(key) {
         )
       )
     ),
+    h('div', { class: 'form-group' },
+      h('label', {}, 'Program'),
+      h('select', { class: 'input', id: 'edit-student-program' },
+        ...programs.map(pr => h('option', { value: pr, ...(pr === p.program ? { selected: 'selected' } : {}) }, pr))
+      )
+    ),
     h('div', { class: 'form-row' },
       h('div', { class: 'form-group' },
-        h('label', {}, 'Program'),
-        h('select', { class: 'input', id: 'edit-student-program' },
-          ...programs.map(pr => h('option', { value: pr, ...(pr === p.program ? { selected: 'selected' } : {}) }, pr))
-        )
+        h('label', {}, 'Private Lesson Rate ($/lesson)'),
+        h('input', { class: 'input', id: 'edit-student-private-rate', type: 'number', value: '' + (p.privateRate || p.rate || 75) })
       ),
       h('div', { class: 'form-group' },
-        h('label', {}, 'Monthly Rate ($)'),
-        h('input', { class: 'input', id: 'edit-student-rate', type: 'number', value: '' + (p.rate || 200) })
+        h('label', {}, 'Group Lesson Rate ($/lesson)'),
+        h('input', { class: 'input', id: 'edit-student-group-rate', type: 'number', value: '' + (p.groupRate || 50) })
       )
     ),
     h('div', { class: 'form-row' },
@@ -587,7 +596,8 @@ function renderEditStudentForm(key) {
         const name = document.getElementById('edit-student-name').value.trim();
         const instrument = document.getElementById('edit-student-instrument').value;
         const program = document.getElementById('edit-student-program').value;
-        const rate = parseInt(document.getElementById('edit-student-rate').value) || 200;
+        const privateRate = parseInt(document.getElementById('edit-student-private-rate').value) || 75;
+        const groupRate = parseInt(document.getElementById('edit-student-group-rate').value) || 50;
         const lessonDay = document.getElementById('edit-student-day').value;
         const lessonTime = document.getElementById('edit-student-time').value.trim();
         const parentName = document.getElementById('edit-student-parent').value.trim();
@@ -599,7 +609,7 @@ function renderEditStudentForm(key) {
         // Check duplicate access code (excluding self)
         const existingCodes = Object.entries(localData.students).filter(([k]) => k !== key).map(([,v]) => v.profile.accessCode);
         if (existingCodes.includes(accessCode)) { alert('That access code is already in use by another student.'); return; }
-        s.profile = { ...s.profile, name, instrument, program, rate, lessonDay, lessonTime, parentName, parentEmail, accessCode };
+        s.profile = { ...s.profile, name, instrument, program, privateRate, groupRate, lessonDay, lessonTime, parentName, parentEmail, accessCode };
         s.paymentStatus = paymentStatus;
         saveLocalData();
         editingStudent = null;
@@ -644,7 +654,7 @@ function renderStudents() {
       h('div', { class: 'stat' }, h('div', { class: 'stat-label' }, 'Students'), h('div', { class: 'stat-value' }, '' + totalStudents)),
       h('div', { class: 'stat' }, h('div', { class: 'stat-label' }, 'This Month'), h('div', { class: 'stat-value' }, fmtCurrency(totalRevenue))),
       h('div', { class: 'stat' }, h('div', { class: 'stat-label' }, 'Outstanding'), h('div', { class: 'stat-value', style: { color: outstanding > 0 ? 'var(--red)' : 'var(--green)' } }, fmtCurrency(outstanding))),
-      h('div', { class: 'stat' }, h('div', { class: 'stat-label' }, 'Rate'), h('div', { class: 'stat-value' }, '$200'), h('div', { class: 'stat-sub' }, '/month'))
+      h('div', { class: 'stat' }, h('div', { class: 'stat-label' }, 'Avg Rate'), h('div', { class: 'stat-value' }, '$' + (totalStudents ? Math.round(keys.reduce((s, k) => s + (students[k].profile.privateRate || students[k].profile.rate || 75), 0) / totalStudents) : 0)), h('div', { class: 'stat-sub' }, '/private lesson'))
     ),
 
     ...keys.map(key => {
@@ -787,16 +797,53 @@ function renderPayments() {
 
       h('div', { class: 'stats' },
         h('div', { class: 'stat' }, h('div', { class: 'stat-label' }, 'Balance'), h('div', { class: 'stat-value', style: { color: balance > 0 ? 'var(--red)' : 'var(--green)' } }, (balance > 0 ? '' : '-') + fmtCurrency(balance))),
-        h('div', { class: 'stat' }, h('div', { class: 'stat-label' }, 'Rate'), h('div', { class: 'stat-value' }, '$' + s.profile.rate), h('div', { class: 'stat-sub' }, '/month'))
+        h('div', { class: 'stat' }, h('div', { class: 'stat-label' }, 'Private'), h('div', { class: 'stat-value' }, '$' + (s.profile.privateRate || s.profile.rate || 75)), h('div', { class: 'stat-sub' }, '/lesson')),
+        h('div', { class: 'stat' }, h('div', { class: 'stat-label' }, 'Group'), h('div', { class: 'stat-value' }, '$' + (s.profile.groupRate || 50)), h('div', { class: 'stat-sub' }, '/lesson'))
       ),
 
-      // Add payment form
+      // Add charge
       h('div', { class: 'card card-accent' },
-        h('div', { style: { fontWeight: '600', fontSize: '13px', marginBottom: '10px' } }, 'Add Payment'),
+        h('div', { style: { fontWeight: '600', fontSize: '13px', marginBottom: '10px' } }, 'Add Charge'),
+        h('div', { class: 'form-row' },
+          h('div', { class: 'form-group' },
+            h('label', {}, 'Category'),
+            h('select', { class: 'input', id: 'charge-category', onChange: () => {
+              const cat = document.getElementById('charge-category').value;
+              const amtEl = document.getElementById('charge-amount');
+              amtEl.value = cat === 'private' ? (s.profile.privateRate || s.profile.rate || 75) : (s.profile.groupRate || 50);
+            } },
+              h('option', { value: 'private' }, 'Private Lesson'),
+              h('option', { value: 'group' }, 'Group Lesson')
+            )
+          ),
+          h('div', { class: 'form-group' },
+            h('label', {}, 'Amount'),
+            h('input', { class: 'input', id: 'charge-amount', type: 'number', value: '' + (s.profile.privateRate || s.profile.rate || 75) })
+          )
+        ),
+        h('div', { class: 'form-group' },
+          h('label', {}, 'Note'),
+          h('input', { class: 'input', id: 'charge-note', placeholder: 'e.g. Private lesson — Feb 12' })
+        ),
+        h('button', { class: 'btn', style: { background: 'var(--accent-dim)' }, onClick: () => {
+          const amount = parseFloat(document.getElementById('charge-amount').value);
+          const category = document.getElementById('charge-category').value;
+          const note = document.getElementById('charge-note').value;
+          if (!amount || amount <= 0) return;
+          s.billing.push({ id: uid(), date: new Date().toISOString().slice(0, 10), type: 'charge', amount, method: null, category, note: note || (category === 'private' ? 'Private lesson' : 'Group lesson') });
+          if (getBalance(paymentStudent) > 0) s.paymentStatus = 'overdue';
+          saveLocalData();
+          render();
+        }}, 'Add Charge')
+      ),
+
+      // Record payment
+      h('div', { class: 'card card-accent' },
+        h('div', { style: { fontWeight: '600', fontSize: '13px', marginBottom: '10px' } }, 'Record Payment'),
         h('div', { class: 'form-row' },
           h('div', { class: 'form-group' },
             h('label', {}, 'Amount'),
-            h('input', { class: 'input', id: 'pay-amount', type: 'number', placeholder: '200', value: '200' })
+            h('input', { class: 'input', id: 'pay-amount', type: 'number', placeholder: '' + (s.profile.privateRate || s.profile.rate || 75), value: '' + balance })
           ),
           h('div', { class: 'form-group' },
             h('label', {}, 'Method'),
@@ -818,7 +865,7 @@ function renderPayments() {
           const method = document.getElementById('pay-method').value;
           const note = document.getElementById('pay-note').value;
           if (!amount || amount <= 0) return;
-          s.billing.push({ id: uid(), date: new Date().toISOString().slice(0, 10), type: 'payment', amount, method, note });
+          s.billing.push({ id: uid(), date: new Date().toISOString().slice(0, 10), type: 'payment', amount, method, category: 'payment', note });
           if (getBalance(paymentStudent) <= 0) s.paymentStatus = 'current';
           saveLocalData();
           render();
@@ -828,21 +875,22 @@ function renderPayments() {
       // Transaction history
       h('div', { class: 'card' },
         h('div', { style: { fontWeight: '600', fontSize: '13px', marginBottom: '10px' } }, 'Transaction History'),
-        ...billing.map(entry =>
-          h('div', { class: 'payment-row' },
+        ...billing.map(entry => {
+          const catLabel = entry.category === 'private' ? 'Private' : entry.category === 'group' ? 'Group' : '';
+          return h('div', { class: 'payment-row' },
             h('div', { style: { width: '80px' } },
               h('span', { class: 'payment-amount ' + (entry.type === 'payment' ? 'payment-positive' : 'payment-negative') },
                 (entry.type === 'payment' ? '+' : '-') + fmtCurrency(entry.amount)
               )
             ),
             h('div', { style: { flex: '1', minWidth: '0' } },
-              h('div', { style: { fontSize: '12px' } }, entry.note || (entry.type === 'charge' ? 'Monthly charge' : 'Payment')),
+              h('div', { style: { fontSize: '12px' } }, entry.note || (entry.type === 'charge' ? 'Lesson charge' : 'Payment')),
               h('div', { style: { fontSize: '10px', color: 'var(--muted)' } },
-                fmtDateFull(entry.date) + (entry.method ? ' · ' + entry.method : ''))
+                fmtDateFull(entry.date) + (entry.method ? ' · ' + entry.method : '') + (catLabel ? ' · ' + catLabel : ''))
             ),
-            h('span', { class: 'badge ' + (entry.type === 'payment' ? 'badge-green' : 'badge-accent') }, entry.type)
-          )
-        )
+            h('span', { class: 'badge ' + (entry.type === 'payment' ? 'badge-green' : entry.category === 'group' ? 'badge-blue' : 'badge-accent') }, entry.type === 'payment' ? 'payment' : catLabel || 'charge')
+          );
+        })
       )
     );
   }
@@ -890,7 +938,7 @@ function renderPayments() {
         h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
           h('div', {},
             h('div', { class: 'student-name' }, s.profile.name),
-            h('div', { style: { fontSize: '11px', color: 'var(--muted)' } }, s.profile.program + ' · $' + s.profile.rate + '/mo')
+            h('div', { style: { fontSize: '11px', color: 'var(--muted)' } }, s.profile.program + ' · $' + (s.profile.privateRate || s.profile.rate || 75) + ' priv · $' + (s.profile.groupRate || 50) + ' group')
           ),
           h('div', { style: { textAlign: 'right' } },
             h('div', { style: { fontFamily: "'DM Serif Display',Georgia,serif", fontSize: '20px', fontWeight: '700', color: balance > 0 ? 'var(--red)' : 'var(--green)' } }, (balance > 0 ? '' : '') + fmtCurrency(balance)),
@@ -971,13 +1019,51 @@ function renderLessonInput() {
   );
 }
 
+// Temp state for member pickers
+let newEnsMembers = [];
+let editEnsMembers = [];
+
+function renderMemberPicker(selectedMembers, onToggle, inputId) {
+  const allStudentNames = Object.values(localData.students).map(s => s.profile.name);
+  return h('div', { class: 'form-group' },
+    h('label', {}, 'Members'),
+    h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '6px' } },
+      ...allStudentNames.map(name => {
+        const active = selectedMembers.includes(name);
+        return h('button', {
+          class: 'btn-outline' + (active ? ' active' : ''),
+          style: { padding: '3px 10px', fontSize: '11px', cursor: 'pointer' },
+          onClick: (e) => { e.preventDefault(); onToggle(name); }
+        }, name);
+      })
+    ),
+    selectedMembers.filter(m => !allStudentNames.includes(m)).length > 0
+      ? h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '6px' } },
+          ...selectedMembers.filter(m => !allStudentNames.includes(m)).map(name =>
+            h('span', { style: { padding: '3px 10px', borderRadius: '8px', fontSize: '11px', background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '4px' } },
+              name,
+              h('span', { style: { cursor: 'pointer', color: 'var(--red)', fontWeight: '700' }, onClick: () => onToggle(name) }, '×')
+            )
+          )
+        )
+      : '',
+    h('div', { style: { display: 'flex', gap: '6px' } },
+      h('input', { class: 'input', id: inputId, placeholder: 'Add non-student member...', style: { flex: '1' } }),
+      h('button', { class: 'btn-outline', style: { padding: '4px 10px', fontSize: '11px', whiteSpace: 'nowrap' }, onClick: () => {
+        const inp = document.getElementById(inputId);
+        const name = inp.value.trim();
+        if (name && !selectedMembers.includes(name)) { onToggle(name); }
+        inp.value = '';
+      }}, '+ Add')
+    )
+  );
+}
+
 function renderAddEnsembleForm() {
-  const students = localData.students;
-  const studentNames = Object.values(students).map(s => s.profile.name);
   return h('div', { class: 'card card-accent', style: { marginBottom: '16px' } },
     h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' } },
       h('div', { style: { fontWeight: '600', fontSize: '15px' } }, 'Add New Ensemble'),
-      h('button', { class: 'btn-outline', onClick: () => { showAddEnsemble = false; render(); } }, '✕ Cancel')
+      h('button', { class: 'btn-outline', onClick: () => { showAddEnsemble = false; newEnsMembers = []; render(); } }, '✕ Cancel')
     ),
     h('div', { class: 'form-group' },
       h('label', {}, 'Ensemble Name'),
@@ -993,26 +1079,25 @@ function renderAddEnsembleForm() {
         h('input', { class: 'input', id: 'new-ens-location', placeholder: 'e.g. Studio S, Oakland', value: 'Studio S, Oakland' })
       )
     ),
-    h('div', { class: 'form-group' },
-      h('label', {}, 'Members (comma-separated names)'),
-      h('input', { class: 'input', id: 'new-ens-members', placeholder: 'e.g. Mason, Kai, Diego' }),
-      studentNames.length > 0 ? h('div', { style: { fontSize: '10px', color: 'var(--muted)', marginTop: '4px' } }, 'Current students: ' + studentNames.join(', ')) : ''
-    ),
+    renderMemberPicker(newEnsMembers, (name) => {
+      const idx = newEnsMembers.indexOf(name);
+      if (idx === -1) newEnsMembers.push(name); else newEnsMembers.splice(idx, 1);
+      render();
+    }, 'new-ens-member-input'),
     h('button', { class: 'btn', style: { marginTop: '4px' }, onClick: () => {
       const name = document.getElementById('new-ens-name').value.trim();
       const schedule = document.getElementById('new-ens-schedule').value.trim();
       const location = document.getElementById('new-ens-location').value.trim();
-      const membersRaw = document.getElementById('new-ens-members').value.trim();
       if (!name) { alert('Please enter an ensemble name.'); return; }
-      const members = membersRaw ? membersRaw.split(',').map(m => m.trim()).filter(Boolean) : [];
       const key = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
       if (localData.ensembles[key]) { alert('An ensemble with a similar name already exists.'); return; }
       localData.ensembles[key] = {
-        info: { name, schedule, location, members },
+        info: { name, schedule, location, members: [...newEnsMembers] },
         repertoire: []
       };
       saveLocalData();
       showAddEnsemble = false;
+      newEnsMembers = [];
       render();
     }}, 'Add Ensemble')
   );
@@ -1021,11 +1106,15 @@ function renderAddEnsembleForm() {
 function renderEditEnsembleForm(key) {
   const ens = localData.ensembles[key];
   const info = ens.info;
-  const studentNames = Object.values(localData.students).map(s => s.profile.name);
+  // Initialize editEnsMembers from current ensemble when first opening
+  if (editingEnsemble === key && editEnsMembers._key !== key) {
+    editEnsMembers = [...(info.members || [])];
+    editEnsMembers._key = key;
+  }
   return h('div', { class: 'card card-accent', style: { marginBottom: '16px' } },
     h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' } },
       h('div', { style: { fontWeight: '600', fontSize: '15px' } }, 'Edit Ensemble — ' + info.name),
-      h('button', { class: 'btn-outline', onClick: () => { editingEnsemble = null; render(); } }, '✕ Cancel')
+      h('button', { class: 'btn-outline', onClick: () => { editingEnsemble = null; editEnsMembers = []; render(); } }, '✕ Cancel')
     ),
     h('div', { class: 'form-group' },
       h('label', {}, 'Ensemble Name'),
@@ -1041,22 +1130,21 @@ function renderEditEnsembleForm(key) {
         h('input', { class: 'input', id: 'edit-ens-location', value: info.location || '' })
       )
     ),
-    h('div', { class: 'form-group' },
-      h('label', {}, 'Members (comma-separated names)'),
-      h('input', { class: 'input', id: 'edit-ens-members', value: (info.members || []).join(', ') }),
-      studentNames.length > 0 ? h('div', { style: { fontSize: '10px', color: 'var(--muted)', marginTop: '4px' } }, 'Current students: ' + studentNames.join(', ')) : ''
-    ),
+    renderMemberPicker(editEnsMembers, (name) => {
+      const idx = editEnsMembers.indexOf(name);
+      if (idx === -1) editEnsMembers.push(name); else editEnsMembers.splice(idx, 1);
+      render();
+    }, 'edit-ens-member-input'),
     h('div', { style: { display: 'flex', gap: '8px', marginTop: '4px' } },
       h('button', { class: 'btn', onClick: () => {
         const name = document.getElementById('edit-ens-name').value.trim();
         const schedule = document.getElementById('edit-ens-schedule').value.trim();
         const location = document.getElementById('edit-ens-location').value.trim();
-        const membersRaw = document.getElementById('edit-ens-members').value.trim();
         if (!name) { alert('Ensemble name is required.'); return; }
-        const members = membersRaw ? membersRaw.split(',').map(m => m.trim()).filter(Boolean) : [];
-        ens.info = { ...ens.info, name, schedule, location, members };
+        ens.info = { ...ens.info, name, schedule, location, members: [...editEnsMembers] };
         saveLocalData();
         editingEnsemble = null;
+        editEnsMembers = [];
         render();
       }}, 'Save Changes'),
       h('button', { class: 'btn-outline', style: { color: 'var(--red)', borderColor: 'var(--red)' }, onClick: () => {
