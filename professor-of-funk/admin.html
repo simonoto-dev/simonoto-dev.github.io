@@ -327,6 +327,7 @@ function saveLocalData() {
 
 function setupRealtimeSync() {
   onDataChange("students", val => {
+    if (!localData) return;
     Object.keys(val).forEach(k => {
       val[k].billing = toArray(val[k].billing);
       if (!val[k].attendance || typeof val[k].attendance !== 'object') val[k].attendance = {};
@@ -335,6 +336,7 @@ function setupRealtimeSync() {
     render();
   });
   onDataChange("ensembles", val => {
+    if (!localData) return;
     Object.keys(val).forEach(k => {
       val[k].repertoire = toArray(val[k].repertoire);
       if (val[k].info) val[k].info.members = toArray(val[k].info.members);
@@ -343,6 +345,7 @@ function setupRealtimeSync() {
     render();
   });
   onDataChange("lessonTranscripts", val => {
+    if (!localData) return;
     localData.lessonTranscripts = toArray(val);
     render();
   });
@@ -1330,6 +1333,7 @@ function renderEnsembles() {
 
 /* ===== RENDER ===== */
 function render() {
+  if (!localData) return;
   const app = document.getElementById('app');
   app.innerHTML = '';
   const tabs = [
