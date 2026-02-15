@@ -304,12 +304,14 @@ async function loadLocalData() {
     fbLoad("ensembles", JSON.parse(JSON.stringify(MOCK.ensembles))),
     fbLoad("lessonTranscripts", [])
   ]);
-  // Normalize arrays that Firebase may have converted to objects
+  // Normalize arrays/objects that Firebase may have converted or stripped
   Object.keys(students).forEach(k => {
-    if (students[k].billing) students[k].billing = toArray(students[k].billing);
+    students[k].billing = toArray(students[k].billing);
+    if (!students[k].attendance || typeof students[k].attendance !== 'object') students[k].attendance = {};
   });
   Object.keys(ensembles).forEach(k => {
-    if (ensembles[k].repertoire) ensembles[k].repertoire = toArray(ensembles[k].repertoire);
+    ensembles[k].repertoire = toArray(ensembles[k].repertoire);
+    if (ensembles[k].info) ensembles[k].info.members = toArray(ensembles[k].info.members);
   });
   localData = { students, ensembles, lessonTranscripts: toArray(lessonTranscripts) };
 }
@@ -325,12 +327,18 @@ function saveLocalData() {
 
 function setupRealtimeSync() {
   onDataChange("students", val => {
-    Object.keys(val).forEach(k => { if (val[k].billing) val[k].billing = toArray(val[k].billing); });
+    Object.keys(val).forEach(k => {
+      val[k].billing = toArray(val[k].billing);
+      if (!val[k].attendance || typeof val[k].attendance !== 'object') val[k].attendance = {};
+    });
     localData.students = val;
     render();
   });
   onDataChange("ensembles", val => {
-    Object.keys(val).forEach(k => { if (val[k].repertoire) val[k].repertoire = toArray(val[k].repertoire); });
+    Object.keys(val).forEach(k => {
+      val[k].repertoire = toArray(val[k].repertoire);
+      if (val[k].info) val[k].info.members = toArray(val[k].info.members);
+    });
     localData.ensembles = val;
     render();
   });
@@ -389,7 +397,9 @@ function getBalance(studentKey) {
 }
 
 function getAttendanceRate(studentKey) {
-  const att = localData.students[studentKey].attendance || {};
+  const s = localData.students[studentKey];
+  if (!s) return 100;
+  const att = s.attendance || {};
   const entries = Object.values(att);
   const attended = entries.filter(e => e.present).length;
   const total = entries.filter(e => !e.cancelled).length;
@@ -631,7 +641,7 @@ function renderStudents() {
   const keys = Object.keys(students);
   const totalStudents = keys.length;
   const totalRevenue = keys.reduce((sum, k) => {
-    const payments = students[k].billing.filter(b => b.type === 'payment');
+    const payments = (students[k].billing || []).filter(b => b.type === 'payment');
     const thisMonth = payments.filter(b => {
       const d = new Date(b.date + 'T12:00:00');
       const now = new Date();
@@ -717,7 +727,7 @@ function renderAttendance() {
           return [
             h('div', { class: 'attendance-cell attendance-name' }, s.profile.name),
             ...dates.map(d => {
-              const att = s.attendance[d];
+              const att = (s.attendance || {})[d];
               let icon = '—';
               let color = 'var(--muted)';
               if (att) {
@@ -729,6 +739,7 @@ function renderAttendance() {
                 class: 'attendance-cell attendance-toggle',
                 style: { color: color },
                 onClick: () => {
+                  if (!s.attendance) s.attendance = {};
                   if (!s.attendance[d]) {
                     s.attendance[d] = { present: true };
                   } else if (s.attendance[d].present) {
@@ -764,7 +775,7 @@ function renderAttendance() {
       ...keys.map(key => {
         const s = students[key];
         const rate = getAttendanceRate(key);
-        const entries = Object.values(s.attendance);
+        const entries = Object.values(s.attendance || {});
         const total = entries.filter(e => !e.cancelled).length;
         const attended = entries.filter(e => e.present).length;
         return h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid var(--border)' } },
@@ -905,7 +916,7 @@ function renderPayments() {
     const year = d.getFullYear();
     let total = 0;
     keys.forEach(k => {
-      students[k].billing.filter(b => b.type === 'payment').forEach(b => {
+      (students[k].billing || []).filter(b => b.type === 'payment').forEach(b => {
         const bd = new Date(b.date + 'T12:00:00');
         if (bd.getMonth() === month && bd.getFullYear() === year) total += b.amount;
       });
@@ -1196,7 +1207,7 @@ function renderEnsembles() {
         h('div', { style: { marginBottom: '10px' } },
           h('div', { class: 'label' }, 'Members'),
           h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } },
-            ...ens.info.members.map(m =>
+            ...(ens.info.members || []).map(m =>
               h('span', { style: { padding: '2px 10px', borderRadius: '10px', fontSize: '11px', background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text)' } }, m)
             )
           )
